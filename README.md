@@ -1,7 +1,7 @@
 ### Đề tài môn Công nghệ phần mềm 💻 💻
-  Tên đề tài: App tặng quà 🎁 💝
+  ### Tên đề tài: App tặng quà 🎁 💝
   
-  Nhóm 3:
+  ### Nhóm 3:
   
     1. Lê Ngọc Hải          18128015 (Nhóm trưởng)
     
