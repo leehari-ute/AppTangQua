@@ -1,11 +1,7 @@
-### Đề tài môn Công nghệ phần mềm 💻 💻
+## Đề tài môn Công nghệ phần mềm 💻 💻
 
-  Tên đề tài: App tặng quà 🎁 💝 
-
-  Nhóm 3:
-
-  ### Tên đề tài: App tặng quà 🎁 💝
-  ### Nhóm 3:
+### Tên đề tài: App tặng quà 🎁 💝
+### Nhóm 3:
 
     1. Lê Ngọc Hải          18128015 (Nhóm trưởng)
     
@@ -13,7 +9,7 @@
      
     3. Phùng Vĩnh Đức       18110100
 
-### Danh sách các yêu cầu của đề tài:
+## Danh sách các yêu cầu của đề tài:
 
 |STT|Yêu cầu|Giải thích|
 |:---:|-------|----------|
@@ -31,4 +27,4 @@
 | 12 | Bảo mật thông tin người dùng | Đảm bảo an toàn cho tài khoản, thông tin người dùng, thông tin thanh toán, thông tin giao dịch |
 
 
-### Hướng dẫn sử dụng (Bổ sung sau) ❓
+## Hướng dẫn sử dụng (Bổ sung sau) ❓
