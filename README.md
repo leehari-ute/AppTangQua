@@ -25,6 +25,7 @@
 | 10 | Mục đánh giá đơn hàng | Người dùng có thể đánh giá, góp ý về chất lượng phục vụ của cửa hàng |
 | 11 | Hiển thị lịch sử mua hàng | Người dùng nắm bắt được các hóa đơn mà mình đã thánh toán |
 | 12 | Bảo mật thông tin người dùng | Đảm bảo an toàn cho tài khoản, thông tin người dùng, thông tin thanh toán, thông tin giao dịch |
+| 13 | Quản lý sản phẩm | Thêm, xóa, sửa sản phẩm|
 
 
 ## Hướng dẫn sử dụng (Bổ sung sau) ❓
