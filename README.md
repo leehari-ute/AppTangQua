@@ -3,6 +3,8 @@
 ### Tên đề tài: App tặng quà 🎁 💝
 ### Nhóm 3:
 
+    PM : Hồ Huy Hoàng       18110284
+    DEVELOPER:
     1. Lê Ngọc Hải          18128015 
     
     2. Đỗ Phạm Trúc Quỳnh   18110188
