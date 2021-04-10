@@ -7,7 +7,7 @@
     android:layout_width="match_parent">
 
     <LinearLayout
-
+        android:background="#4DA5A5A5"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -101,6 +101,7 @@
 
         <EditText
             android:id="@+id/edtUser"
+            android:background="@drawable/border"
             android:layout_width="355dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
@@ -119,6 +120,7 @@
 
         <EditText
             android:id="@+id/edtPassword"
+            android:background="@drawable/border"
             android:layout_width="355dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
@@ -137,6 +139,7 @@
 
         <EditText
             android:id="@+id/edtEmail"
+            android:background="@drawable/border"
             android:layout_width="355dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
@@ -155,6 +158,7 @@
 
         <EditText
             android:id="@+id/edtSdt"
+            android:background="@drawable/border"
             android:layout_width="355dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
