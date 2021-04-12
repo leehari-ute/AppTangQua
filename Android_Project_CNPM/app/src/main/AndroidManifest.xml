@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App_QuaTang">
         <activity android:name=".Signup_form"></activity>
+        <activity android:name=".Products_form"></activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".Login_form">
             <intent-filter>

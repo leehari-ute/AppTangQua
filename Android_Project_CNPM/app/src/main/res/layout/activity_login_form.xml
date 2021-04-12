@@ -93,7 +93,7 @@
             android:textSize="20dp" />
 
         <Button
-            android:id="@+id/btnSignUp"
+            android:id="@+id/btnLogin"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="120dp"
