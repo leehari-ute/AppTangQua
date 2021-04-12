@@ -27,7 +27,7 @@ public class LoginForm extends AppCompatActivity {
     private TextView        txtRegisterNow;
     private FirebaseAuth    fAuth;
     private String          password = null,
-                    email = null;
+                            email = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
