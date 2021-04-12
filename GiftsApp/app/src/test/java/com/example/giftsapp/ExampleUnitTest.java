@@ -1,4 +1,4 @@
-package com.example.app_quatang;
+package com.example.giftsapp;
 
 import org.junit.Test;
 

@@ -1,15 +1,14 @@
-package com.example.app_quatang;
+package com.example.giftsapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class ProductsForm extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_products_form);
-        getSupportActionBar().setTitle("Products");
+        setContentView(R.layout.activity_main);
     }
 }

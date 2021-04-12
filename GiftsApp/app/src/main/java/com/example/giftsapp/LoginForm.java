@@ -1,4 +1,4 @@
-package com.example.app_quatang;
+package com.example.giftsapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +27,7 @@ public class LoginForm extends AppCompatActivity {
     private TextView        txtRegisterNow;
     private FirebaseAuth    fAuth;
     private String          password = null,
-                            email = null;
+            email = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class LoginForm extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               login();
+                login();
             }
         });
 
@@ -84,17 +84,17 @@ public class LoginForm extends AppCompatActivity {
 
         fAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(LoginForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(getApplicationContext(), ProductsForm.class);
-//                    startActivity(intent);
-                    return;
-                }
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), ProductsForm.class);
+                    startActivity(intent);
+                            return;
+                        }
 
-                Toast.makeText(LoginForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
-            }
-        });
+                        Toast.makeText(LoginForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

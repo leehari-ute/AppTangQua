@@ -14,18 +14,18 @@
         android:orderInCategory="2"
         android:id="@+id/menuSearch"/>
 
-        <item android:title="Exit"
-            android:orderInCategory="3"
-            android:id="@+id/menuExit"/>
+    <item android:title="Exit"
+        android:orderInCategory="3"
+        android:id="@+id/menuExit"/>
 
-<!--    <item android:title="Contact"
-        android:orderInCategory="3">
-        <menu>
-            <item android:title="Email"
-                android:id="@+id/menuEmail"/>
-            <item android:title="Phone"
-                android:id="@+id/menuPhone"/>
-        </menu>
-    </item>-->
+    <!--    <item android:title="Contact"
+            android:orderInCategory="3">
+            <menu>
+                <item android:title="Email"
+                    android:id="@+id/menuEmail"/>
+                <item android:title="Phone"
+                    android:id="@+id/menuPhone"/>
+            </menu>
+        </item>-->
 
 </menu>

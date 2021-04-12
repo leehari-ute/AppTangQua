@@ -1,4 +1,4 @@
-package com.example.app_quatang;
+package com.example.giftsapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,10 +29,10 @@ public class SignUpForm extends AppCompatActivity {
     private EditText        edtFullName, edtPassword, edtEmail, edtPhone;
     private FirebaseAuth    fAuth;
     private String          gender = null,
-                    fullName = null,
-                    password = null,
-                    email = null,
-                    phone = null;
+            fullName = null,
+            password = null,
+            email = null,
+            phone = null;
     private TextView        txtLoginHere;
 
     @Override
@@ -135,16 +135,16 @@ public class SignUpForm extends AppCompatActivity {
 
         fAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(SignUpForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SignUpForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                Toast.makeText(SignUpForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
-            }
-        });
+                        Toast.makeText(SignUpForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void validate() {
