@@ -82,7 +82,6 @@
             android:layout_marginTop="20dp"
             android:text="Password"
             android:textSize="15sp"/>
-
         <EditText
             android:id="@+id/edtPassword"
             android:layout_width="355dp"
