@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
-        <activity android:name=".SignUpForm"></activity>
+        <activity android:name=".Home"></activity>
+        <activity android:name=".SignUpForm" />
         <activity android:name=".ProductsForm" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginForm">
