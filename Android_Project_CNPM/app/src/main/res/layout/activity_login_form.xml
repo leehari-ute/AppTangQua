@@ -65,14 +65,14 @@
             android:text="Email"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/edtEmail"
-            android:layout_width="355dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="30dp"
-            android:textSize="20sp"
-            android:ems="10"
-            android:inputType="textWebEmailAddress" />
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="355dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:textSize="20sp"
+                android:ems="10"
+                android:inputType="textWebEmailAddress" />
 
         <TextView
             android:id="@+id/txtPassword"
@@ -82,6 +82,27 @@
             android:layout_marginTop="20dp"
             android:text="Password"
             android:textSize="15sp"/>
+<<<<<<< HEAD
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="355dp"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:layout_marginLeft="30dp"
+                android:inputType="textPassword"
+                android:textSize="20sp" />
+
+        <ImageView
+            android:layout_marginLeft="370dp"
+            android:layout_marginTop="-32dp"
+            android:id="@+id/imgShowPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha=".5"
+            android:onClick="ShowHidePass"
+            android:src="@drawable/invisible_password" />
+=======
         <EditText
             android:id="@+id/edtPassword"
             android:layout_width="355dp"
@@ -90,6 +111,7 @@
             android:ems="10"
             android:inputType="textPassword"
             android:textSize="20dp" />
+>>>>>>> 0ae01ebe17c28c65eae6275e13c306fc8c46c1af
 
         <Button
             android:id="@+id/btnLogin"
