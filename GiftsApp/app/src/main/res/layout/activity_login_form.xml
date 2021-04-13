@@ -52,6 +52,8 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="30dp"
                 android:src="@drawable/avaboy" />
+
+
         </LinearLayout>
 
         <TextView
@@ -111,6 +113,8 @@
                 android:layout_marginTop="18dp"/>
 
         </LinearLayout>
+
+
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="170dp"
@@ -139,6 +143,7 @@
             android:text="Forgot Password?"
             android:textColor="#072A91"
             android:textSize="18sp" />
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
