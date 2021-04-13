@@ -90,6 +90,14 @@
             android:inputType="textPassword"
             android:textSize="20dp" />
 
+        <ImageView
+            android:id="@+id/imgShowHidePass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha=".5"
+            android:onClick="showHidePass"
+            android:layout_marginLeft="360dp"
+            android:layout_marginTop="-35dp"/>
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="170dp"
@@ -110,5 +118,13 @@
             android:textColor="#072A91"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/txtForgotPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Forgot Password?"
+            android:textColor="#072A91"
+            android:textSize="18sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
