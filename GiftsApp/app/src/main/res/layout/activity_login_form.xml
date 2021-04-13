@@ -7,7 +7,7 @@
     android:layout_width="match_parent">
 
     <LinearLayout
-        android:background="#4DA5A5A5"
+        android:background="#4DFFFFFF"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -50,17 +50,16 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:src="@drawable/avaboy" />
-
         </LinearLayout>
 
         <TextView
             android:id="@+id/txtEmail"
             android:layout_width="355dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="50dp"
             android:text="Email"
             android:textSize="15sp" />
 
@@ -69,6 +68,8 @@
             android:layout_width="355dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/border"
             android:textSize="20sp"
             android:ems="10"
             android:inputType="textWebEmailAddress" />
@@ -77,37 +78,49 @@
             android:id="@+id/txtPassword"
             android:layout_width="355dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="40dp"
             android:text="Password"
             android:textSize="15sp"/>
-        <EditText
-            android:id="@+id/edtPassword"
-            android:layout_width="355dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="30dp"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:textSize="20dp" />
 
-        <ImageView
-            android:id="@+id/imgShowHidePass"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:alpha=".5"
-            android:onClick="showHidePass"
-            android:layout_marginLeft="360dp"
-            android:layout_marginTop="-35dp"/>
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="355dp"
+                android:layout_height="50dp"
+                android:background="@drawable/border"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textSize="20dp" />
+
+            <ImageView
+                android:id="@+id/imgShowHidePass"
+                android:src="@drawable/invisible_password_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha=".5"
+                android:onClick="showHidePass"
+                android:layout_marginLeft="-65dp"
+                android:layout_marginTop="18dp"/>
+
+        </LinearLayout>
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="120dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="60dp"
             android:text="Login"
+            android:textColor="@android:color/white"
             android:textSize="20sp"
-            app:backgroundTint="#2C4CC3"
-            app:backgroundTintMode="screen" />
+            app:backgroundTint="#2C4CC3"/>
 
         <TextView
             android:id="@+id/txtRegisterNow"
@@ -126,5 +139,6 @@
             android:text="Forgot Password?"
             android:textColor="#072A91"
             android:textSize="18sp" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

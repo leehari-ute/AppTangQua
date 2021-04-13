@@ -38,7 +38,8 @@ public class LoginForm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_form);
-        getSupportActionBar().setTitle("Login");
+        //getSupportActionBar().setTitle("Login");
+
 
         fAuth = FirebaseAuth.getInstance();
         Init();
@@ -144,13 +145,14 @@ public class LoginForm extends AppCompatActivity {
     public void showHidePass(View view) {
         if(view.getId()==R.id.imgShowHidePass){
             if(edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
-                ((ImageView)(view)).setImageResource(R.drawable.invisible_password);
+                ((ImageView)(view)).setImageResource(R.drawable.visible_password_2);
+
                 //Show Password
                 edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 return;
             }
 
-            ((ImageView)(view)).setImageResource(R.drawable.visible_password);
+            ((ImageView)(view)).setImageResource(R.drawable.invisible_password_2);
             //Hide Password
             edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
         }
