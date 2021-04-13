@@ -98,7 +98,6 @@
             android:onClick="showHidePass"
             android:layout_marginLeft="360dp"
             android:layout_marginTop="-35dp"/>
-
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="170dp"
@@ -127,6 +126,5 @@
             android:text="Forgot Password?"
             android:textColor="#072A91"
             android:textSize="18sp" />
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
