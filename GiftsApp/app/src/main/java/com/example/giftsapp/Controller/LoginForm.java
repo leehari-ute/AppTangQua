@@ -40,6 +40,7 @@ public class LoginForm extends AppCompatActivity {
         setContentView(R.layout.activity_login_form);
         //getSupportActionBar().setTitle("Login");
 
+
         fAuth = FirebaseAuth.getInstance();
         Init();
 
@@ -145,6 +146,7 @@ public class LoginForm extends AppCompatActivity {
         if(view.getId()==R.id.imgShowHidePass){
             if(edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
                 ((ImageView)(view)).setImageResource(R.drawable.visible_password_2);
+
                 //Show Password
                 edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 return;
