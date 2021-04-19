@@ -22,9 +22,8 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         int images[] = {R.drawable.quatangmot,R.drawable.quatanghai,R.drawable.quatangba};
-        flipper = (ViewFlipper) findViewById(R.id.viewFlipperImage);
-        imageView = (ImageView) findViewById(R.id.imageProduct);
 
+        Anhxa();
         for(int image:images)
         {
             flipperImage(image);
@@ -36,6 +35,12 @@ public class Home extends AppCompatActivity {
                 DenTrangMuaHang();
             }
         });
+    }
+
+    private void Anhxa()
+    {
+        flipper = (ViewFlipper) findViewById(R.id.viewFlipperImage);
+        imageView = (ImageView) findViewById(R.id.imageProduct);
     }
 
     private void DenTrangMuaHang()
