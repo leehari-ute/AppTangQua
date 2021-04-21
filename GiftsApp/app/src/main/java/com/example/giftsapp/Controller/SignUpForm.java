@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,9 +20,13 @@ import android.widget.Toast;
 
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,11 +38,14 @@ public class SignUpForm extends AppCompatActivity {
     private RadioGroup      rdGender;
     private EditText        edtFullName, edtPassword, edtEmail, edtPhone;
     private FirebaseAuth    fAuth;
+    private FirebaseFirestore fStore;
     private String          gender = null,
-            fullName = null,
-            password = null,
-            email = null,
-            phone = null;
+                            fullName = null,
+                            password = null,
+                            email = null,
+                            phone = null,
+                            role = "Customer",
+                            userID = null;
     private TextView        txtLoginHere;
 
     @Override
@@ -47,6 +55,7 @@ public class SignUpForm extends AppCompatActivity {
         //getSupportActionBar().setTitle("SignUp");
 
         fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
         Init();
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -143,13 +152,28 @@ public class SignUpForm extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-//                            userID = fAuth.getCurrentUser().getUid();
-//                            DocumentReference documentReference = fStore.collection("Users").document(UserID);
-//                            Map<String, Object> user = new HashMap<>();
-//                            user.put("fullName", fullName);
-//                            user.put("email", email);
-//                            user.put("phone", phone);
-//                            user.put("gender", gender);
+                            userID = fAuth.getCurrentUser().getUid();
+                            DocumentReference documentReference = fStore.collection("Users").document(userID);
+                            Map<String, Object> User = new HashMap<>();
+                            User.put("fullName", fullName);
+                            User.put("email", email);
+                            User.put("phone", phone);
+                            User.put("gender", gender);
+                            User.put("role", role);
+                            documentReference.set(User).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("TAG", "onSuccess: user profile is create for "+ userID);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("TAG", "onFailure: "+ e.toString());
+                                }
+                            });
+                            Intent intent = new Intent(getApplicationContext(), Home.class);
+                            startActivity(intent);
+
                             Toast.makeText(SignUpForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
                             return;
                         }
