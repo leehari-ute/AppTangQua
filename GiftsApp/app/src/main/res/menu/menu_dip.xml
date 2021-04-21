@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Sinh nhật"
+        android:id="@+id/menuSn"/>
+
+    <item android:title="Ngày cưới"
+        android:id="@+id/menuWedding"/>
+
+    <item android:title="Tân gia"
+        android:id="@+id/menuTangia"/>
+
+</menu>

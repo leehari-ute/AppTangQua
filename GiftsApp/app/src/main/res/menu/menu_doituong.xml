@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Nam"
+        android:icon="@drawable/avaboy"
+        android:id="@+id/menuBanGai"/>
+
+    <item android:title="Nữ"
+        android:id="@+id/menuBanTrai"/>
+
+    <item android:title="Tăng bé"
+        android:id="@+id/menuTangbe"/>
+
+</menu>
