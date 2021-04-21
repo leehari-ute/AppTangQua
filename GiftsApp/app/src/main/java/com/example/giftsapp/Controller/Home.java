@@ -12,6 +12,7 @@ import android.widget.ViewFlipper;
 
 import com.example.giftsapp.Controller.ProductsForm;
 import com.example.giftsapp.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Home extends AppCompatActivity {
 
@@ -22,9 +23,8 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         int images[] = {R.drawable.quatangmot,R.drawable.quatanghai,R.drawable.quatangba};
-        flipper = (ViewFlipper) findViewById(R.id.viewFlipperImage);
-        imageView = (ImageView) findViewById(R.id.imageProduct);
 
+        Anhxa();
         for(int image:images)
         {
             flipperImage(image);
@@ -36,6 +36,12 @@ public class Home extends AppCompatActivity {
                 DenTrangMuaHang();
             }
         });
+    }
+
+    private void Anhxa()
+    {
+        flipper = (ViewFlipper) findViewById(R.id.viewFlipperImage);
+        imageView = (ImageView) findViewById(R.id.imageProduct);
     }
 
     private void DenTrangMuaHang()
@@ -69,5 +75,12 @@ public class Home extends AppCompatActivity {
 
         flipper.setInAnimation(this,android.R.anim.slide_in_left);
         flipper.setOutAnimation(this,android.R.anim.slide_out_right);
+    }
+
+    public void logout (View view) {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getApplicationContext(), LoginForm.class);
+        startActivity(intent);
+        finish();
     }
 }
