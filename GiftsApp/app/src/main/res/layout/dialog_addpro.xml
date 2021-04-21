@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:weightSum="4"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/imageProduct"
+        android:layout_width="219dp"
+        android:layout_height="219dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="97dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/border_header"
+        android:src="@drawable/product1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:weightSum="3"
+        android:layout_height="70dp">
+
+        <TextView
+            android:id="@+id/txtTensp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/edtTenSp"
+            android:text="Tên sản phẩm" />
+
+        <EditText
+            android:id="@+id/edtTenSp"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:background="@drawable/border"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageProduct"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="-80dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="6"
+        android:orientation="horizontal">
+
+       <TextView
+           android:layout_marginLeft="25dp"
+           android:layout_width="0dp"
+           android:layout_height="50dp"
+           android:layout_weight="1"
+           android:text="Đối trượng"/>
+
+        <Spinner
+            android:id="@+id/SpDoituong"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="50dp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:text="Dịp"/>
+
+        <Spinner
+            android:id="@+id/SpDip"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="50dp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:text="Ngày lễ"/>
+
+        <Spinner
+            android:id="@+id/SpNgayle"
+            android:layout_weight="1"
+            android:layout_marginRight="25dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="25dp"
+            android:text="Mô tả"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_marginRight="25dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="-30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:layout_weight="2"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="25dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Số lượng"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/border"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="-50dp"
+            android:text="Submit"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

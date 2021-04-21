@@ -43,11 +43,12 @@
 
 
             <ImageButton
-                android:background="@null"
-                android:src="@drawable/avata"
-                android:layout_weight="1"
+                android:id="@+id/btnDoituong"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/avata" />
 
             <TextView
                 android:layout_width="350dp"
@@ -59,12 +60,13 @@
                 android:textSize="40sp" />
 
             <ImageButton
-                android:background="@null"
-                android:src="@drawable/party1"
-
-                android:layout_weight="1"
+                android:id="@+id/btnDip"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/party1" />
 
             <TextView
                 android:layout_width="350dp"
@@ -76,11 +78,12 @@
                 android:textSize="40sp" />
 
             <ImageButton
-                android:background="@null"
-                android:src="@drawable/calendar1"
-                android:layout_weight="1"
+                android:id="@+id/btnHoliday"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/calendar1" />
 
             <TextView
                 android:layout_width="350dp"
@@ -91,13 +94,13 @@
                 android:textColor="#65818080"
                 android:textSize="40sp" />
 
-
             <ImageButton
-                android:background="@null"
-                android:src="@drawable/new1"
-                android:layout_weight="1"
+                android:id="@+id/btnMoney"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/money1" />
 
             <TextView
                 android:layout_width="350dp"
@@ -108,13 +111,17 @@
                 android:textColor="#65818080"
                 android:textSize="40sp" />
 
-
             <ImageButton
-                android:background="@null"
-                android:src="@drawable/money1"
-                android:layout_weight="1"
+                android:id="@+id/btnNew"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/new1" />
+
+
+
+
 
         </LinearLayout>
 

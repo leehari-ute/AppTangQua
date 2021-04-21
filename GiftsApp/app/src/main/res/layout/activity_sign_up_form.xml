@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:verticalScrollbarPosition="right"
-        android:background="#4DA5A5A5"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#4DA5A5A5"
         android:orientation="vertical"
+        android:verticalScrollbarPosition="right"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
@@ -48,16 +47,17 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/avaboy"/>
+                android:src="@drawable/avaboy" />
+
             <ImageView
-                android:layout_marginTop="10dp"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/avagirl"/>
+                android:layout_marginTop="10dp"
+                android:src="@drawable/avagirl" />
 
 
         </LinearLayout>
@@ -69,9 +69,9 @@
 
             <RadioGroup
                 android:id="@+id/rdGender"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:weightSum="4">
 
                 <RadioButton
@@ -81,11 +81,12 @@
                     android:layout_marginLeft="41dp"
                     android:layout_weight="1"
                     android:text="Male" />
+
                 <RadioButton
                     android:id="@+id/rdBtnFemale"
-                    android:layout_marginLeft="7dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
                     android:layout_weight="1"
                     android:text="Female" />
 
@@ -104,13 +105,13 @@
 
         <EditText
             android:id="@+id/edtFullName"
-            android:background="@drawable/border"
             android:layout_width="355dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
-            android:textSize="20sp"
+            android:background="@drawable/border"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textSize="20sp" />
 
 
         <TextView
@@ -145,27 +146,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"    >
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/edtPassword"
-                android:background="@drawable/border"
                 android:layout_width="355dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="30dp"
+                android:background="@drawable/border"
                 android:ems="10"
                 android:inputType="textPassword"
                 android:textSize="20dp" />
 
             <ImageView
                 android:id="@+id/imgShowHidePass"
-                android:src="@drawable/invisible_password_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="-30dp"
+                android:layout_marginTop="20dp"
                 android:alpha=".5"
                 android:onClick="showHidePass"
-                android:layout_marginLeft="-30dp"
-                android:layout_marginTop="20dp"/>
+                android:src="@drawable/invisible_password_2" />
         </LinearLayout>
 
         <TextView
@@ -179,10 +180,10 @@
 
         <EditText
             android:id="@+id/edtPhone"
-            android:background="@drawable/border"
             android:layout_width="355dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
+            android:background="@drawable/border"
             android:ems="10"
             android:inputType="phone" />
 
