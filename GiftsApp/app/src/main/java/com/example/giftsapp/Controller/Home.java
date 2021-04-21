@@ -1,5 +1,6 @@
 package com.example.giftsapp.Controller;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +22,10 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+
         int images[] = {R.drawable.quatangmot,R.drawable.quatanghai,R.drawable.quatangba};
         flipper = (ViewFlipper) findViewById(R.id.viewFlipperImage);
         imageView = (ImageView) findViewById(R.id.imageProduct);
