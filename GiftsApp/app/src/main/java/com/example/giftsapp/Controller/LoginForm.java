@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -146,7 +147,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
                         intent = new Intent(getApplicationContext(), CustomerHome.class);
                         break;
                     case "Admin":
-                        intent = new Intent(getApplicationContext(), Home.class);
+                        intent = new Intent(getApplicationContext(), homemoi.class);
                         break;
                     default:
                         break;
@@ -176,6 +177,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
                             checkRole();

@@ -13,12 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
         <activity android:name=".Controller.CustomerHome" />
-        <activity android:name=".Controller.LoginForm" />
+        <activity android:name=".Controller.ProductsForm" />
+        <activity android:name=".Controller.AddProductsForm"></activity>
+        <activity android:name=".Controller.homemoi"></activity>
         <activity android:name=".Controller.Home" />
         <activity android:name=".Controller.AddProductsForm" />
         <activity android:name=".Controller.SignUpForm" />
         <activity android:name=".Controller.MainActivity" />
-        <activity android:name=".Controller.ProductsForm">
+        <activity android:name=".Controller.LoginForm">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
