@@ -15,9 +15,7 @@
         <activity android:name=".Controller.CustomerHome" />
         <activity android:name=".Controller.ProductsForm" />
         <activity android:name=".Controller.AddProductsForm"></activity>
-        <activity android:name=".Controller.homemoi"></activity>
-        <activity android:name=".Controller.Home" />
-        <activity android:name=".Controller.AddProductsForm" />
+        <activity android:name=".Controller.AdminHome"></activity>
         <activity android:name=".Controller.SignUpForm" />
         <activity android:name=".Controller.MainActivity" />
         <activity android:name=".Controller.LoginForm">
