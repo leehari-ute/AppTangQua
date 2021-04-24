@@ -1,39 +1,64 @@
 package com.example.giftsapp.Model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Products {
-    private String tenSp;
-    private String gia;
-    private int hinh;
+    public String name;
+    public String price;
+    public String imageUrl;
+    public String description;
+    public int quantity;
+    public String holiday;
+    public String object;
+    public String occasion;
 
-    public String getTenSp() {
-        return tenSp;
+    public Products(String name, String price, String imageUrl, String description, int quantity, String holiday, String object,  String occasion) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.holiday = holiday;
+        this.object = object;
+        this.occasion = occasion;
+    }
+    public String getName() {
+        return name;
     }
 
-    public void setTenSp(String tenSp) {
-        this.tenSp = tenSp;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getGia() {
-        return gia;
+    public void setPrice() {
+        this.price = price;
     }
 
-    public void setGia(String gia) {
-        this.gia = gia;
+    public String getPrice() {
+        return price;
     }
 
-    public int getHinh() {
-        return hinh;
+    public void setImageUrl() {
+        this.imageUrl = imageUrl;
     }
 
-    public void setHinh(int hinh) {
-        this.hinh = hinh;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public Products(String tenSp, String gia, int hinh) {
-        this.tenSp = tenSp;
-        this.gia = gia;
-        this.hinh = hinh;
+//    public Map<String, Object> toMap() {
+//        HashMap<String, Object> newProduct = new HashMap<>();
+//
+//        newProduct.put("Name", this.name);
+//        newProduct.put("Price", this.price);
+//        newProduct.put("ImageUrl", this.imageUrl);
+//        newProduct.put("Quantity", this.quantity);
+//        newProduct.put("Object", this.object);
+//        newProduct.put("Holiday", this.holiday);
+//        newProduct.put("Occasion", this.occasion);
+//
+//        return newProduct;
+//    }
 
-
-    }
 }

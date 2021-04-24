@@ -15,6 +15,9 @@
     <item android:title="Search"
         android:orderInCategory="2"
         android:id="@+id/menuSearch"/>
+    <item android:title="Reload"
+        android:orderInCategory="3"
+        android:id="@+id/menuReload"/>
 
     <item android:title="Exit"
         android:orderInCategory="3"

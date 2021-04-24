@@ -148,7 +148,6 @@ public class SignUpForm extends AppCompatActivity {
             return;
         }
         edtPassword.setError(null);
-
         fAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -173,7 +172,7 @@ public class SignUpForm extends AppCompatActivity {
                                     Log.d("TAG", "onFailure: "+ e.toString());
                                 }
                             });
-                            Intent intent = new Intent(getApplicationContext(), Home.class);
+                            Intent intent = new Intent(getApplicationContext(), CustomerHome.class);
                             startActivity(intent);
 
                             Toast.makeText(SignUpForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
