@@ -43,7 +43,7 @@
 
 
             <ImageButton
-                android:id="@+id/btnDoituong"
+                android:id="@+id/btnObject"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -60,9 +60,8 @@
                 android:textSize="40sp" />
 
             <ImageButton
-                android:id="@+id/btnDip"
+                android:id="@+id/btnOccasion"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@null"

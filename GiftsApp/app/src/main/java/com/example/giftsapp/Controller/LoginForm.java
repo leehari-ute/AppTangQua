@@ -1,6 +1,7 @@
     package com.example.giftsapp.Controller;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,15 +27,33 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
-public class LoginForm extends AppCompatActivity {
+    public class LoginForm extends AppCompatActivity {
 
     private EditText        edtEmail, edtPassword;
     private Button          btnLogin;
     private TextView        txtRegisterNow, txtForgotPassword;
     private FirebaseAuth    fAuth;
-    private String          password = null,
-                            email = null;
+    private FirebaseFirestore fStore;
+    private String          password = "",
+                            email = "",
+                            userID = "";
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = fAuth.getCurrentUser();
+        if(currentUser != null){
+            currentUser.reload();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +64,7 @@ public class LoginForm extends AppCompatActivity {
 
 
         fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
         Init();
 
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -114,6 +134,29 @@ public class LoginForm extends AppCompatActivity {
         btnLogin            = findViewById(R.id.btnLogin);
     }
 
+    private void checkRole() {
+        userID = fAuth.getCurrentUser().getUid();
+        DocumentReference documentReference = fStore.collection("Users").document(userID);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                String role = value.getString("role");
+                Intent intent = new Intent();
+                switch (role) {
+                    case "Customer":
+                        intent = new Intent(getApplicationContext(), CustomerHome.class);
+                        break;
+                    case "Admin":
+                        intent = new Intent(getApplicationContext(), homemoi.class);
+                        break;
+                    default:
+                        break;
+                }
+                startActivity(intent);
+            }
+        });
+    }
+
     private void login() {
         email = edtEmail.getText().toString().trim();
         password = edtPassword.getText().toString().trim();
@@ -136,14 +179,14 @@ public class LoginForm extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(getApplicationContext(), homemoi.class);
-                            startActivity(intent);
+                            Toast.makeText(LoginForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
+                            checkRole();
                             return;
                         }
-
                         Toast.makeText(LoginForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
     }
 
     public void showHidePass(View view) {
@@ -161,4 +204,6 @@ public class LoginForm extends AppCompatActivity {
             edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
         }
     }
+
+
 }

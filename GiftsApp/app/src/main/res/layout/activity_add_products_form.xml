@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:weightSum="4"
+    android:weightSum="9"
     android:layout_height="match_parent">
 
 
     <ImageView
-        android:id="@+id/imageProduct"
+        android:id="@+id/imgProduct"
         android:layout_width="219dp"
         android:layout_height="219dp"
         android:layout_alignParentStart="true"
@@ -18,13 +18,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginStart="97dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:background="@drawable/border_header"
         android:src="@drawable/product1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:weightSum="3"
+        android:layout_weight="1"
         android:layout_height="70dp">
 
         <TextView
@@ -35,65 +36,69 @@
             android:layout_marginStart="25dp"
             android:layout_marginEnd="50dp"
             android:layout_marginTop="10dp"
-            android:layout_toStartOf="@+id/edtTenSp"
+            android:layout_toStartOf="@+id/edtNameProduct"
             android:text="Tên sản phẩm" />
 
         <EditText
-            android:id="@+id/edtTenSp"
+            android:id="@+id/edtNameProduct"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:background="@drawable/border"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageProduct"
+            android:layout_below="@+id/imgProduct"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="15dp"
             android:layout_marginRight="25dp"
             android:layout_marginLeft="-80dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:inputType="text"
+            android:hint="Name" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="6"
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/txtObject"
             android:layout_marginLeft="25dp"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:text="Đối trượng"/>
+            android:text="Đối tượng"/>
 
         <Spinner
-            android:id="@+id/SpDoituong"
+            android:id="@+id/spnObject"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="50dp"/>
 
         <TextView
+            android:id="@+id/txtOccasion"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="50dp"
             android:text="Dịp"/>
 
         <Spinner
-            android:id="@+id/SpDip"
+            android:id="@+id/spnOccasion"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="50dp"/>
 
         <TextView
+            android:id="@+id/txtHoliday"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="50dp"
             android:text="Ngày lễ"/>
 
         <Spinner
-            android:id="@+id/SpNgayle"
+            android:id="@+id/spnHoliday"
             android:layout_weight="1"
             android:layout_marginRight="25dp"
             android:layout_width="0dp"
@@ -102,6 +107,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_weight="2"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:weightSum="3">
@@ -115,6 +121,7 @@
             android:text="Mô tả"/>
 
         <EditText
+            android:id="@+id/edtDesProduct"
             android:layout_width="0dp"
             android:layout_marginRight="25dp"
             android:layout_height="120dp"
@@ -126,6 +133,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="4">
@@ -139,6 +147,34 @@
             android:text="Số lượng"/>
 
         <EditText
+            android:id="@+id/edtQuantity"
+            android:inputType="number"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/border"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="25dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Giá"/>
+
+        <EditText
+            android:id="@+id/edtPrice"
+            android:inputType="number"
             android:layout_width="0dp"
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
@@ -150,15 +186,14 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"/>
         <Button
+            android:id="@+id/btnAdd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="10dp"
             android:layout_marginRight="25dp"
             android:layout_marginLeft="-50dp"
-            android:text="Submit"/>
+            android:text="Thêm"/>
 
     </LinearLayout>
-
-
 </LinearLayout>
