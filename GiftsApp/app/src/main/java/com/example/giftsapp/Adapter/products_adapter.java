@@ -1,6 +1,8 @@
 package com.example.giftsapp.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +10,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.giftsapp.Model.Products;
 import com.example.giftsapp.R;
 
+import java.lang.reflect.Array;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class products_adapter extends BaseAdapter {
@@ -45,16 +51,18 @@ public class products_adapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(layout, null);
 
-        //ánh xạ view
-        TextView txtTen = convertView.findViewById(R.id.txtviewTen);
-        TextView txtGia = convertView.findViewById(R.id.txtviewGia);
-        ImageView imgHinh = convertView.findViewById(R.id.imageviewHinh);
+        //map
+        TextView txtName = convertView.findViewById(R.id.txtNameProduct);
+        TextView txtPrice = convertView.findViewById(R.id.txtPrice);
+        ImageView img = convertView.findViewById(R.id.imgProduct);
 
-        //gán
+        //assign
         Products products = productsList.get(position);
-        txtTen.setText(products.getTenSp());
-        txtGia.setText(products.getGia());
-        imgHinh.setImageResource(products.getHinh());
+        txtName.setText(products.getName());
+        txtPrice.setText(products.getPrice());
+        Glide.with(context.getApplicationContext())
+                .load(products.getImageUrl())
+                .into(img);
 
         return convertView;
     }
