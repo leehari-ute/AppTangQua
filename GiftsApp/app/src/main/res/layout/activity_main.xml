@@ -1,83 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    android:weightSum="12"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="30dp"
-        android:textColor="#2C4CC3"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:text="Hello Again"
-        android:layout_weight="0.8"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-    <TextView
-        android:layout_marginLeft="30dp"
-        android:textColor="#2C4CC3"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:text="Welcome Back!"
-        android:layout_weight="0.8"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-    <ImageView
-        android:src="@drawable/ic_launcher_background"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_weight="1.7"
-        android:layout_width="100dp"
-        android:layout_height="0dp"/>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <TextView
-        android:layout_marginLeft="30dp"
-        android:textSize="15sp"
-        android:text="Username"
-        android:layout_marginTop="20dp"
-        android:layout_weight="0.8"
+    <include
+        layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-    <EditText
-        android:textSize="20sp"
-        android:layout_marginLeft="30dp"
-        android:layout_weight="1"
-        android:layout_width="350dp"
-        android:layout_height="0dp"/>
-    <TextView
-        android:layout_marginLeft="30dp"
-        android:textSize="15sp"
-        android:text="Password"
-        android:layout_marginTop="20dp"
-        android:layout_weight="0.8"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-    <EditText
-        android:textSize="20sp"
-        android:inputType="textPassword"
-        android:layout_marginLeft="30dp"
-        android:layout_weight="1"
-        android:layout_width="350dp"
-        android:layout_height="0dp"/>
-    <Button
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2C4CC3"
-        android:textAllCaps="false"
-        android:text="Login"
-        android:textSize="20sp"
-        android:layout_weight="1"
-        android:layout_width="170dp"
-        android:layout_height="0dp"/>
-    <TextView
-        android:gravity="center"
-        android:textColor="#2C4CC3"
-        android:textSize="18sp"
-        android:text="Chưa có tài khoản? Đăng ký ngay"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-</LinearLayout>
+        android:layout_height="match_parent" />
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
+</androidx.drawerlayout.widget.DrawerLayout>
