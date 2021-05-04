@@ -90,21 +90,21 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    AlertDialog al = new AlertDialog.Builder(context)
-                            .setTitle("Buy")
-                            .setMessage("Bạn có muốn chuyển đến trang mua hàng?")
-                            .setPositiveButton("Có", (dialog, which) -> {
-                                if(position ==2)
-                                {
+                    if(position ==2)
+                    {
+                        AlertDialog al = new AlertDialog.Builder(context)
+                                .setTitle("Buy")
+                                .setMessage("Bạn có muốn chuyển đến trang mua hàng?")
+                                .setPositiveButton("Có", (dialog, which) -> {
                                     Intent intent = new Intent(v.getContext(), ProductsForm.class);
                                     v.getContext().startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("Không",(dialog, which) -> {
-                                return;
-                            }).create();
-                    al.show();
+                                })
+                                .setNegativeButton("Không",(dialog, which) -> {
+                                    return;
+                                }).create();
+                        al.show();
+                    }
+
 
                         }
             });
