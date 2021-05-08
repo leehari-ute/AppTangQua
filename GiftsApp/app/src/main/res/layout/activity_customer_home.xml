@@ -5,5 +5,237 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Controller.CustomerHome">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layoutHeader"
+        android:background="@drawable/header_background"
+        android:padding="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/CustomerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Hello, Vinh Duc"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/imageMenu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="330dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_menu"
+            app:layout_constraintBottom_toBottomOf="@+id/CustomerName"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="@+id/CustomerName"
+            app:layout_constraintTop_toBottomOf="@+id/CustomerName"
+            app:layout_constraintVertical_bias="1.0"
+             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/white_rectangle_background"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageMenu"
+            >
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            android:importantForAutofill="no"
+            />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/app_name"
+                android:padding="6dp"
+                android:src="@drawable/ic_search"
+                app:tint="@color/colorPrimary" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutHeader"
+       >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layoutInfor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/white_rectangle_background"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:layout_marginLeft="30dp"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/infor"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/app_name"
+                    android:padding="8dp"
+                    android:src="@drawable/identification_c"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/infor"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutBill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/white_rectangle_background"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:layout_marginRight="30dp"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/app_name"
+                    android:padding="8dp"
+                    android:src="@drawable/bill_c"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Bill"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/white_rectangle_background"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:layout_marginLeft="30dp"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutInfor">
+
+                <ImageView
+                    android:id="@+id/imageBuy"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/app_name"
+                    android:padding="8dp"
+                    android:src="@drawable/gift_c"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Buy"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutPolicy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/white_rectangle_background"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:layout_marginRight="30dp"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutBill">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/app_name"
+                    android:padding="8dp"
+                    android:src="@drawable/insurance_c"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Policy"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/trending_background"
+                android:padding="20dp"
+                app:layout_constraintEnd_toEndOf="@id/layoutPolicy"
+                app:layout_constraintStart_toStartOf="@id/layoutInfor"
+                app:layout_constraintTop_toBottomOf="@+id/layoutProduct"
+                >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Wellcome to my APP"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

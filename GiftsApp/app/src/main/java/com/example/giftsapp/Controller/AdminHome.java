@@ -5,11 +5,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
@@ -19,7 +15,7 @@ import com.example.giftsapp.R;
 
 import java.util.ArrayList;
 
-public class homemoi extends AppCompatActivity {
+public class AdminHome extends AppCompatActivity {
 
     ViewFlipper flipper;
     RecyclerView rcview;
@@ -28,7 +24,7 @@ public class homemoi extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_homemoi);
+        setContentView(R.layout.activity_admin_home);
         int images[] = {R.drawable.quatangmot,R.drawable.quatanghai,R.drawable.quatangba};
         // tạo mảng icon
         int rcImages[] = {R.drawable.contact,R.drawable.documents,R.drawable.product,R.drawable.profile};
@@ -54,7 +50,7 @@ public class homemoi extends AppCompatActivity {
         rcview.setLayoutManager(layoutManager);
         rcview.setItemAnimator(new DefaultItemAnimator());
         // khoi tao MainAdapter
-        mainAdapter = new MainAdapter(homemoi.this,mainModel);
+        mainAdapter = new MainAdapter(AdminHome.this,mainModel);
         rcview.setAdapter(mainAdapter);
 
     }
