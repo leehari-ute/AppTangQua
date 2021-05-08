@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_infor"
-        android:text="Phùng Vĩnh Đức"
+        android:text="Thích ghi gì thì ghi"
         android:textSize="20dp"
         android:layout_weight="1"
         android:layout_marginTop="10dp"/>
