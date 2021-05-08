@@ -176,7 +176,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
                             checkRole();

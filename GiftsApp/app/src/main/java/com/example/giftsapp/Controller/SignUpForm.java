@@ -224,7 +224,7 @@ public class SignUpForm extends AppCompatActivity {
         edtPassword.setError(null);
     }
 
-    public void showHidePass(View view) {
+    public void ShowHidePass(View view) {
         if(view.getId()==R.id.imgShowHidePass){
             if(edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
                 ((ImageView)(view)).setImageResource(R.drawable.visible_password_2);

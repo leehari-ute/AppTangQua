@@ -19,13 +19,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class products_adapter extends BaseAdapter {
+public class ProductAdapter extends BaseAdapter {
 
     private Context context;
     private  int layout;
     private List<Products> productsList;
 
-    public products_adapter(Context context, int layout, List<Products> productsList) {
+    public ProductAdapter(Context context, int layout, List<Products> productsList) {
         this.context = context;
         this.layout = layout;
         this.productsList = productsList;
