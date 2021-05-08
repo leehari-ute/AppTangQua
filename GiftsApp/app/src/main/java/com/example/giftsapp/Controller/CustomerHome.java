@@ -17,6 +17,7 @@ public class CustomerHome extends AppCompatActivity {
 
     ImageButton imgMenu ;
     ImageView imgBuy;
+    ImageView imgInfor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +39,14 @@ public class CustomerHome extends AppCompatActivity {
             }
         });
 
+        imgInfor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SettingAccountForm.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -50,6 +59,7 @@ public class CustomerHome extends AppCompatActivity {
     {
         imgMenu = (ImageButton) findViewById(R.id.imageMenu);
         imgBuy = (ImageView) findViewById(R.id.imageBuy);
+        imgInfor = findViewById(R.id.infor);
     }
 
     public void showMenu()
