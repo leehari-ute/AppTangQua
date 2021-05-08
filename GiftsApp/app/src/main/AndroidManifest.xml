@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
-        <activity android:name=".Controller.Fragment_Accounts.ChangeName"></activity>
+        <activity android:name=".Controller.Fragment_Accounts.ChangeBiography"></activity>
+        <activity android:name=".Controller.Fragment_Accounts.ChangeName" />
         <activity
             android:name=".Controller.CategoryActivity"
             android:theme="@style/Theme.GiftsApp.NoActionBar" />
