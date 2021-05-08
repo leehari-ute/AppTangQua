@@ -1,48 +1,39 @@
 package com.example.giftsapp.Controller;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
 import com.example.giftsapp.Model.Products;
 import com.example.giftsapp.R;
-import com.example.giftsapp.Adapter.products_adapter;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.giftsapp.Adapter.ProductAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class ProductsForm extends AppCompatActivity{
     GridView gvProducts;
-    products_adapter productAdapter;
+    ProductAdapter productAdapter;
     ImageButton btnOccasion, btnObject, btnHoliday, btnNew, btnMoney;
     FirebaseFirestore fStore;
     FirebaseStorage fStorage;
@@ -60,7 +51,6 @@ public class ProductsForm extends AppCompatActivity{
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
-        /*actionBar.setTitle(Html.fromHtml("<font color='#ff0000'>ActionBartitle </font>"));*/
 
         Init();
         btnObject.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +87,17 @@ public class ProductsForm extends AppCompatActivity{
                 ShowMenu(v);
             }
         });
+
+        gvProducts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), EditProductForm.class);
+                String productID = productsList.get(position).id;
+                intent.putExtra("EXTRA_DOCUMENT_PRODUCT", productID);
+                startActivity(intent);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -112,7 +113,7 @@ public class ProductsForm extends AppCompatActivity{
                 break;
             case  R.id.menuReload:
                 productsList.clear();
-                getProducts();
+                GetProducts();
                 break;
             case R.id.menuAdd:
                 Intent intent = new Intent(getApplicationContext(), AddProductsForm.class);
@@ -128,12 +129,6 @@ public class ProductsForm extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    private  void DialogAdd(){
-        Dialog dialog_add = new Dialog(this);
-        dialog_add.setContentView(R.layout.dialog_addpro);
-        dialog_add.show();
-    }
-
     private void Init() {
         btnObject = findViewById(R.id.btnObject);
         btnOccasion = findViewById(R.id.btnOccasion);
@@ -145,9 +140,9 @@ public class ProductsForm extends AppCompatActivity{
         fStorage = FirebaseStorage.getInstance();
         storageRef = fStorage.getReference();
         productsList = new ArrayList<>();
-        productAdapter = new products_adapter(this, R.layout.products, productsList);
+        productAdapter = new ProductAdapter(this, R.layout.products, productsList);
         gvProducts.setAdapter(productAdapter);
-        getProducts();
+        GetProducts();
     }
 
     private void ShowMenu(View view){
@@ -177,7 +172,7 @@ public class ProductsForm extends AppCompatActivity{
         }
     }
 
-    public void getProducts() {
+    public void GetProducts() {
         CollectionReference productRefs = fStore.collection("Products");
         productRefs.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -187,6 +182,7 @@ public class ProductsForm extends AppCompatActivity{
                     return;
                 } else {
                     for (DocumentSnapshot document : documentSnapshots) {
+                        String id           = document.getId();
                         String name         = (String) document.get("name");
                         String price        = (String) document.get("price");
                         String description  = (String) document.get("description");
@@ -195,7 +191,7 @@ public class ProductsForm extends AppCompatActivity{
                         String object       = (String) document.get("object");
                         String occasion     = (String) document.get("occasion");
                         String imgUrl       =  document.getString("imageUrl");
-                        Products product = new Products(name, price, imgUrl, description, quantity, holiday, object, occasion);
+                        Products product = new Products(id, name, price, imgUrl, description, quantity, holiday, object, occasion);
                         productsList.add(product);
                     }
                     productAdapter.notifyDataSetChanged();
@@ -207,11 +203,5 @@ public class ProductsForm extends AppCompatActivity{
                 Log.d("TAG","Error");
             }
         });
-
-
-
-
-
-
     }
 }
