@@ -6,10 +6,8 @@
     <item android:id="@+id/menuBuy"
         android:title="Buy Now"
         />
-    <item android:id="@+id/menuSet"
-        android:title="Change Password"
-        />
     <item android:id="@+id/menuLogout"
         android:title="Logout"
+        android:onClick="LogOut"
         />
 </menu>

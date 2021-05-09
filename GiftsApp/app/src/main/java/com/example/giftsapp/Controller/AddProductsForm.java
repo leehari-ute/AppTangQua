@@ -1,7 +1,6 @@
 package com.example.giftsapp.Controller;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +15,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,11 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.local.QueryEngine;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -46,10 +40,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class AddProductsForm extends AppCompatActivity {
 
@@ -64,7 +56,6 @@ public class AddProductsForm extends AppCompatActivity {
     FirebaseFirestore   fStore;
     FirebaseStorage     fStorage;
     StorageReference    storageRef;
-    String              userID;
     TextView            txtHoliday, txtObject, txtOccasion;
 
     @Override
@@ -88,14 +79,14 @@ public class AddProductsForm extends AppCompatActivity {
         imgProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImage();
+                ChooseImage();
             }
         });
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProduct();
+                AddProduct();
             }
         });
     }
@@ -128,10 +119,10 @@ public class AddProductsForm extends AppCompatActivity {
         holidayList         = new ArrayList<>();
         objectList          = new ArrayList<>();
         occasionList        = new ArrayList<>();
-        loadSpinner();
+        LoadSpinner();
     }
 
-    private void loadSpinner() {
+    private void LoadSpinner() {
         holidayList.add("Valentine");
         holidayList.add("8/3");
         holidayList.add("Giáng sinh");
@@ -141,6 +132,7 @@ public class AddProductsForm extends AppCompatActivity {
         objectList.add("Nam & Nữ");
         occasionList.add("Sinh nhật");
         occasionList.add("Tân gia");
+        occasionList.add("Ngày cưới");
 
         ArrayAdapter<String> holidayAdapter = new ArrayAdapter<String>(AddProductsForm.this, android.R.layout.simple_spinner_item, holidayList);
         ArrayAdapter<String> objectAdapter = new ArrayAdapter<String>(AddProductsForm.this, android.R.layout.simple_spinner_item, objectList);
@@ -155,7 +147,7 @@ public class AddProductsForm extends AppCompatActivity {
         spnOccasion.setAdapter(occasionAdapter);
     }
 
-    private void addProduct() {
+    private void AddProduct() {
         String name         = edtNameProduct.getText().toString();
         String price        = edtPrice.getText().toString();
         String description  = edtDes.getText().toString();
@@ -163,14 +155,15 @@ public class AddProductsForm extends AppCompatActivity {
         String holiday      = spnHoliday.getSelectedItem().toString();
         String object       = spnObject.getSelectedItem().toString();
         String occasion     = spnOccasion.getSelectedItem().toString();
-        Products product = new Products(name, price, "", description, quantity, holiday, object, occasion);
+        String createAt     = new Date().toString();
+        Products product    = new Products(name, price, "", description, createAt, quantity, holiday, object, occasion);
         fStore.collection("Products")
                 .add(product)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        uploadImage(documentReference.getId());
-                        clearForm();
+                        UploadImage(documentReference.getId());
+                        ClearForm();
                         Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
                 })
@@ -182,7 +175,7 @@ public class AddProductsForm extends AppCompatActivity {
                 });
     }
 
-    private void chooseImage() {
+    private void ChooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -207,14 +200,14 @@ public class AddProductsForm extends AppCompatActivity {
         }
     }
 
-    private void uploadImage(String productID) {
+    private void UploadImage(String productID) {
         if(filePath != null)
         {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref = storageRef.child("images/products/"+ UUID.randomUUID().toString());
+            StorageReference ref = storageRef.child("products/"+ productID);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -238,11 +231,11 @@ public class AddProductsForm extends AppCompatActivity {
                             progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
                     });
-            getImageUrl(ref, productID);
+            GetImageUrl(ref, productID);
         }
     }
 
-    private void getImageUrl(StorageReference ref, String productID) {
+    private void GetImageUrl(StorageReference ref, String productID) {
         UploadTask uploadTask = ref.putFile(filePath);
         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -277,7 +270,7 @@ public class AddProductsForm extends AppCompatActivity {
         });
     }
 
-    private void clearForm() {
+    private void ClearForm() {
         imgProduct.setImageResource(R.drawable.product1);
         edtNameProduct.setText("");
         edtDes.setText("");

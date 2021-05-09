@@ -15,30 +15,28 @@
         >
 
         <TextView
-            android:id="@+id/CustomerName"
+            android:id="@+id/txtHelloCustomer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
-            android:text="Hello, Vinh Duc"
             android:textColor="@color/white"
             android:textSize="25sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/imageMenu"
+            android:id="@+id/imgMenu"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="330dp"
             android:layout_marginEnd="16dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_menu"
-            app:layout_constraintBottom_toBottomOf="@+id/CustomerName"
+            app:layout_constraintBottom_toBottomOf="@+id/txtHelloCustomer"
             app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintStart_toStartOf="@+id/CustomerName"
-            app:layout_constraintTop_toBottomOf="@+id/CustomerName"
+            app:layout_constraintStart_toStartOf="@+id/txtHelloCustomer"
+            app:layout_constraintTop_toBottomOf="@+id/txtHelloCustomer"
             app:layout_constraintVertical_bias="1.0"
              />
 
@@ -52,7 +50,7 @@
             android:background="@drawable/white_rectangle_background"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageMenu"
+            app:layout_constraintTop_toBottomOf="@+id/imgMenu"
             >
         <EditText
             android:layout_width="0dp"
@@ -68,6 +66,7 @@
             android:importantForAutofill="no"
             />
             <ImageView
+                android:id="@+id/imgSearch"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="@string/app_name"
@@ -107,7 +106,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/infor"
+                    android:id="@+id/imgInformation"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:contentDescription="@string/app_name"
@@ -138,6 +137,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/imgBill"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:contentDescription="@string/app_name"
@@ -168,7 +168,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/layoutInfor">
 
                 <ImageView
-                    android:id="@+id/imageBuy"
+                    android:id="@+id/imgBuy"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:contentDescription="@string/app_name"
@@ -198,6 +198,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/layoutBill">
 
                 <ImageView
+                    android:id="@+id/imgPolicy"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:contentDescription="@string/app_name"
@@ -228,7 +229,7 @@
                 android:padding="6dp"
                 android:textStyle="bold"
                 android:textSize="18sp"
-                android:text="Wellcome to my APP"
+                android:text="Welcome to our APP"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

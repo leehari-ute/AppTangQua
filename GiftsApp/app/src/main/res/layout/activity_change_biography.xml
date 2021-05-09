@@ -11,16 +11,16 @@
 
 
     <EditText
+        android:id="@+id/edtBio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_infor"
-        android:text="Thích ghi gì thì ghi"
         android:textSize="20dp"
         android:layout_weight="1"
         android:layout_marginTop="10dp"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:backgroundTint="#2C4CC3"

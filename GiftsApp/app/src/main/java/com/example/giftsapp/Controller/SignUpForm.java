@@ -1,6 +1,7 @@
 package com.example.giftsapp.Controller;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,7 +28,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +49,6 @@ public class SignUpForm extends AppCompatActivity {
                             password = null,
                             email = null,
                             phone = null,
-                            role = "Customer",
                             userID = null;
     private TextView        txtLoginHere;
 
@@ -56,9 +59,12 @@ public class SignUpForm extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
         Init();
+
+        if (fAuth.getCurrentUser() != null) {
+            CheckRole();
+            finish();
+        }
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,10 +80,6 @@ public class SignUpForm extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("message");
     }
 
     private void Init() {
@@ -90,6 +92,8 @@ public class SignUpForm extends AppCompatActivity {
         edtEmail        = findViewById(R.id.edtEmail);
         edtPhone        = findViewById(R.id.edtPhone);
         txtLoginHere    = findViewById(R.id.txtLoginHere);
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
     }
 
     private void Register() {
@@ -160,7 +164,14 @@ public class SignUpForm extends AppCompatActivity {
                             User.put("email", email);
                             User.put("phone", phone);
                             User.put("gender", gender);
-                            User.put("role", role);
+                            User.put("role", "Customer");
+                            User.put("bio", "");
+                            User.put("birthday", "28/02/2000");
+                            if (gender == "Nam") {
+                                User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtMale.jpg?alt=media&token=868c8c7b-21af-4f78-bfa2-41b9d154c0e6");
+                            } else {
+                                User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtFemale.jpg?alt=media&token=757d5538-61f2-4096-a74b-e2fc0e667012");
+                            }
                             documentReference.set(User).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -184,7 +195,7 @@ public class SignUpForm extends AppCompatActivity {
                 });
     }
 
-    private void validate() {
+    private void Validate() {
         if (TextUtils.isEmpty(gender)) {
             rdBtnMale.setError("Gender is required");
             rdBtnFemale.setError("Gender is required");
@@ -237,5 +248,28 @@ public class SignUpForm extends AppCompatActivity {
             //Hide Password
             edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
         }
+    }
+
+    private void CheckRole() {
+        userID = fAuth.getCurrentUser().getUid();
+        DocumentReference documentReference = fStore.collection("Users").document(userID);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                String role = value.getString("role");
+                Intent intent = new Intent();
+                switch (role) {
+                    case "Customer":
+                        intent = new Intent(getApplicationContext(), CustomerHome.class);
+                        break;
+                    case "Admin":
+                        intent = new Intent(getApplicationContext(), AdminHome.class);
+                        break;
+                    default:
+                        break;
+                }
+                startActivity(intent);
+            }
+        });
     }
 }

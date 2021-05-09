@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.giftsapp.Model.Products;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,7 +44,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class EditProductForm extends AppCompatActivity {
 
@@ -130,11 +128,11 @@ public class EditProductForm extends AppCompatActivity {
         holidayList         = new ArrayList<>();
         objectList          = new ArrayList<>();
         occasionList        = new ArrayList<>();
-        loadSpinner();
+        LoadSpinner();
         LoadProduct();
     }
 
-    private void loadSpinner() {
+    private void LoadSpinner() {
         holidayList.add("Valentine");
         holidayList.add("8/3");
         holidayList.add("Giáng sinh");
@@ -144,6 +142,7 @@ public class EditProductForm extends AppCompatActivity {
         objectList.add("Nam & Nữ");
         occasionList.add("Sinh nhật");
         occasionList.add("Tân gia");
+        occasionList.add("Ngày cưới");
 
         holidayAdapter = new ArrayAdapter<String>(EditProductForm.this, android.R.layout.simple_spinner_item, holidayList);
         objectAdapter = new ArrayAdapter<String>(EditProductForm.this, android.R.layout.simple_spinner_item, objectList);
@@ -200,13 +199,13 @@ public class EditProductForm extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("TAG", "DocumentSnapshot data: " + document.getData());
-                        edtNameProduct.setText(document.get("name").toString());
-                        edtPrice.setText(document.get("price").toString());
-                        edtDes.setText(document.get("description").toString());
+                        edtNameProduct.setText(document.getString("name"));
+                        edtPrice.setText(document.getString("price"));
+                        edtDes.setText(document.getString("description"));
                         edtQuantity.setText(document.get("quantity").toString());
-                        spnHoliday.setSelection(holidayAdapter.getPosition(document.get("holiday").toString()));
-                        spnObject.setSelection(objectAdapter.getPosition(document.get("object").toString()));
-                        spnOccasion.setSelection(occasionAdapter.getPosition(document.get("occasion").toString()));
+                        spnHoliday.setSelection(holidayAdapter.getPosition(document.getString("holiday")));
+                        spnObject.setSelection(objectAdapter.getPosition(document.getString("object")));
+                        spnOccasion.setSelection(occasionAdapter.getPosition(document.getString("occasion")));
                         String imgUrl       =  document.getString("imageUrl");
                         Glide.with(getApplicationContext())
                                 .load(imgUrl)
@@ -253,7 +252,7 @@ public class EditProductForm extends AppCompatActivity {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref = storageRef.child("images/products/"+ UUID.randomUUID().toString());
+            StorageReference ref = storageRef.child("products/"+ productID);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -314,13 +313,5 @@ public class EditProductForm extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void ClearForm() {
-        imgProduct.setImageResource(R.drawable.product1);
-        edtNameProduct.setText("");
-        edtDes.setText("");
-        edtQuantity.setText("");
-        edtPrice.setText("");
     }
 }
