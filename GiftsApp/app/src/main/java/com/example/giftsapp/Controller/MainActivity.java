@@ -22,7 +22,13 @@ import androidx.appcompat.widget.Toolbar;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private AppBarConfiguration mAppBarConfiguration;
+
+    private static final int HOME_FRAGMENT=0;
+    private static final  int CART_FRAGMENT=1;
+
     private FrameLayout frameLayout;
+    private static int currentFragment ;
+    private NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         frameLayout = findViewById(R.id.main_framelayout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 else if(id == R.id.nav_cart)
                 {
-
+                    myCart();
                 }else if(id== R.id.nav_account) {
 
                 }else if(id==R.id.nav_logout){
@@ -60,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
             }
         });
+        navigationView.getMenu().getItem(0).setChecked(true);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -70,14 +77,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);*/
 
-        setFragment(new HomeFragment());
+        setFragment(new HomeFragment(),HOME_FRAGMENT);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        if(currentFragment==HOME_FRAGMENT) {
+            getMenuInflater().inflate(R.menu.main, menu);
+        }
         return true;
+
     }
 
     @Override
@@ -105,12 +115,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if(id == R.id.main_cart_icon)
         {
             // xem giỏ hàng chỗ này
+            myCart();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setFragment(Fragment fragment){
+    private void myCart() {
+        invalidateOptionsMenu();
+        setFragment(new MyCartFragment(),CART_FRAGMENT);
+        navigationView.getMenu().getItem(2).setChecked(true);
+    }
+
+    private void setFragment(Fragment fragment, int fragmentNo){
+        currentFragment = fragmentNo;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(frameLayout.getId(),fragment);
         fragmentTransaction.commit();
