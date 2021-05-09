@@ -23,7 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.giftsapp.Model.Products;
+import com.bumptech.glide.Glide;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -40,30 +41,35 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class AddProductsForm extends AppCompatActivity {
+public class EditProductForm extends AppCompatActivity {
 
-    Button              btnAdd;
-    EditText            edtDes, edtNameProduct, edtQuantity, edtPrice;
-    ImageView           imgProduct;
-    Spinner             spnHoliday, spnObject, spnOccasion;
-    List<String>        holidayList , objectList, occasionList;
-    Uri                 filePath;
+    ArrayAdapter<String> holidayAdapter;
+    ArrayAdapter<String> objectAdapter;
+    ArrayAdapter<String> occasionAdapter;
+    Button btnSave;
+    EditText edtDes, edtNameProduct, edtQuantity, edtPrice;
+    ImageView imgProduct;
+    Spinner spnHoliday, spnObject, spnOccasion;
+    List<String> holidayList , objectList, occasionList;
+    Uri filePath;
     final int           PICK_IMAGE_REQUEST = 71;
-    FirebaseAuth        fAuth;
-    FirebaseFirestore   fStore;
-    FirebaseStorage     fStorage;
-    StorageReference    storageRef;
-    TextView            txtHoliday, txtObject, txtOccasion;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    FirebaseStorage fStorage;
+    StorageReference storageRef;
+    String              userID, productID;
+    TextView txtHoliday, txtObject, txtOccasion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_products_form);
+        setContentView(R.layout.activity_edit_product_form);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Thêm sản phẩm");
+        actionBar.setTitle("Sửa sản phẩm");
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setLogo(R.drawable.supply1);
         actionBar.setDisplayUseLogoEnabled(true);
@@ -83,10 +89,12 @@ public class AddProductsForm extends AppCompatActivity {
             }
         });
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddProduct();
+                EditProduct();
+                Intent intent = new Intent(getApplicationContext(), ProductsForm.class);
+                startActivity(intent);
             }
         });
     }
@@ -104,7 +112,8 @@ public class AddProductsForm extends AppCompatActivity {
     }
 
     private void Init() {
-        btnAdd              = findViewById(R.id.btnAdd);
+        productID           = getIntent().getStringExtra("EXTRA_DOCUMENT_PRODUCT");
+        btnSave             = findViewById(R.id.btnSave);
         edtDes              = findViewById(R.id.edtDesProduct);
         edtNameProduct      = findViewById(R.id.edtNameProduct);
         edtQuantity         = findViewById(R.id.edtQuantity);
@@ -120,6 +129,7 @@ public class AddProductsForm extends AppCompatActivity {
         objectList          = new ArrayList<>();
         occasionList        = new ArrayList<>();
         LoadSpinner();
+        LoadProduct();
     }
 
     private void LoadSpinner() {
@@ -134,9 +144,9 @@ public class AddProductsForm extends AppCompatActivity {
         occasionList.add("Tân gia");
         occasionList.add("Ngày cưới");
 
-        ArrayAdapter<String> holidayAdapter = new ArrayAdapter<String>(AddProductsForm.this, android.R.layout.simple_spinner_item, holidayList);
-        ArrayAdapter<String> objectAdapter = new ArrayAdapter<String>(AddProductsForm.this, android.R.layout.simple_spinner_item, objectList);
-        ArrayAdapter<String> occasionAdapter = new ArrayAdapter<String>(AddProductsForm.this, android.R.layout.simple_spinner_item, occasionList);
+        holidayAdapter = new ArrayAdapter<String>(EditProductForm.this, android.R.layout.simple_spinner_item, holidayList);
+        objectAdapter = new ArrayAdapter<String>(EditProductForm.this, android.R.layout.simple_spinner_item, objectList);
+        occasionAdapter = new ArrayAdapter<String>(EditProductForm.this, android.R.layout.simple_spinner_item, occasionList);
 
         holidayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         objectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -147,7 +157,7 @@ public class AddProductsForm extends AppCompatActivity {
         spnOccasion.setAdapter(occasionAdapter);
     }
 
-    private void AddProduct() {
+    private void EditProduct() {
         String name         = edtNameProduct.getText().toString();
         String price        = edtPrice.getText().toString();
         String description  = edtDes.getText().toString();
@@ -155,24 +165,59 @@ public class AddProductsForm extends AppCompatActivity {
         String holiday      = spnHoliday.getSelectedItem().toString();
         String object       = spnObject.getSelectedItem().toString();
         String occasion     = spnOccasion.getSelectedItem().toString();
-        String createAt     = new Date().toString();
-        Products product    = new Products(name, price, "", description, createAt, quantity, holiday, object, occasion);
-        fStore.collection("Products")
-                .add(product)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        UploadImage(documentReference.getId());
-                        ClearForm();
-                        Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("price", price);
+        map.put("description", description);
+        map.put("quantity", quantity);
+        map.put("holiday", holiday);
+        map.put("object", object);
+        map.put("occasion", occasion);
+
+        fStore.collection("Products").document(productID).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                UploadImage(productID);
+                Log.d("TAG", "Successfully updated!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG", "Unsuccessfully updated!");
+            }
+        });
+
+    }
+
+    private void LoadProduct() {
+        DocumentReference docRef = fStore.collection("Products").document(productID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("TAG", "DocumentSnapshot data: " + document.getData());
+                        edtNameProduct.setText(document.getString("name"));
+                        edtPrice.setText(document.getString("price"));
+                        edtDes.setText(document.getString("description"));
+                        edtQuantity.setText(document.get("quantity").toString());
+                        spnHoliday.setSelection(holidayAdapter.getPosition(document.getString("holiday")));
+                        spnObject.setSelection(objectAdapter.getPosition(document.getString("object")));
+                        spnOccasion.setSelection(occasionAdapter.getPosition(document.getString("occasion")));
+                        String imgUrl       =  document.getString("imageUrl");
+                        Glide.with(getApplicationContext())
+                                .load(imgUrl)
+                                .into(imgProduct);
+                    } else {
+                        Log.d("TAG", "No such document");
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error adding document", e);
-                    }
-                });
+                } else {
+                    Log.d("TAG", "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     private void ChooseImage() {
@@ -213,14 +258,14 @@ public class AddProductsForm extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(AddProductsForm.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProductForm.this, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(AddProductsForm.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProductForm.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -264,17 +309,9 @@ public class AddProductsForm extends AppCompatActivity {
                     });
                 }
                 else {
-                    Toast.makeText(AddProductsForm.this, "Failed "+task.getException(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProductForm.this, "Failed "+task.getException(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
-
-    private void ClearForm() {
-        imgProduct.setImageResource(R.drawable.product1);
-        edtNameProduct.setText("");
-        edtDes.setText("");
-        edtQuantity.setText("");
-        edtPrice.setText("");
     }
 }

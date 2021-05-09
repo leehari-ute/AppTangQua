@@ -13,9 +13,10 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"></ViewFlipper>
     <TextView
+        android:id="@+id/txtLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to my App"
+        android:text="Đăng xuất"
         android:gravity="center"
         android:textSize="20dp"
         android:textStyle="bold"
@@ -26,7 +27,6 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="360dp">
-
     </ListView>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
