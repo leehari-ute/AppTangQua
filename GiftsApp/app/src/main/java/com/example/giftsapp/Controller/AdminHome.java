@@ -5,22 +5,27 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.example.giftsapp.Adapter.MainAdapter;
 import com.example.giftsapp.Model.MainModel;
 import com.example.giftsapp.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
 public class AdminHome extends AppCompatActivity {
 
-    ViewFlipper flipper;
-    RecyclerView rcview;
-    ArrayList<MainModel> mainModel;
-    MainAdapter mainAdapter;
+    ViewFlipper             flipper;
+    RecyclerView            recyclerview;
+    ArrayList<MainModel>    mainModel;
+    MainAdapter             mainAdapter;
+    TextView                txtLogout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,37 +35,47 @@ public class AdminHome extends AppCompatActivity {
         int rcImages[] = {R.drawable.contact,R.drawable.documents,R.drawable.product,R.drawable.profile};
         //tao mảng tên cac icon tuong ứng
         String iconName[] = {"Liên hệ","Chính sách","Sản phẩm","Thông tin"};
-        AnhXa();
+        Init();
         for(int image:images) // phần carousel
         {
-            flipperImage(image);
+            FlipperImage(image);
         }
 
         // tạo Arraylist
         int l = iconName.length;
         mainModel = new ArrayList<>();
-        for(int i=0;i<l;i++)
+        for(int i = 0; i < l; i++)
         {
-            MainModel model = new MainModel(rcImages[i],iconName[i]);
+            MainModel model = new MainModel(rcImages[i], iconName[i]);
             mainModel.add(model);
         }
 
         // thiết kế horizantal layout
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
-        rcview.setLayoutManager(layoutManager);
-        rcview.setItemAnimator(new DefaultItemAnimator());
+        recyclerview.setLayoutManager(layoutManager);
+        recyclerview.setItemAnimator(new DefaultItemAnimator());
         // khoi tao MainAdapter
         mainAdapter = new MainAdapter(AdminHome.this,mainModel);
-        rcview.setAdapter(mainAdapter);
+        recyclerview.setAdapter(mainAdapter);
+
+
+        txtLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogOut();
+            }
+        });
 
     }
 
-    public void AnhXa()
+    public void Init()
     {
-        flipper = (ViewFlipper) findViewById(R.id.viewFlipperImages);
-        rcview = (RecyclerView) findViewById(R.id.recycleImages);
+        flipper         = (ViewFlipper) findViewById(R.id.viewFlipperImages);
+        recyclerview    = (RecyclerView) findViewById(R.id.recycleImages);
+        txtLogout       = findViewById(R.id.txtLogout);
     }
-    public void flipperImage(int image){
+
+    public void FlipperImage(int image){
         ImageView imageview = new ImageView(this);
         imageview.setBackgroundResource(image);
         flipper.addView(imageview);
@@ -69,7 +84,12 @@ public class AdminHome extends AppCompatActivity {
 
         flipper.setInAnimation(this,android.R.anim.slide_in_left);
         flipper.setOutAnimation(this,android.R.anim.slide_out_right);
+    }
 
+    private void LogOut() {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(), LoginForm.class));
+        finish();
     }
 
 }
