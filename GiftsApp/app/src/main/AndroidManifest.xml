@@ -12,10 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
-        <activity android:name=".Controller.CategoryActivity"
-            android:theme="@style/Theme.GiftsApp.NoActionBar"
-
-            ></activity>
+        <activity android:name=".Controller.ProductDetailsActivity"
+            android:theme="@style/Theme.GiftsApp.NoActionBar"></activity>
+        <activity
+            android:name=".Controller.CategoryActivity"
+            android:theme="@style/Theme.GiftsApp.NoActionBar" />
         <activity
             android:name=".Controller.MainActivity"
             android:label="@string/title_activity_main"

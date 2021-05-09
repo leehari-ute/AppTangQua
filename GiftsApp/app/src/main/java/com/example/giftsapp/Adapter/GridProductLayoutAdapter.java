@@ -1,5 +1,6 @@
 package com.example.giftsapp.Adapter;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.giftsapp.Controller.ProductDetailsActivity;
 import com.example.giftsapp.Model.HorizontalProductScrollModel;
 import com.example.giftsapp.R;
 
@@ -49,6 +51,15 @@ public class GridProductLayoutAdapter extends BaseAdapter {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_scroll_item_layout,null);
             view.setElevation(0);
             view.setBackgroundColor(Color.parseColor("#ffffff"));
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent productDetailsIntent = new Intent(parent.getContext(), ProductDetailsActivity.class);
+                    parent.getContext().startActivity(productDetailsIntent);
+                }
+            });
+
             ImageView productImage = view.findViewById(R.id.h_s_product_image);
             TextView productName = view.findViewById(R.id.h_s_product_name);
             TextView productDescription = view.findViewById(R.id.h_s_product_description);
