@@ -61,13 +61,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
         Init();
 
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("message");
+        if (fAuth.getCurrentUser() != null) {
+            CheckRole();
+            finish();
+        }
 
         txtRegisterNow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,45 +79,14 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                Login();
             }
         });
 
         txtForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText resetMail  = new EditText(v.getContext());
-                AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
-                passwordResetDialog.setTitle("Forgot Password");
-                passwordResetDialog.setMessage("Enter your email to reset password");
-                passwordResetDialog.setView(resetMail);
-
-                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String email = resetMail.getText().toString();
-                        fAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(LoginForm.this, "Reset link was sent to your email", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(LoginForm.this, "Error!!! " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                });
-
-                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-                passwordResetDialog.create().show();
+                ForgotPassword(v);
             }
         });
 
@@ -131,9 +99,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
         txtRegisterNow      = findViewById(R.id.txtRegisterNow);
         txtForgotPassword   = findViewById(R.id.txtForgotPassword);
         btnLogin            = findViewById(R.id.btnLogin);
+        fAuth               = FirebaseAuth.getInstance();
+        fStore              = FirebaseFirestore.getInstance();
     }
 
-    private void checkRole() {
+    private void CheckRole() {
         userID = fAuth.getCurrentUser().getUid();
         DocumentReference documentReference = fStore.collection("Users").document(userID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
@@ -156,7 +126,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
         });
     }
 
-    private void login() {
+    private void Login() {
         email = edtEmail.getText().toString().trim();
         password = edtPassword.getText().toString().trim();
 
@@ -172,22 +142,22 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
         }
         edtPassword.setError(null);
 
+
         fAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(LoginForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
-                            checkRole();
+                            Toast.makeText(LoginForm.this, "Success", Toast.LENGTH_SHORT).show();
+                            CheckRole();
                             return;
                         }
-                        Toast.makeText(LoginForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginForm.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
-    public void showHidePass(View view) {
+    public void ShowHidePass(View view) {
         if(view.getId()==R.id.imgShowHidePass){
             if(edtPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
                 ((ImageView)(view)).setImageResource(R.drawable.visible_password_2);
@@ -203,5 +173,38 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
         }
     }
 
+    private void ForgotPassword(View v) {
+        final EditText resetMail  = new EditText(v.getContext());
+        final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
+        passwordResetDialog.setTitle("Forgot Password");
+        passwordResetDialog.setMessage("Enter your email to reset password");
+        passwordResetDialog.setView(resetMail);
 
+        passwordResetDialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String email = resetMail.getText().toString();
+                fAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(LoginForm.this, "Reset link was sent to your email", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(LoginForm.this, "Error!!! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        passwordResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        passwordResetDialog.create().show();
+    }
 }

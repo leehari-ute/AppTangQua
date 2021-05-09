@@ -1,5 +1,8 @@
 package com.example.giftsapp.Model;
 
+import com.google.type.DateTime;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,16 +12,18 @@ public class Products {
     public String price;
     public String imageUrl;
     public String description;
+    public String createAt;
     public int quantity;
     public String holiday;
     public String object;
     public String occasion;
 
-    public Products(String id, String name, String price, String imageUrl, String description, int quantity, String holiday, String object,  String occasion) {
+    public Products(String id, String name, String price, String imageUrl, String description, String createAt, int quantity, String holiday, String object,  String occasion) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
+        this.createAt = createAt;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.holiday = holiday;
@@ -26,10 +31,11 @@ public class Products {
         this.occasion = occasion;
     }
 
-    public Products(String name, String price, String imageUrl, String description, int quantity, String holiday, String object,  String occasion) {
+    public Products(String name, String price, String imageUrl, String description, String createAt, int quantity, String holiday, String object,  String occasion) {
         this.name = name;
         this.price = price;
         this.description = description;
+        this.createAt = createAt;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.holiday = holiday;

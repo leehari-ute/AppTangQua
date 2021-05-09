@@ -29,16 +29,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ProductsForm extends AppCompatActivity{
-    GridView gvProducts;
-    ProductAdapter productAdapter;
-    ImageButton btnOccasion, btnObject, btnHoliday, btnNew, btnMoney;
-    FirebaseFirestore fStore;
-    FirebaseStorage fStorage;
-    StorageReference storageRef;
-    List<Products> productsList;
+    GridView            gvProducts;
+    ProductAdapter      productAdapter;
+    ImageButton         btnOccasion, btnObject, btnHoliday, btnNew, btnMoney;
+    FirebaseFirestore   fStore;
+    FirebaseStorage     fStorage;
+    StorageReference    storageRef;
+    List<Products>      productsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class ProductsForm extends AppCompatActivity{
                 String productID = productsList.get(position).id;
                 intent.putExtra("EXTRA_DOCUMENT_PRODUCT", productID);
                 startActivity(intent);
+                finish();
                 return true;
             }
         });
@@ -118,6 +120,7 @@ public class ProductsForm extends AppCompatActivity{
             case R.id.menuAdd:
                 Intent intent = new Intent(getApplicationContext(), AddProductsForm.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.menuExit:
                 System.exit(0);
@@ -130,17 +133,17 @@ public class ProductsForm extends AppCompatActivity{
     }
 
     private void Init() {
-        btnObject = findViewById(R.id.btnObject);
-        btnOccasion = findViewById(R.id.btnOccasion);
-        btnHoliday = findViewById(R.id.btnHoliday);
-        btnNew = findViewById(R.id.btnNew);
-        btnMoney = findViewById(R.id.btnMoney);
-        gvProducts = findViewById(R.id.gridProducts);
-        fStore = FirebaseFirestore.getInstance();
-        fStorage = FirebaseStorage.getInstance();
-        storageRef = fStorage.getReference();
-        productsList = new ArrayList<>();
-        productAdapter = new ProductAdapter(this, R.layout.products, productsList);
+        btnObject       = findViewById(R.id.btnObject);
+        btnOccasion     = findViewById(R.id.btnOccasion);
+        btnHoliday      = findViewById(R.id.btnHoliday);
+        btnNew          = findViewById(R.id.btnNew);
+        btnMoney        = findViewById(R.id.btnMoney);
+        gvProducts      = findViewById(R.id.gridProducts);
+        fStore          = FirebaseFirestore.getInstance();
+        fStorage        = FirebaseStorage.getInstance();
+        storageRef      = fStorage.getReference();
+        productsList    = new ArrayList<>();
+        productAdapter  = new ProductAdapter(this, R.layout.products, productsList);
         gvProducts.setAdapter(productAdapter);
         GetProducts();
     }
@@ -186,12 +189,13 @@ public class ProductsForm extends AppCompatActivity{
                         String name         = (String) document.get("name");
                         String price        = (String) document.get("price");
                         String description  = (String) document.get("description");
+                        String createAt     = (String) document.get("createAt");
                         Integer quantity    =  Integer.parseInt(document.get("quantity").toString());
                         String holiday      = (String) document.get("holiday");
                         String object       = (String) document.get("object");
                         String occasion     = (String) document.get("occasion");
                         String imgUrl       =  document.getString("imageUrl");
-                        Products product = new Products(id, name, price, imgUrl, description, quantity, holiday, object, occasion);
+                        Products product = new Products(id, name, price, imgUrl, description, createAt, quantity, holiday, object, occasion);
                         productsList.add(product);
                     }
                     productAdapter.notifyDataSetChanged();

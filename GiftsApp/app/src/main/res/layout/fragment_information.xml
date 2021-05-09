@@ -20,14 +20,14 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/avatar"
+                android:id="@+id/imgAvt"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:src="@drawable/avatar_infor"/>
 
 
             <TextView
-                android:id="@+id/changeAva"
+                android:id="@+id/txtChangeAvt"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:textSize="10dp"
@@ -57,12 +57,11 @@
                         android:text="Họ tên"/>
 
                     <TextView
-                        android:id="@+id/txtTen"
+                        android:id="@+id/txtName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableEnd="@drawable/right"
-                        android:text="Phùng Vĩnh Đức"
                         android:textAlignment="textEnd" />
                 </LinearLayout>
 
@@ -86,7 +85,6 @@
                         android:layout_weight="1"
                         android:layout_marginTop="10dp"
                         android:drawableEnd="@drawable/right"
-                        android:text="Nam"
                         android:textAlignment="textEnd" />
                 </LinearLayout>
 
@@ -111,7 +109,6 @@
                         android:layout_weight="1"
                         android:drawableEnd="@drawable/right"
                         android:layout_marginTop="10dp"
-                        android:text="Thích ghi gì thì ghi"
                         android:textAlignment="textEnd" />
                 </LinearLayout>
             </LinearLayout>
@@ -142,7 +139,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableEnd="@drawable/right"
-                        android:text="dd/mm/yyyy"
                         android:textAlignment="textEnd" />
                 </LinearLayout>
 
@@ -160,11 +156,11 @@
                         android:text="Số điện thoại"/>
 
                     <TextView
+                        android:id="@+id/txtPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginTop="10dp"
-                        android:text="********xx"
                         android:textAlignment="textEnd" />
                 </LinearLayout>
 
@@ -182,16 +178,17 @@
                         android:text="Email"/>
 
                     <TextView
+                        android:id="@+id/txtEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginTop="10dp"
-                        android:text="phungvinhduc3@gmail.com"
                         android:textAlignment="textEnd" />
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
+                android:id="@+id/txtChangePass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_infor"

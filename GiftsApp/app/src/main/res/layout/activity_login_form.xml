@@ -118,7 +118,6 @@
 
             </LinearLayout>
 
-
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="170dp"
@@ -147,8 +146,6 @@
                 android:text="Forgot Password?"
                 android:textColor="#072A91"
                 android:textSize="18sp" />
-
-
         </LinearLayout>
 
     </ScrollView>
