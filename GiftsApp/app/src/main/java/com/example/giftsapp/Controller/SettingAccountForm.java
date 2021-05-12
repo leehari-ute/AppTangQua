@@ -34,6 +34,7 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
     private static int FRAGMENT_LOCATION = 2;
     private static int FRAGMENT_BANK = 3;
     private static int FRAGMENT_INTRODUCTION = 4;
+    private  static  int FRAGMENT_HISTORY = 5;
     private  int currentFragment = FRAGMENT_INFOR;
 
 
@@ -103,6 +104,12 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
                     currentFragment = FRAGMENT_INTRODUCTION;
                 }
                 break;
+/*            case R.id.nav_historybuy:
+                if(FRAGMENT_HISTORY != currentFragment){
+                    ReplaceFragment(new H);
+                    currentFragment = FRAGMENT_HISTORY;
+                }
+                break;*/
             case R.id.nav_logout:
                 LogOut();
                 break;
