@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.giftsapp.Controller.Fragment_Accounts.BankAccount;
+import com.example.giftsapp.Controller.Fragment_Accounts.Bill;
 import com.example.giftsapp.Controller.Fragment_Accounts.Information;
 import com.example.giftsapp.Controller.Fragment_Accounts.Introduction;
 import com.example.giftsapp.Controller.Fragment_Accounts.Location;
@@ -122,12 +123,12 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
                     currentFragment = FRAGMENT_INTRODUCTION;
                 }
                 break;
-/*            case R.id.nav_historybuy:
+            case R.id.nav_historybuy:
                 if(FRAGMENT_HISTORY != currentFragment){
-                    ReplaceFragment(new H);
+                    ReplaceFragment(new Bill());
                     currentFragment = FRAGMENT_HISTORY;
                 }
-                break;*/
+                break;
             case R.id.nav_logout:
                 LogOut();
                 break;
