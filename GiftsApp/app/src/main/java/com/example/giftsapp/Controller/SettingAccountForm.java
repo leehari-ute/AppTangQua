@@ -1,6 +1,7 @@
 package com.example.giftsapp.Controller;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,7 +12,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -53,9 +57,18 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         setContentView(R.layout.activity_setting_account_form);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(null);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
         fm = getSupportFragmentManager();
+
         Init();
 
         if (fAuth.getCurrentUser() == null) {
@@ -76,7 +89,6 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
     private void Init(){
         drawerLayout    = findViewById(R.id.drawer_layout);
         navigationView  = findViewById(R.id.nav_view);
-        toolbar         = findViewById(R.id.toolbar);
         fAuth           = FirebaseAuth.getInstance();
         fStore          = FirebaseFirestore.getInstance();
         user            = fAuth.getCurrentUser();
@@ -94,6 +106,26 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
         else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_information, menu);
+//        return super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuHome:
+                Intent intent = new Intent(getApplicationContext(), CustomerHome.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
