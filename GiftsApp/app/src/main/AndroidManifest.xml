@@ -12,8 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
-        <activity android:name=".Controller.EditProductForm"></activity>
-        <activity android:name=".Controller.Fragment_Accounts.ChangeBiography"></activity>
+        <activity android:name=".Controller.VillageForm"></activity>
+        <activity android:name=".Controller.DistrictForm" />
+        <activity android:name=".Controller.ProvinceForm" />
+        <activity android:name=".Controller.Fragment_Accounts.AddLocation" />
+        <activity
+            android:name=".Controller.ProductDetailsActivity"
+            android:theme="@style/Theme.GiftsApp.NoActionBar" />
+        <activity android:name=".Controller.EditProductForm" />
+        <activity android:name=".Controller.Fragment_Accounts.ChangeBiography" />
         <activity android:name=".Controller.Fragment_Accounts.ChangeName" />
         <activity
             android:name=".Controller.CategoryActivity"
