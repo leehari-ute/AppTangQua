@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -55,8 +56,11 @@ public class AddProductsForm extends AppCompatActivity {
     FirebaseAuth        fAuth;
     FirebaseFirestore   fStore;
     FirebaseStorage     fStorage;
+    FirebaseUser        user;
     StorageReference    storageRef;
     TextView            txtHoliday, txtObject, txtOccasion;
+    String              name, price, description, holiday, object, occasion, createAt;
+    Integer             quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +74,13 @@ public class AddProductsForm extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
 
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-        fStorage = FirebaseStorage.getInstance();
-        storageRef = fStorage.getReference();
+
         Init();
+
+        if (user == null) {
+            startActivity(new Intent(getApplicationContext(), LoginForm.class));
+            finish();
+        }
 
         imgProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,9 +101,9 @@ public class AddProductsForm extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                //onBackPressed();
                 Intent intent = new Intent(getApplicationContext(), ProductsForm.class);
                 startActivity(intent);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -119,6 +125,11 @@ public class AddProductsForm extends AppCompatActivity {
         holidayList         = new ArrayList<>();
         objectList          = new ArrayList<>();
         occasionList        = new ArrayList<>();
+        fAuth               = FirebaseAuth.getInstance();
+        fStore              = FirebaseFirestore.getInstance();
+        fStorage            = FirebaseStorage.getInstance();
+        storageRef          = fStorage.getReference();
+        user                = fAuth.getCurrentUser();
         LoadSpinner();
     }
 
@@ -148,14 +159,10 @@ public class AddProductsForm extends AppCompatActivity {
     }
 
     private void AddProduct() {
-        String name         = edtNameProduct.getText().toString();
-        String price        = edtPrice.getText().toString();
-        String description  = edtDes.getText().toString();
-        Integer quantity    = Integer.parseInt(edtQuantity.getText().toString());
-        String holiday      = spnHoliday.getSelectedItem().toString();
-        String object       = spnObject.getSelectedItem().toString();
-        String occasion     = spnOccasion.getSelectedItem().toString();
-        String createAt     = new Date().toString();
+        GetDataFromUI();
+        if (!CheckRequired()) {
+            return;
+        }
         Products product    = new Products(name, price, "", description, createAt, quantity, holiday, object, occasion);
         fStore.collection("Products")
                 .add(product)
@@ -276,5 +283,44 @@ public class AddProductsForm extends AppCompatActivity {
         edtDes.setText("");
         edtQuantity.setText("");
         edtPrice.setText("");
+    }
+
+    private void GetDataFromUI() {
+        name         = edtNameProduct.getText().toString();
+        price        = edtPrice.getText().toString();
+        description  = edtDes.getText().toString();
+        quantity     = Integer.parseInt(edtQuantity.getText().toString());
+        holiday      = spnHoliday.getSelectedItem().toString();
+        object       = spnObject.getSelectedItem().toString();
+        occasion     = spnOccasion.getSelectedItem().toString();
+        createAt     = new Date().toString();
+    }
+
+    private boolean CheckRequired() {
+        if (name.equals("")) {
+            edtNameProduct.setError("Tên sản phẩm không được bỏ trống");
+            return false;
+        }
+
+        edtNameProduct.setError(null);
+        if (price.equals("") || Integer.parseInt(price) < 1000) {
+            edtPrice.setError("Giá sản phẩm không hợp lệ");
+            return false;
+        }
+        edtPrice.setError(null);
+
+        if (description.equals("") || Integer.parseInt(price) < 1000) {
+            edtDes.setError("Giá sản phẩm không hợp lệ");
+            return false;
+        }
+        edtDes.setError(null);
+
+        if (quantity <= 0) {
+            edtQuantity.setError("Số lượng không thể nhỏ hơn 1");
+            return false;
+        }
+        edtQuantity.setError(null);
+
+        return true;
     }
 }

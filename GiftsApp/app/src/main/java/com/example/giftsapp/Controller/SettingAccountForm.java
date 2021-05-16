@@ -17,6 +17,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.giftsapp.Controller.Fragment_Accounts.BankAccount;
 import com.example.giftsapp.Controller.Fragment_Accounts.Bill;
@@ -24,17 +26,26 @@ import com.example.giftsapp.Controller.Fragment_Accounts.Information;
 import com.example.giftsapp.Controller.Fragment_Accounts.Introduction;
 import com.example.giftsapp.Controller.Fragment_Accounts.Location;
 import com.example.giftsapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SettingAccountForm extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout            drawerLayout;
     NavigationView          navigationView;
     ActionBarDrawerToggle   toggle;
+    Toolbar                 toolbar;
+    TextView navHello;
     FragmentManager         fm;
     FirebaseAuth            fAuth;
-    Toolbar                 toolbar;
+    FirebaseUser            user;
+    FirebaseFirestore       fStore;
+    String                  userID;
     private static int FRAGMENT_INFOR = 1;
     private static int FRAGMENT_LOCATION = 2;
     private static int FRAGMENT_BANK = 3;
@@ -64,6 +75,7 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
             startActivity(new Intent(getApplicationContext(), LoginForm.class));
             finish();
         }
+
         navigationView.bringToFront();
         toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -78,6 +90,12 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
         drawerLayout    = findViewById(R.id.drawer_layout);
         navigationView  = findViewById(R.id.nav_view);
         fAuth           = FirebaseAuth.getInstance();
+        fStore          = FirebaseFirestore.getInstance();
+        user            = fAuth.getCurrentUser();
+        userID          = user.getUid();
+        View headerView = navigationView.getHeaderView(0);
+        navHello = headerView.findViewById(R.id.txtHello);
+        GetDataUser();
     }
 
     @Override
@@ -164,6 +182,18 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(getApplicationContext(), LoginForm.class));
         finish();
+    }
+
+    private void GetDataUser() {
+        fStore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    navHello.setText("Xìn chào " + document.getString("fullName"));
+                }
+            }
+        });
     }
 
 }

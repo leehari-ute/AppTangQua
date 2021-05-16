@@ -1,5 +1,6 @@
 package com.example.giftsapp.Adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -98,15 +99,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
                                 .setPositiveButton("Có", (dialog, which) -> {
                                     Intent intent = new Intent(v.getContext(), ProductsForm.class);
                                     v.getContext().startActivity(intent);
+                                    ((Activity)context).finish();
                                 })
                                 .setNegativeButton("Không",(dialog, which) -> {
                                     return;
                                 }).create();
                         al.show();
                     }
-
-
-                        }
+                }
             });
 
 
