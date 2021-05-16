@@ -112,12 +112,14 @@ public class AddLocation extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isDefault) {
-                    FindDefaultAddress();
+                GetDataFromUI();
+                if (CheckRequired()) {
+                    if (isDefault) {
+                        FindDefaultAddress();
+                    }
+                    AddNewAddress();
+                    finish();
                 }
-
-                AddNewAddress();
-                finish();
             }
         });
 
@@ -142,6 +144,7 @@ public class AddLocation extends AppCompatActivity {
                     province = data.getStringExtra("EXTRA_DOCUMENT_PROVINCE");
                     provinceID = data.getIntExtra("EXTRA_DOCUMENT_PROVINCE_ID", 0);
                     txtProvince.setText(province);
+                    txtProvince.setError(null);
                     txtDistrict.setText(null);
                     txtVillage.setText(null);
                     txtDistrict.setEnabled(true);
@@ -151,12 +154,14 @@ public class AddLocation extends AppCompatActivity {
                     district = data.getStringExtra("EXTRA_DOCUMENT_DISTRICT");
                     districtID = data.getIntExtra("EXTRA_DOCUMENT_DISTRICT_ID", 0);
                     txtDistrict.setText(district);
+                    txtDistrict.setError(null);
                     txtVillage.setText(null);
                     txtVillage.setEnabled(true);
                     break;
                 case 3:
                     village = data.getStringExtra("EXTRA_DOCUMENT_VILLAGE");
                     txtVillage.setText(village);
+                    txtVillage.setError(null);
                     break;
                 default:
                     break;
@@ -180,7 +185,6 @@ public class AddLocation extends AppCompatActivity {
     }
 
     private void AddNewAddress() {
-        GetDataFromUI();
         HashMap<String, Object> newAddress = new HashMap<String, Object>();
         newAddress.put("isDefault", isDefault);
         newAddress.put("name", name);
@@ -203,12 +207,12 @@ public class AddLocation extends AppCompatActivity {
     }
 
     private void GetDataFromFireStore(ArrayList<Map<String, Object>> addressArray, int i) {
-        name = addressArray.get(i).get("name").toString();
-        phone = addressArray.get(i).get("phone").toString();
-        province = addressArray.get(i).get("province").toString();
-        district = addressArray.get(i).get("district").toString();
-        village = addressArray.get(i).get("village").toString();
-        detailAddress = addressArray.get(i).get("detailAddress").toString();
+        name = addressArray.get(i).get("name").toString().trim();
+        phone = addressArray.get(i).get("phone").toString().trim();
+        province = addressArray.get(i).get("province").toString().trim();
+        district = addressArray.get(i).get("district").toString().trim();
+        village = addressArray.get(i).get("village").toString().trim();
+        detailAddress = addressArray.get(i).get("detailAddress").toString().trim();
     }
 
     private void SetNotDefault() {
@@ -254,5 +258,45 @@ public class AddLocation extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private boolean CheckRequired() {
+        if (name.trim().equals("")) {
+            edtName.setError("Bạn chưa nhập tên");
+            return false;
+        }
+        edtName.setError(null);
+
+        if (phone.trim().equals("")) {
+            edtPhone.setError("Bạn chưa nhập số điện thoại");
+            return false;
+        }
+        edtPhone.setError(null);
+
+        if (province.trim().equals("")) {
+            txtProvince.setError("Bạn chưa chọn tỉnh");
+            return false;
+        }
+        txtProvince.setError(null);
+
+        if (district.trim().equals("")) {
+            txtDistrict.setError("Bạn chưa chọn huyện");
+            return false;
+        }
+        txtDistrict.setError(null);
+
+        if (village.trim().equals("")) {
+            txtVillage.setError("Bạn chưa chọn xã");
+            return false;
+        }
+        txtVillage.setError(null);
+
+        if (detailAddress.trim().equals("")) {
+            txtAddress.setError("Bạn chưa nhập địa chỉ cụ thể");
+            return false;
+        }
+        txtAddress.setError(null);
+
+        return true;
     }
 }

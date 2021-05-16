@@ -117,7 +117,6 @@ public class Location extends Fragment {
                 else {
                     Log.d("QUYNH", "Looxi: " + task.getException());
                 }
-
             }
         });
     }

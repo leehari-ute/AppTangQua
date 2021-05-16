@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -123,6 +124,7 @@ public class ProductsForm extends AppCompatActivity{
                 finish();
                 break;
             case R.id.menuExit:
+                finish();
                 System.exit(0);
                 break;
             case android.R.id.home:

@@ -55,8 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="v1.1"
-                android:textAlignment="center"/>
+                android:text="v2.0"
+                android:textAlignment="center" />
 
         </LinearLayout>
 
