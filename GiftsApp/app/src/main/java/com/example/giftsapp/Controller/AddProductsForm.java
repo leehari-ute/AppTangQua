@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -55,6 +56,7 @@ public class AddProductsForm extends AppCompatActivity {
     FirebaseAuth        fAuth;
     FirebaseFirestore   fStore;
     FirebaseStorage     fStorage;
+    FirebaseUser        user;
     StorageReference    storageRef;
     TextView            txtHoliday, txtObject, txtOccasion;
 
@@ -70,11 +72,13 @@ public class AddProductsForm extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
 
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-        fStorage = FirebaseStorage.getInstance();
-        storageRef = fStorage.getReference();
+
         Init();
+
+        if (user == null) {
+            startActivity(new Intent(getApplicationContext(), LoginForm.class));
+            finish();
+        }
 
         imgProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +123,11 @@ public class AddProductsForm extends AppCompatActivity {
         holidayList         = new ArrayList<>();
         objectList          = new ArrayList<>();
         occasionList        = new ArrayList<>();
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        fStorage = FirebaseStorage.getInstance();
+        storageRef = fStorage.getReference();
+        user = fAuth.getCurrentUser();
         LoadSpinner();
     }
 

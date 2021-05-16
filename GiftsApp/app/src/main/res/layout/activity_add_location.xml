@@ -1,71 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
+    android:orientation="vertical"
+    android:weightSum="14"
+xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:background="#56C3C1C1"
-        android:weightSum="7"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <EditText
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:hint="Tên người nhận"
-            android:layout_weight="1"
-        android:background="@drawable/border_infor"
-        android:layout_marginTop="10dp"/>
+        android:orientation="vertical"
+        android:layout_weight="7"
+        android:weightSum="7">
 
-        <EditText
+        <LinearLayout
+            android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:hint="Số điện thoại người nhận"
             android:layout_weight="1"
-            android:background="@drawable/border_infor" />
+            android:orientation="horizontal"
+            android:background="@drawable/border_infor">
 
-        <EditText
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Họ &amp; Tên"
+                android:textColor="@color/black"
+                android:textSize="18dp"/>
+
+            <EditText
+                android:id="@+id/edtName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Điền Họ &amp; Tên"
+                android:textAlignment="textEnd"
+                android:background="@color/white"
+                android:textColor="@color/black"
+                android:textSize="18dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:hint="Địa chỉ nhà/công ty"
             android:layout_weight="1"
-            android:background="@drawable/border_infor" />
+            android:orientation="horizontal"
+            android:background="@drawable/border_infor">
 
-        <EditText
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Số điện thoại"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/edtPhone"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Điền số điện thoại"
+                android:textAlignment="textEnd"
+                android:background="@color/white"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:inputType="phone"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:hint="Phường"
             android:layout_weight="1"
-            android:background="@drawable/border_infor" />
+            android:orientation="horizontal"
+            android:background="@drawable/border_infor">
 
-        <EditText
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Tỉnh/Thành phố"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/txtProvince"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:hint="Điền Tỉnh/Thành phố"
+                android:drawableEnd="@drawable/right"
+                android:textColor="@color/black"
+                android:textAlignment="textEnd" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:hint="Quận/huyện/Xã"
             android:layout_weight="1"
-            android:background="@drawable/border_infor" />
+            android:orientation="horizontal"
+            android:background="@drawable/border_infor">
 
-        <EditText
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Quận/Huyện"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/txtDistrict"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:hint="Điền Quận/Huyện"
+                android:drawableEnd="@drawable/right"
+                android:textColor="@color/black"
+                android:textAlignment="textEnd" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:hint="Tỉnh/Thành phố"
             android:layout_weight="1"
-            android:background="@drawable/border_infor" />
+            android:orientation="horizontal"
+            android:background="@drawable/border_infor">
 
-        <Button
-            android:id="@+id/btnSave"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:text="Phường/Xã"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/txtVillage"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:hint="Điền Phường/Xã"
+                android:drawableEnd="@drawable/right"
+                android:textColor="@color/black"
+                android:textAlignment="textEnd" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:backgroundTint="#2C4CC3"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:text="THÊM ĐỊA CHỈ" />
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:text="Địa chỉ cụ thể"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="10dp"
+                android:text="Số nhà, tên tòa nhà, tên đường, tên khu vực"
+                android:textSize="15dp" />
 
+            <EditText
+                android:id="@+id/txtAddAddress"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="Nhập địa chỉ cụ thể"
+                android:textColor="@color/black"
+                android:background="@color/white"/>
+
+        </LinearLayout>
     </LinearLayout>
-</ScrollView>
+
+    <Switch
+        android:id="@+id/switchDefaultAddress"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_height="0dp"
+        android:switchMinWidth="56dp"
+        android:text="Đặt làm địa chỉ mặc định"
+        android:textSize="18dp"
+        android:textColor="@color/black"
+        android:layout_weight="1"
+        android:checked="true"
+        android:textOff="OFF"
+        android:textOn="ON"/>
+
+    <Button
+        android:layout_marginTop="10dp"
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:backgroundTint="#2C4CC3"
+        android:layout_weight="1"
+        android:text="Lưu" />
+
+</LinearLayout>
+
+
+
+
