@@ -1,5 +1,6 @@
 package com.example.giftsapp.Controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -7,16 +8,14 @@ import android.widget.FrameLayout;
 
 import com.example.giftsapp.R;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -54,25 +53,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if(id==R.id.nav_order){
-                    gotoFragment("My Order",new MyOrdersFragment(),ORDERS_FRAGMENT);
-                }
-                else if(id == R.id.nav_discount)
-                {
-
-                }
-                else if(id == R.id.nav_cart)
-                {
-                    gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
-                }else if(id== R.id.nav_account) {
-                    gotoFragment("My Account",new MyAccountFragment(),ACCOUNT_FRAGMENT);
-                }else if(id==R.id.nav_logout){
-
-                }
-                else if(id==R.id.nav_home){
-
-                    invalidateOptionsMenu();
-                    setFragment(new HomeFragment(),HOME_FRAGMENT);
+                switch (id) {
+                    case R.id.nav_order:
+                        gotoFragment("My Order",new MyOrdersFragment(),ORDERS_FRAGMENT);
+                        break;
+                    case R.id.nav_discount:
+                        break;
+                    case R.id.nav_account:
+                        //gotoFragment("My Account",new MyAccountFragment(),ACCOUNT_FRAGMENT);
+                        startActivity(new Intent(getApplicationContext(), SettingAccountForm.class));
+                        finish();
+                        break;
+                    case R.id.nav_cart:
+                        gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
+                        break;
+                    case R.id.nav_logout:
+                        LogOut();
+                        break;
+                    case R.id.nav_home:
+                        invalidateOptionsMenu();
+                        setFragment(new HomeFragment(),HOME_FRAGMENT);
+                        break;
+                    default:
+                        break;
                 }
                /*drawer.closeDrawer(GravityCompat.START);
                 return true;*/
@@ -89,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /*NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);*/
-
 
         setFragment(new HomeFragment(),HOME_FRAGMENT);
     }
@@ -112,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getMenuInflater().inflate(R.menu.main, menu);
         }
         return true;
-
     }
 
     @Override
@@ -126,22 +127,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
-        if(id==R.id.main_search_icon)
-        {
-            // search chỗ này
-            return true;
-        }
-        else if(id == R.id.main_notification_icon)
-        {
-            // Thông báo chỗ này
-            return true;
-        }
-        else if(id == R.id.main_cart_icon)
-        {
-            // xem giỏ hàng chỗ này
-            gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
-            return true;
+        switch (id) {
+            case R.id.main_search_icon:
+                // search chỗ này
+                break;
+            case R.id.main_notification_icon:
+                // Thông báo chỗ này
+                break;
+            case R.id.main_cart_icon:
+                // xem giỏ hàng chỗ này
+                gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
+                break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -171,7 +169,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    public void AnhXa(){
+    public void Init(){
         frameLayout = findViewById(R.id.main_framelayout);
+    }
+
+    private void LogOut() {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(), LoginForm.class));
+        finish();
     }
 }

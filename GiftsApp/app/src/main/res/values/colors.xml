@@ -17,4 +17,5 @@
     <color name="colorTrendingEnd">#96C93D</color>
     <color name="colorDivider">#D6D6D6</color>
     <color name="colorRed">#DF0404</color>
+    <color name="colorSettingAccount">#FF000000</color>
 </resources>

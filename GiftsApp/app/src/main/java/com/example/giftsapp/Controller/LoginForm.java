@@ -73,6 +73,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignUpForm.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -113,7 +114,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
                 Intent intent = new Intent();
                 switch (role) {
                     case "Customer":
-                        intent = new Intent(getApplicationContext(), CustomerHome.class);
+                        intent = new Intent(getApplicationContext(), MainActivity.class);
                         break;
                     case "Admin":
                         intent = new Intent(getApplicationContext(), AdminHome.class);
@@ -122,6 +123,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
                         break;
                 }
                 startActivity(intent);
+                finish();
             }
         });
     }

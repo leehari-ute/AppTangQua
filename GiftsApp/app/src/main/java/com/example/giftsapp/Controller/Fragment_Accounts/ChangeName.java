@@ -31,7 +31,7 @@ public class ChangeName extends AppCompatActivity {
     Button              btnSave;
     FirebaseAuth        fAuth;
     FirebaseFirestore   fStore;
-    String              userID;
+    String              userID, name = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,12 @@ public class ChangeName extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                name = edtFullName.getText().toString().trim();
+                if (name.equals("")) {
+                    edtFullName.setError("Tên không được bỏ trống");
+                    return;
+                };
+                edtFullName.setError(null);
                 ChangeName();
                 startActivity(new Intent(getApplicationContext(), SettingAccountForm.class));
             }
@@ -82,7 +88,8 @@ public class ChangeName extends AppCompatActivity {
     }
 
     private void ChangeName() {
-        fStore.collection("Users").document(userID).update("fullName", edtFullName.getText().toString().trim())
+
+        fStore.collection("Users").document(userID).update("fullName", name)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
