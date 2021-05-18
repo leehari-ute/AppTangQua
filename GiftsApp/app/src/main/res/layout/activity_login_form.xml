@@ -13,7 +13,7 @@
         <LinearLayout
             android:background="#4DFFFFFF"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="50dp"
                 android:text="Hello Again "
                 android:textAlignment="viewStart"
@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:text="Welcome Back!"
                 android:textAlignment="viewStart"
                 android:textColor="#2C4CC3"
@@ -53,7 +53,7 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
                     android:layout_marginTop="30dp"
                     android:src="@drawable/avaboy" />
 
@@ -64,7 +64,7 @@
                 android:id="@+id/txtEmail"
                 android:layout_width="355dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
+                android:layout_marginStart="40dp"
                 android:layout_marginTop="50dp"
                 android:text="Email"
                 android:textSize="15sp" />
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:alpha=".5"
                     android:onClick="ShowHidePass"
-                    android:layout_marginLeft="-65dp"
+                    android:layout_marginStart="-65dp"
                     android:layout_marginTop="18dp"/>
 
             </LinearLayout>
@@ -122,7 +122,7 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="120dp"
+                android:layout_marginStart="120dp"
                 android:layout_marginTop="60dp"
                 android:text="Login"
                 android:textColor="@android:color/white"

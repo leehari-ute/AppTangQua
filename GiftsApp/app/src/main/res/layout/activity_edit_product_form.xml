@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_height="match_parent"
+<ScrollView xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -8,7 +9,7 @@
         android:orientation="vertical"
         android:weightSum="17"
         android:background="#41A58B8B"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
         <LinearLayout
@@ -31,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:weightSum="2"
             android:layout_marginTop="10dp"
             android:background="@drawable/border_addsp"
             android:orientation="vertical">
@@ -43,14 +45,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_toStartOf="@+id/edtNameProduct"
-                android:text="Tên sản phẩm" />
+                android:text="Tên sản phẩm"
+                tools:ignore="NestedWeights" />
 
             <EditText
                 android:id="@+id/edtNameProduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imgProduct"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
@@ -160,7 +161,6 @@
                 android:id="@+id/edtDesProduct"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_below="@+id/imgProduct"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"
@@ -178,15 +178,17 @@
             android:layout_weight="2"
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
+            android:weightSum="2"
             android:background="@drawable/border_addsp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Số lượng"/>
+                android:text="Số lượng"
+                tools:ignore="NestedWeights" />
 
             <EditText
                 android:id="@+id/edtQuantity"
@@ -194,7 +196,7 @@
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"/>
         </LinearLayout>
@@ -211,10 +213,11 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Giá"/>
+                android:text="Giá"
+                tools:ignore="NestedWeights" />
 
             <EditText
                 android:id="@+id/edtPrice"
@@ -222,7 +225,7 @@
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"/>
         </LinearLayout>

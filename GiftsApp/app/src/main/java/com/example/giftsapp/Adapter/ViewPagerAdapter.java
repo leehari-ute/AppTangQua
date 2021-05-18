@@ -1,5 +1,6 @@
 package com.example.giftsapp.Adapter;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.giftsapp.Controller.Fragment_Accounts.BillStatus;
 import com.example.giftsapp.Controller.Fragment_Accounts.Delivered;
 import com.example.giftsapp.Controller.Fragment_Accounts.Delivering;
 import com.example.giftsapp.Controller.Fragment_Accounts.WaitForConfirm;
@@ -23,16 +25,28 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
+        Bundle bundle = new Bundle();
+        BillStatus fragObj = new BillStatus();
+        String status = "Error";
         switch (position){
+            case 0:
+                status = "WaitForConfirm";
+                break;
             case 1:
-                return new WaitForTheGift();
+                status = "WaitForTheGift";
+                break;
             case 2:
-                return new Delivering();
+                status = "Delivering";
+                break;
             case 3:
-                return new Delivered();
+                status = "Delivered";
+                break;
             default:
-                return new WaitForConfirm();
+                break;
         }
+        bundle.putString("status", status);
+        fragObj.setArguments(bundle);
+        return fragObj;
     }
 
     @Override

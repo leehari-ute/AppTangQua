@@ -50,7 +50,7 @@ public class AddLocation extends AppCompatActivity {
     FirebaseFirestore   fStore;
     FirebaseUser        user;
     String              userID, name = "", phone = "", province = "", district = "", village = "", detailAddress = "";
-    Integer             provinceID, districtID;
+    Integer             provinceID, districtID, addressID, quantityAddress = 0;
     Boolean             isDefault = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,16 +185,31 @@ public class AddLocation extends AppCompatActivity {
     }
 
     private void AddNewAddress() {
-        HashMap<String, Object> newAddress = new HashMap<String, Object>();
-        newAddress.put("isDefault", isDefault);
-        newAddress.put("name", name);
-        newAddress.put("phone", phone);
-        newAddress.put("province", province);
-        newAddress.put("district", district);
-        newAddress.put("village", village);
-        newAddress.put("detailAddress", detailAddress);
+        fStore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
+                    quantityAddress = addressArray.size();
+                    addressID = quantityAddress + 1;
+                    HashMap<String, Object> newAddress = new HashMap<String, Object>();
+                    newAddress.put("ID", addressID);
+                    newAddress.put("isDefault", isDefault);
+                    newAddress.put("name", name);
+                    newAddress.put("phone", phone);
+                    newAddress.put("province", province);
+                    newAddress.put("district", district);
+                    newAddress.put("village", village);
+                    newAddress.put("detailAddress", detailAddress);
 
-        fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(newAddress));
+                    fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(newAddress));
+                } else {
+
+                }
+            }
+        });
+
     }
 
     private void GetDataFromUI() {
@@ -207,6 +222,7 @@ public class AddLocation extends AppCompatActivity {
     }
 
     private void GetDataFromFireStore(ArrayList<Map<String, Object>> addressArray, int i) {
+        addressID = Integer.parseInt(addressArray.get(i).get("ID").toString());
         name = addressArray.get(i).get("name").toString().trim();
         phone = addressArray.get(i).get("phone").toString().trim();
         province = addressArray.get(i).get("province").toString().trim();
@@ -217,6 +233,7 @@ public class AddLocation extends AppCompatActivity {
 
     private void SetNotDefault() {
         HashMap<String, Object> disableDefault = new HashMap<String, Object>();
+        disableDefault.put("ID", addressID);
         disableDefault.put("isDefault", false);
         disableDefault.put("name", name);
         disableDefault.put("phone", phone);
@@ -238,8 +255,8 @@ public class AddLocation extends AppCompatActivity {
                     for (int i = 0; i < addressArray.size(); i++) {
                         if (addressArray.get(i).get("isDefault").toString().equals("true")) {
                             HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
-
                             GetDataFromFireStore(addressArray, i);
+                            defaultAddress.put("ID", addressID);
                             defaultAddress.put("isDefault", true);
                             defaultAddress.put("name", name);
                             defaultAddress.put("phone", phone);
@@ -249,7 +266,6 @@ public class AddLocation extends AppCompatActivity {
                             defaultAddress.put("detailAddress", detailAddress);
 
                             fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress));
-
                             SetNotDefault();
                         }
                     }

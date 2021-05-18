@@ -38,7 +38,7 @@
                 android:background="@drawable/border_search"
                 android:drawableEnd="@drawable/ic_search"
                 android:hint="Search"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:imeOptions="actionSearch"
                 android:importantForAutofill="no"
                 android:inputType="text"
@@ -50,7 +50,7 @@
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/ic_menu" />
 

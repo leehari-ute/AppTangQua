@@ -54,15 +54,15 @@ public class Delivering extends Fragment {
         arrBill = new ArrayList<>();
 
 
-        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh ơi là xinh đó nha","200.000VNĐ",
-                "200.000VNĐ","1 sản phẩm",R.drawable.donghonu));
-        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh","200.000VNĐ",
-                "400.000VNĐ","2 sản phẩm",R.drawable.donghonu));
-        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh","200.000VNĐ",
-                "600.000VNĐ","3 sản phẩm",R.drawable.donghonu));
-        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh","200.000VNĐ",
-                "800.000VNĐ","4 sản phẩm",R.drawable.donghonu));
-        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh","200.000VNĐ",
-                "200.000VNĐ","5 sản phẩm",R.drawable.donghonu));
+//        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh ơi là xinh đó nha","200.000VNĐ",
+//                "200.000VNĐ","1 sản phẩm",R.drawable.donghonu));
+//        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh","200.000VNĐ",
+//                "400.000VNĐ","2 sản phẩm",R.drawable.donghonu));
+//        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh","200.000VNĐ",
+//                "600.000VNĐ","3 sản phẩm",R.drawable.donghonu));
+//        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh","200.000VNĐ",
+//                "800.000VNĐ","4 sản phẩm",R.drawable.donghonu));
+//        arrBill.add(new BillModel("Đang giao","Đồng hồ xinh","200.000VNĐ",
+//                "200.000VNĐ","5 sản phẩm",R.drawable.donghonu));
     }
 }
