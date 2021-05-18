@@ -78,6 +78,7 @@ public class SignUpForm extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), LoginForm.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -269,6 +270,7 @@ public class SignUpForm extends AppCompatActivity {
                         break;
                 }
                 startActivity(intent);
+                finish();
             }
         });
     }

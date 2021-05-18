@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,6 +137,7 @@ public class Information extends Fragment {
             this.settingAccountForm = (SettingAccountForm) context;
         }
     }
+
 
     private void Init(View view) {
         txtChangePass   = view.findViewById(R.id.txtChangePass);

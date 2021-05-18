@@ -19,6 +19,11 @@
             android:icon="@drawable/credit_card"/>
 
         <item
+            android:id="@+id/nav_historybuy"
+            android:title="Lịch sử mua hàng"
+            android:icon="@drawable/shopping_cart"/>
+
+        <item
             android:id="@+id/nav_intro"
             android:title="Giới thiệu"
             android:icon="@drawable/intro"/>

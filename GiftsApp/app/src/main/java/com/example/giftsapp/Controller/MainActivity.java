@@ -1,5 +1,6 @@
 package com.example.giftsapp.Controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -7,14 +8,12 @@ import android.widget.FrameLayout;
 
 import com.example.giftsapp.R;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -46,20 +45,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if(id==R.id.nav_order){
-
-                }
-                else if(id == R.id.nav_discount)
-                {
-
-                }
-                else if(id == R.id.nav_cart)
-                {
-                    myCart();
-                }else if(id== R.id.nav_account) {
-
-                }else if(id==R.id.nav_logout){
-
+                switch (id) {
+                    case R.id.nav_order:
+                        break;
+                    case R.id.nav_discount:
+                        break;
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(), SettingAccountForm.class));
+                        finish();
+                        break;
+                    case R.id.nav_cart:
+                        MyCart();
+                        break;
+                    case R.id.nav_logout:
+                        LogOut();
+                        break;
+                    default:
+                        break;
                 }
                /*drawer.closeDrawer(GravityCompat.START);
                 return true;*/
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);*/
 
-        setFragment(new HomeFragment(),HOME_FRAGMENT);
+        SetFragment(new HomeFragment(),HOME_FRAGMENT);
     }
 
     @Override
@@ -87,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getMenuInflater().inflate(R.menu.main, menu);
         }
         return true;
-
     }
 
     @Override
@@ -101,33 +102,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
-        if(id==R.id.main_search_icon)
-        {
-            // search chỗ này
-            return true;
-        }
-        else if(id == R.id.main_notification_icon)
-        {
-            // Thông báo chỗ này
-            return true;
-        }
-        else if(id == R.id.main_cart_icon)
-        {
-            // xem giỏ hàng chỗ này
-            myCart();
-            return true;
+        switch (id) {
+            case R.id.main_search_icon:
+                // search chỗ này
+                break;
+            case R.id.main_notification_icon:
+                // Thông báo chỗ này
+                break;
+            case R.id.main_cart_icon:
+                // xem giỏ hàng chỗ này
+                MyCart();
+                break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void myCart() {
+    private void MyCart() {
         invalidateOptionsMenu();
-        setFragment(new MyCartFragment(),CART_FRAGMENT);
+        SetFragment(new MyCartFragment(),CART_FRAGMENT);
         navigationView.getMenu().getItem(2).setChecked(true);
     }
 
-    private void setFragment(Fragment fragment, int fragmentNo){
+    private void SetFragment(Fragment fragment, int fragmentNo){
         currentFragment = fragmentNo;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(frameLayout.getId(),fragment);
@@ -139,7 +137,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    public void AnhXa(){
+    public void Init(){
         frameLayout = findViewById(R.id.main_framelayout);
+    }
+
+    private void LogOut() {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(), LoginForm.class));
+        finish();
     }
 }
