@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -43,6 +44,8 @@ public class Location extends Fragment {
     FirebaseUser user;
     FirebaseAuth fAuth;
     String userID;
+    private boolean isBackFromAdd;
+
 
     private SettingAccountForm settingAccountForm;
 
@@ -50,6 +53,25 @@ public class Location extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isBackFromAdd = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isBackFromAdd = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isBackFromAdd) {
+            GetAddressFromFireStore();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

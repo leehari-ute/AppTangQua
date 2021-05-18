@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 public class Bill extends Fragment {
 
-
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private SettingAccountForm settingAccountForm;
@@ -34,7 +33,6 @@ public class Bill extends Fragment {
 
     public Bill() {
         // Required empty public constructor
-
     }
 
     @Override

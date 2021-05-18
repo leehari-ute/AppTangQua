@@ -52,6 +52,7 @@ public class AddLocation extends AppCompatActivity {
     String              userID, name = "", phone = "", province = "", district = "", village = "", detailAddress = "";
     Integer             provinceID, districtID, addressID, quantityAddress = 0;
     Boolean             isDefault = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,7 +206,7 @@ public class AddLocation extends AppCompatActivity {
 
                     fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(newAddress));
                 } else {
-
+                    Log.d("TAG", "DocumentSnapshot Fail" + task.getException());
                 }
             }
         });
@@ -270,7 +271,7 @@ public class AddLocation extends AppCompatActivity {
                         }
                     }
                 } else {
-                    Log.d("TAG", "Lỗi");
+                    Log.d("TAG", "DocumentSnapshot Fail" + task.getException());
                 }
             }
         });

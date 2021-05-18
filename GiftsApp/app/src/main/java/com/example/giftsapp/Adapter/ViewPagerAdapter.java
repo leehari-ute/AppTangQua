@@ -1,8 +1,6 @@
 package com.example.giftsapp.Adapter;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,10 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.giftsapp.Controller.Fragment_Accounts.BillStatus;
-import com.example.giftsapp.Controller.Fragment_Accounts.Delivered;
-import com.example.giftsapp.Controller.Fragment_Accounts.Delivering;
-import com.example.giftsapp.Controller.Fragment_Accounts.WaitForConfirm;
-import com.example.giftsapp.Controller.Fragment_Accounts.WaitForTheGift;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     CharSequence Titles[] = {"Chờ xác nhận", "Chờ lấy hàng", "Đang giao hàng", "Đã giao hàng"};

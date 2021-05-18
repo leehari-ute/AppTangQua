@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECECEC"
-    tools:context=".Controller.Fragment_Accounts.AddLocation">
+    tools:context=".Controller.Fragment_Accounts.Location">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -19,24 +19,15 @@
             android:id="@+id/txtAddAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_addsp"
-            android:text="Thêm địa chỉ mới"
-            app:drawableEndCompat="@drawable/add" />
+            android:background="@drawable/border_addlocation"
+            android:drawableEnd="@drawable/add"
+            android:text="Thêm địa chỉ mới" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ListView
+            android:id="@+id/listViewAddress"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="9.3">
+            android:layout_height="660dp" />
 
-            <ListView
-                android:id="@+id/listViewAddress"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </FrameLayout>

@@ -1,9 +1,7 @@
 package com.example.giftsapp.Controller.Fragment_Accounts;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.giftsapp.Adapter.BillAdapter;
 import com.example.giftsapp.Controller.LoginForm;
@@ -25,7 +22,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,12 +33,12 @@ import java.util.Map;
 
 public class BillStatus extends Fragment {
 
-    ListView listView;
-    ArrayList<BillModel> arrBill;
+    ListView listViewBill;
+    ArrayList<BillModel> arrayListBill;
     FirebaseAuth fAuth;
     FirebaseUser user;
     FirebaseFirestore fStore;
-    BillAdapter adapter;
+    BillAdapter billAdapter;
     String statusRequest, userID;
     private SettingAccountForm settingAccountForm;
 
@@ -85,10 +81,10 @@ public class BillStatus extends Fragment {
         fStore = FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();
         userID = user.getUid();
-        listView = view.findViewById(R.id.listViewBill);
-        arrBill = new ArrayList<>();
-        adapter = new BillAdapter(settingAccountForm,R.layout.list_bill, arrBill);
-        listView.setAdapter(adapter);
+        listViewBill = view.findViewById(R.id.listViewBill);
+        arrayListBill = new ArrayList<>();
+        billAdapter = new BillAdapter(settingAccountForm,R.layout.list_bill, arrayListBill);
+        listViewBill.setAdapter(billAdapter);
         GetDataFromFireStore();
     }
 
@@ -109,9 +105,9 @@ public class BillStatus extends Fragment {
                         String quantity = billArrayList.get(0).get("quantityProduct").toString();
                         String statusBill = "";
 
-                        for (int j = 0; j < statusArrayList.size(); j++) {
-                            if (statusArrayList.get(j).get("isDone").toString().equals("true")) {
-                                statusBill = statusArrayList.get(j).get("name").toString();
+                        for (int i = 0; i < statusArrayList.size(); i++) {
+                            if (statusArrayList.get(i).get("isDone").toString().equals("true")) {
+                                statusBill = statusArrayList.get(i).get("name").toString();
                                 break;
                             }
                         }
@@ -121,8 +117,8 @@ public class BillStatus extends Fragment {
                             String firstPrice = productArrayList.get(0).get("price").toString();
                             String imgUrl = productArrayList.get(0).get("imageUrl").toString();
                             BillModel billModel = new BillModel(productID, statusBill, firstProduct, firstPrice, totalPrice, quantity, imgUrl);
-                            arrBill.add(billModel);
-                            adapter.notifyDataSetChanged();
+                            arrayListBill.add(billModel);
+                            billAdapter.notifyDataSetChanged();
                         }
                     }
                 } else {
