@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.viewpager.widget.ViewPager
+        android:layout_marginTop="60dp"
         android:id="@+id/banner_slider_viewPager"
         android:layout_width="0dp"
         android:layout_height="230dp"

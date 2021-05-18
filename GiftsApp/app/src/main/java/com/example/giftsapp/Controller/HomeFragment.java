@@ -3,6 +3,8 @@ package com.example.giftsapp.Controller;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.transition.Slide;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -31,38 +34,37 @@ import com.example.giftsapp.Model.CategoryModel;
 import com.example.giftsapp.Model.HomePageModel;
 import com.example.giftsapp.Model.HorizontalProductScrollModel;
 import com.example.giftsapp.Model.sliderModel;
-import com.example.giftsapp.R;;import java.util.ArrayList;
+import com.example.giftsapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;;import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.example.giftsapp.Controller.DBqueries.categoryModelList;
+import static com.example.giftsapp.Controller.DBqueries.firebaseFirestore;
+import static com.example.giftsapp.Controller.DBqueries.homePageModelList;
+import static com.example.giftsapp.Controller.DBqueries.loadBannerTripAd;
+import static com.example.giftsapp.Controller.DBqueries.loadCategories;
+import static com.example.giftsapp.Controller.DBqueries.loadProductData;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private RecyclerView testing;
+    private RecyclerView homePageRecyclerView;
 
-    //////////////////////// Banner Slider
 
-   /* private ViewPager bannerSliderViewPager;
-    private List<sliderModel> sliderModelList;
-    private int currentPage = 2;
-    private Timer timer;
-    final private long DELAY_TIME = 3000;
-    final private long PERIOD_TIME = 3000; // chu kỳ lập lại*/
-    ///////////////////////// Banner Slider
 
-    //////////////////////// Strip Ad
-    /*ImageView StripAdImage;
-    ConstraintLayout StripAdContainer;*/
-    //////////////////////// Strip Ad
 
-    /////////////////////// Horizontal Products
-   /* private TextView horizontalLayoutTitle;
-    private Button horizontalLayoutViewAllBtn;
-    private RecyclerView horizontalRecyclerview;*/
-    /////////////////////// Horizontal Products
+    private  HomePageAdapter adapter;
+
+    //FirebaseFirestore firebaseFirestore;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -81,24 +83,41 @@ public class HomeFragment extends Fragment {
         categoryRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-       final List<CategoryModel> categoryModelList = new ArrayList<>();
-        categoryModelList.add(new CategoryModel("link","Home"));
-        categoryModelList.add(new CategoryModel("link","Child"));
-        categoryModelList.add(new CategoryModel("link","Nam"));
-        categoryModelList.add(new CategoryModel("link","Nữ"));
-        categoryModelList.add(new CategoryModel("link","dịp 8/3"));
-        categoryModelList.add(new CategoryModel("link","Valentines"));
-        categoryModelList.add(new CategoryModel("link","Birthday"));
-        categoryModelList.add(new CategoryModel("link","Toys"));
-
         categoryAdapter = new CategoryAdapter(categoryModelList);
         categoryRecyclerView.setAdapter(categoryAdapter);
-        categoryAdapter.notifyDataSetChanged();
+
+        // truy vấn ngược qua DBqueries
+        if(categoryModelList.size()==0)
+        {
+            loadCategories(categoryAdapter,getContext());
+        }else{
+            categoryAdapter.notifyDataSetChanged();
+        }
+
+        /*firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("Categories").orderBy("index").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            for(QueryDocumentSnapshot documentSnapshot:task.getResult()){
+                                categoryModelList.add(new CategoryModel(documentSnapshot.get("icon").toString(),documentSnapshot.get("categoryName").toString()));
+                            }
+                            categoryAdapter.notifyDataSetChanged();
+                        }else{
+                            String error = task.getException().getMessage();
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });*/
+
+
 
         //////////////////////// Banner Slider
 
         //bannerSliderViewPager = root.findViewById(R.id.banner_slider_viewPager);
-        List<sliderModel> sliderModelList = new ArrayList<sliderModel>();
+       /* List<sliderModel> sliderModelList = new ArrayList<sliderModel>();
 
         sliderModelList.add(new sliderModel(R.drawable.contact,"#077AE4"));
         sliderModelList.add(new sliderModel(R.drawable.facebook,"#077AE4"));
@@ -110,50 +129,8 @@ public class HomeFragment extends Fragment {
         sliderModelList.add(new sliderModel(R.drawable.contact,"#077AE4"));
         sliderModelList.add(new sliderModel(R.drawable.facebook,"#077AE4"));
         sliderModelList.add(new sliderModel(R.drawable.gmail,"#077AE4"));
-        sliderModelList.add(new sliderModel(R.drawable.documents,"#077AE4"));
+        sliderModelList.add(new sliderModel(R.drawable.documents,"#077AE4"));*/
 
-       /* SliderAdapter sliderAdapter = new SliderAdapter(sliderModelList);
-        bannerSliderViewPager.setAdapter(sliderAdapter);
-        bannerSliderViewPager.setClipToPadding(false);
-        bannerSliderViewPager.setPageMargin(20);
-
-        bannerSliderViewPager.setCurrentItem(currentPage);
-
-        ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                currentPage = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if(state == ViewPager.SCROLL_STATE_IDLE);
-                {
-                    PageLoop();
-                }
-            }
-        };
-        bannerSliderViewPager.addOnPageChangeListener(onPageChangeListener);
-
-        startBannerSlideShow();
-
-        bannerSliderViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                PageLoop();
-                stopBannerSlideShow();
-                if(event.getAction()==MotionEvent.ACTION_UP)
-                {
-                    startBannerSlideShow();
-                }
-                return false;
-            }
-        });*/
 
         ///////////////////////// Banner Slider
 
@@ -170,7 +147,7 @@ public class HomeFragment extends Fragment {
         horizontalLayoutViewAllBtn = root.findViewById(R.id.horizontal_scroll_layout_button);
         horizontalRecyclerview = root.findViewById(R.id.horizontal_scroll_layout_recyclerview);*/
 
-        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
+       /* List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Ví Nam","Ví dành cho nam","200000-vnđ"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Ví Nữ","Ví dành cho nam","200000-vnđ"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"gấu bông","Ví dành cho nam","200000-vnđ"));
@@ -178,84 +155,96 @@ public class HomeFragment extends Fragment {
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Thắt lưng","Ví dành cho nam","200000-vnđ"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Nón","Ví dành cho nam","200000-vnđ"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Váy","Ví dành cho nam","200000-vnđ"));
+        */
 
         //HorizontalProductScrollAdapter horizontalProductScrollAdapter = new HorizontalProductScrollAdapter(horizontalProductScrollModelList);
 
-        //Tạo layout chứa các item product
-        /*LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        horizontalRecyclerview.setLayoutManager(linearLayoutManager);
-
-        horizontalRecyclerview.setAdapter(horizontalProductScrollAdapter);
-        horizontalProductScrollAdapter.notifyDataSetChanged();*/
-        /////////////////////// Horizontal Products
-
-        /////////////////////// Grid Products Layout
-        /*TextView gridLayoutTitle = root.findViewById(R.id.grid_product_layout_title);
-        Button gridLayoutViewAllBtn = root.findViewById(R.id.grid_product_layout_viewAl_btn);
-        GridView gridView = root.findViewById(R.id.grid_product_layout_gridview);
-
-        gridView.setAdapter(new GridProductLayoutAdapter(horizontalProductScrollModelList));*/
         /////////////////////// Grid Products Layout
 
         ////////////////////////////// Testing
-        testing = root.findViewById(R.id.home_page_recyclerview);
+        homePageRecyclerView = root.findViewById(R.id.home_page_recyclerview);
         LinearLayoutManager TestingLayoutManager = new LinearLayoutManager(getContext());
         TestingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        testing.setLayoutManager(TestingLayoutManager);
+        homePageRecyclerView.setLayoutManager(TestingLayoutManager);
 
-        List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#F84710"));
-        homePageModelList.add(new HomePageModel(3,"Bán chạy",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#ffff00"));
-        homePageModelList.add(new HomePageModel(2,"Deals of the Day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#ff0000"));
+        adapter = new HomePageAdapter(homePageModelList);
+        homePageRecyclerView.setAdapter(adapter);
 
-        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
-        testing.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        // truy vấn ngược qua DBqueries
+        if(homePageModelList.size()==0)
+        {
+            loadBannerTripAd(adapter,getContext());
+        }else{
+            adapter.notifyDataSetChanged();
+        }
+
+        // load ảnh xho slider và strip_ad
+       /* firebaseFirestore.collection("Categories")
+                .document("HOME")
+                .collection("TOP_DEALS").orderBy("index").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            for(QueryDocumentSnapshot documentSnapshot:task.getResult()) {
+                                if (((long) documentSnapshot.get("view_type")) == 0) {
+                                    List<sliderModel> sliderModelList = new ArrayList<>();
+                                    long no_of_banners = (long) documentSnapshot.get("no_of_banners");
+                                    for (long x = 1; x < no_of_banners + 1; x++) {
+                                        sliderModelList.add(new sliderModel(documentSnapshot.get("banner_" + x).toString(),
+                                                documentSnapshot.get("banner_" + x + "_background").toString()));
+
+                                    }
+
+                                    homePageModelList.add(new HomePageModel(0, sliderModelList));
+                                } else if (((long) documentSnapshot.get("view_type")) == 1) {
+                                    homePageModelList.add(new HomePageModel(1, documentSnapshot.get("strip_ad_banner").toString(),
+                                            documentSnapshot.get("background").toString()));
+                                    Log.i("aaa",documentSnapshot.get("background").toString());
+                                } else if (((long) documentSnapshot.get("view_type")) == 2) {
+
+                                } else if (((long) documentSnapshot.get("view_type")) == 3)
+                                {
+
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        }else{
+                            String error = task.getException().getMessage();
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });*/
+
+        // load ảnh cho horizontal_item // và gridLayout
+/*        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
+
+        firebaseFirestore.collection("Products").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful())
+                {
+                    for(QueryDocumentSnapshot documentSnapshot:task.getResult())
+                    {
+                        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(documentSnapshot.get("imageUrl").toString()
+                                ,documentSnapshot.get("name").toString()
+                                ,documentSnapshot.get("occasion").toString()
+                                ,documentSnapshot.get("price").toString()));
+                    }
+                    homePageModelList.add(new HomePageModel(2,"Bán chạy",horizontalProductScrollModelList ));
+                    homePageModelList.add(new HomePageModel(3,"#Trending",horizontalProductScrollModelList ));
+                    adapter.notifyDataSetChanged();
+                }else{
+                    String error = task.getException().getMessage();
+                    Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });*/
+
+        loadProductData(adapter,getContext());
         ////////////////////////////// Testing
         return root;
     }
-    ///////////////////////// Banner Slider
-
-       /* private void PageLoop(){
-            if(currentPage == sliderModelList.size()-2)
-            {
-                currentPage =2 ;
-                bannerSliderViewPager.setCurrentItem(currentPage,false);
-            }
-            if(currentPage == 1)
-            {
-                currentPage =sliderModelList.size()-3 ;
-                bannerSliderViewPager.setCurrentItem(currentPage,false);
-            }
-        }
-        private void startBannerSlideShow(){
-            Handler handler = new Handler();
-            Runnable update = new Runnable() {
-                @Override
-                public void run() {
-                    if(currentPage>= sliderModelList.size()){
-                       currentPage=1;
-                    }
-                    bannerSliderViewPager.setCurrentItem(currentPage++,true);
-                }
-            };
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    handler.post(update);
-                }
-            } ,DELAY_TIME,PERIOD_TIME);
-        }
-        private void stopBannerSlideShow(){
-            timer.cancel();
-        }*/
-    ///////////////////////// Banner Slider
 
 }

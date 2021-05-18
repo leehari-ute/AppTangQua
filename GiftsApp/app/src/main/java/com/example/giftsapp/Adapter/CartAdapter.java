@@ -121,7 +121,7 @@ public class CartAdapter extends RecyclerView.Adapter {
             }
             productPrice.setText(productPriceText);
             cuttedPrice.setText(productCuttedPrice);
-            codeSale.setText(CodeSale+"");
+            codeSale.setText("Mã giảm giá: "+CodeSale+"");
 
         }
 

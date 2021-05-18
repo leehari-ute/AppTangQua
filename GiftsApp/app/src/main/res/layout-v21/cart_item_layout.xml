@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:elevation="3dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -32,8 +34,9 @@
         android:id="@+id/free_VAT_icon"
         android:layout_width="15dp"
         android:layout_height="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_free_VAT"
         app:layout_constraintStart_toStartOf="@+id/product_title"
-        app:layout_constraintTop_toBottomOf="@+id/product_title"
+        app:layout_constraintTop_toTopOf="@+id/tv_free_VAT"
         app:srcCompat="@drawable/sale_tag" />
 
     <TextView
@@ -66,6 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="220000.VND"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/product_price"
         app:layout_constraintEnd_toStartOf="@+id/product_price" />
 
