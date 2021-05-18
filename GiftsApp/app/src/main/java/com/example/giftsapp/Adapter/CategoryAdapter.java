@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.giftsapp.Controller.CategoryActivity;
 import com.example.giftsapp.Model.CategoryModel;
 import com.example.giftsapp.R;
@@ -38,6 +40,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         String icon = categoryModelList.get(position).getCategoryIconLink();
         String name = categoryModelList.get(position).getCategoryName();
         holder.setCategory(name,position);
+        holder.setCategoryIcon(icon);
     }
 
     @Override
@@ -54,8 +57,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             categoryIcon = itemView.findViewById(R.id.category_icon);
             categoryName=itemView.findViewById(R.id.category_name);
         }
-        private void setCategoryIcon(){
+        private void setCategoryIcon(String iconUrl){
             // set lại icon cho categoty tại đây
+            if(!iconUrl.equals("null")) { // nút home bấm ko đc
+                Glide.with(itemView.getContext()).load(iconUrl).apply(new RequestOptions().placeholder(R.drawable.ic__homec)).into(categoryIcon);
+            }
         }
 
         private void setCategory(String name,int position){
