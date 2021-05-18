@@ -73,6 +73,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignUpForm.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -122,6 +123,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
                         break;
                 }
                 startActivity(intent);
+                finish();
             }
         });
     }

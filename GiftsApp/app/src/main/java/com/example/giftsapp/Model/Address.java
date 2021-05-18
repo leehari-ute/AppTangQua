@@ -1,6 +1,7 @@
 package com.example.giftsapp.Model;
 
 public class Address {
+    private int ID;
     private String name;
     private String phone;
     private String detailAddress;
@@ -9,7 +10,8 @@ public class Address {
     private String province;
     private boolean isDefault;
 
-    public Address(String name, String phone, String detailAddress, String village, String district, String province, boolean isDefault) {
+    public Address(int ID, String name, String phone, String detailAddress, String village, String district, String province, boolean isDefault) {
+        this.ID = ID;
         this.name = name;
         this.phone = phone;
         this.detailAddress = detailAddress;
@@ -17,6 +19,14 @@ public class Address {
         this.district = district;
         this.province = province;
         this.isDefault = isDefault;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getName() {

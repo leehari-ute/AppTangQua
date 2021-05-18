@@ -26,6 +26,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +73,7 @@ public class Location extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         if (context instanceof SettingAccountForm) {
             this.settingAccountForm = (SettingAccountForm) context;
@@ -89,9 +91,6 @@ public class Location extends Fragment {
         addressAdapter      = new AddressAdapter(settingAccountForm, R.layout.layout_lisview_address, addressArrayList);
         listViewAddress.setAdapter(addressAdapter);
         GetAddressFromFireStore();
-//        addressArrayList.add(new Address("Đỗ Phạm Trúc Quỳnh", "0393304218", "200", "xã Xuân Trường", "Thành phố Đà Lạt", "Tỉnh Lâm Đồng", true));
-//        addressArrayList.add(new Address("Đỗ Phạm Trúc Quỳnh", "0393304218", "200", "xã Xuân Trường", "Thành phố Đà Lạt", "Tỉnh Lâm Đồng", false));
-
     }
 
     private void GetAddressFromFireStore() {
@@ -102,6 +101,7 @@ public class Location extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
                     for (int i = 0; i < addressArray.size(); i++) {
+                        Integer ID = Integer.parseInt(addressArray.get(i).get("ID").toString());
                         Boolean isDefault = addressArray.get(i).get("isDefault").toString().equals("true");
                         String name = addressArray.get(i).get("name").toString();
                         String phone = addressArray.get(i).get("phone").toString();
@@ -109,13 +109,13 @@ public class Location extends Fragment {
                         String district = addressArray.get(i).get("district").toString();
                         String village = addressArray.get(i).get("village").toString();
                         String detailAddress = addressArray.get(i).get("detailAddress").toString();
-                        Address newAddress = new Address(name, phone, detailAddress, village, district, province, isDefault);
+                        Address newAddress = new Address(ID, name, phone, detailAddress, village, district, province, isDefault);
                         addressArrayList.add(newAddress);
                     }
                     addressAdapter.notifyDataSetChanged();
                 }
                 else {
-                    Log.d("QUYNH", "Looxi: " + task.getException());
+                    Log.d("TAG", "Lỗi: " + task.getException());
                 }
             }
         });

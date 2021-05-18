@@ -55,6 +55,12 @@ public class ChangeName extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                name = edtFullName.getText().toString().trim();
+                if (name.equals("")) {
+                    edtFullName.setError("Tên không được bỏ trống");
+                    return;
+                };
+                edtFullName.setError(null);
                 ChangeName();
                 startActivity(new Intent(getApplicationContext(), SettingAccountForm.class));
             }
@@ -82,12 +88,7 @@ public class ChangeName extends AppCompatActivity {
     }
 
     private void ChangeName() {
-        name = edtFullName.getText().toString().trim();
-        if (name.equals("")) {
-            edtFullName.setError("Tên không được bỏ trống");
-            return;
-        };
-        edtFullName.setError(null);
+
         fStore.collection("Users").document(userID).update("fullName", name)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

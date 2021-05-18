@@ -54,16 +54,16 @@ public class WaitForTheGift extends Fragment {
         arrBill = new ArrayList<>();
 
 
-        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
-                "200.000VNĐ","1 sản phẩm",R.drawable.teddy));
-        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
-                "400.000VNĐ","2 sản phẩm",R.drawable.teddy));
-        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
-                "600.000VNĐ","3 sản phẩm",R.drawable.teddy));
-        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
-                "800.000VNĐ","4 sản phẩm",R.drawable.teddy));
-        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
-                "200.000VNĐ","5 sản phẩm",R.drawable.teddy));
+//        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
+//                "200.000VNĐ","1 sản phẩm",R.drawable.teddy));
+//        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
+//                "400.000VNĐ","2 sản phẩm",R.drawable.teddy));
+//        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
+//                "600.000VNĐ","3 sản phẩm",R.drawable.teddy));
+//        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
+//                "800.000VNĐ","4 sản phẩm",R.drawable.teddy));
+//        arrBill.add(new BillModel("Chờ lấy hàng","Gấu xinh ơi là xinh đó nha","200.000VNĐ",
+//                "200.000VNĐ","5 sản phẩm",R.drawable.teddy));
 
 
     }

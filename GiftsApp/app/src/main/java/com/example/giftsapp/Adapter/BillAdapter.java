@@ -8,9 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.giftsapp.Model.BillModel;
 import com.example.giftsapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BillAdapter extends BaseAdapter {
@@ -45,7 +47,7 @@ public class BillAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(layout,null);
         //Init view
-        TextView txtFirstPro = (TextView) convertView.findViewById(R.id.txtFirstPro);
+        TextView txtFirstPro = convertView.findViewById(R.id.txtFirstPro);
         TextView txtFirstPrice = convertView.findViewById(R.id.txtFirstPrice);
         TextView txtQuantity = convertView.findViewById(R.id.txtQuantity);
         TextView txtStatus = convertView.findViewById(R.id.txtStatus);
@@ -59,7 +61,9 @@ public class BillAdapter extends BaseAdapter {
         txtStatus.setText(billModel.getStatus());
         txtQuantity.setText(billModel.getQuantity());
         txtTotal.setText(billModel.getTotal());
-        imgSp.setImageResource(billModel.getImageProduct());
+        Glide.with(context.getApplicationContext())
+                .load(billModel.getImgUrl())
+                .into(imgSp);
 
         return convertView;
     }

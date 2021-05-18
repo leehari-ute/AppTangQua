@@ -10,15 +10,15 @@
     <ViewFlipper
         android:id="@+id/viewFlipperImages"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_centerHorizontal="true"></ViewFlipper>
+        android:layout_height="200dp" />
+
     <TextView
         android:id="@+id/txtLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Đăng xuất"
         android:gravity="center"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#FF00"
         android:layout_marginTop="5dp"
