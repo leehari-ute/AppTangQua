@@ -48,24 +48,12 @@ public class CategoryActivity extends AppCompatActivity {
         categoryRecyclerView = (RecyclerView) findViewById(R.id.category_recyclerview);
 
         //////// Banner Slider
-        List<sliderModel> sliderModelList = new ArrayList<sliderModel>();
-
-        sliderModelList.add(new sliderModel(R.drawable.contact,"#077AE4"));
-        sliderModelList.add(new sliderModel(R.drawable.facebook,"#077AE4"));
-        sliderModelList.add(new sliderModel(R.drawable.gmail,"#077AE4"));
-        sliderModelList.add(new sliderModel(R.drawable.documents,"#077AE4"));
-
-        sliderModelList.add(new sliderModel(R.drawable.giftapp,"#077AE4"));
-
-        sliderModelList.add(new sliderModel(R.drawable.contact,"#077AE4"));
-        sliderModelList.add(new sliderModel(R.drawable.facebook,"#077AE4"));
-        sliderModelList.add(new sliderModel(R.drawable.gmail,"#077AE4"));
-        sliderModelList.add(new sliderModel(R.drawable.documents,"#077AE4"));
+       // List<sliderModel> sliderModelList = new ArrayList<sliderModel>();
 
         //////// Banner Slider
 
         //////// Horizontal product layout
-        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
+       /* List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Ví Nam","Ví dành cho nam","200000-vnđ"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Ví Nữ","Ví dành cho nam","200000-vnđ"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"gấu bông","Ví dành cho nam","200000-vnđ"));
@@ -73,7 +61,7 @@ public class CategoryActivity extends AppCompatActivity {
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Thắt lưng","Ví dành cho nam","200000-vnđ"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Nón","Ví dành cho nam","200000-vnđ"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.vi,"Váy","Ví dành cho nam","200000-vnđ"));
-
+        */
         //HorizontalProductScrollAdapter horizontalProductScrollAdapter = new HorizontalProductScrollAdapter(horizontalProductScrollModelList);
 
         //////// Horizontal product layout
@@ -84,16 +72,8 @@ public class CategoryActivity extends AppCompatActivity {
         TestingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         categoryRecyclerView.setLayoutManager(TestingLayoutManager);
 
-        List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#F84710"));
-        homePageModelList.add(new HomePageModel(3,"Bán chạy",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#ffff00"));
-        homePageModelList.add(new HomePageModel(2,"Deals of the Day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#ff0000"));
 
+        List<HomePageModel> homePageModelList = new ArrayList<>();
         HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
         categoryRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();

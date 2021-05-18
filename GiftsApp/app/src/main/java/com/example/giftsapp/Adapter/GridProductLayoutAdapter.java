@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.giftsapp.Controller.ProductDetailsActivity;
 import com.example.giftsapp.Model.HorizontalProductScrollModel;
 import com.example.giftsapp.R;
@@ -29,7 +31,7 @@ public class GridProductLayoutAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return horizontalProductScrollModelList.size();
     }
 
     @Override
@@ -65,10 +67,10 @@ public class GridProductLayoutAdapter extends BaseAdapter {
             TextView productDescription = view.findViewById(R.id.h_s_product_description);
             TextView productPrice = view.findViewById(R.id.h_s_product_price);
 
-            productImage.setImageResource(horizontalProductScrollModelList.get(position).getProductImage());
+            Glide.with(parent.getContext()).load( horizontalProductScrollModelList.get(position).getProductImage()).apply(new RequestOptions().placeholder(R.drawable.ic__homec)).into(productImage);
             productName.setText(horizontalProductScrollModelList.get(position).getProductName());
             productDescription.setText(horizontalProductScrollModelList.get(position).getProductDescription());
-            productPrice.setText(horizontalProductScrollModelList.get(position).getProductPrice());
+            productPrice.setText(horizontalProductScrollModelList.get(position).getProductPrice()+".VND");
         }
         else{
             view = convertView;
