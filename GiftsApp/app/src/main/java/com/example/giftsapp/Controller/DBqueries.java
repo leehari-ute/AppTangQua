@@ -46,7 +46,6 @@ public class DBqueries {
                 });
     }
 
-
     public static void loadBannerTripAd(HomePageAdapter adapter,Context context){
         firebaseFirestore.collection("Categories")
                 .document("HOME")

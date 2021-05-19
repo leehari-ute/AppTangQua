@@ -60,6 +60,7 @@ public class CustomerHome extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -68,6 +69,7 @@ public class CustomerHome extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),SettingAccountForm.class);
                 startActivity(intent);
+                finish();
             }
         });
 

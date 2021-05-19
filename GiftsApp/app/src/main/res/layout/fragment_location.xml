@@ -20,8 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border_addlocation"
-            android:drawableEnd="@drawable/add"
-            android:text="Thêm địa chỉ mới" />
+            android:text="Thêm địa chỉ mới"
+            app:drawableEndCompat="@drawable/add" />
 
         <ListView
             android:id="@+id/listViewAddress"

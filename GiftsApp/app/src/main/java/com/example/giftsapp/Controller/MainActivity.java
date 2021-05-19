@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.Menu;
 import android.widget.FrameLayout;
 
+import com.example.giftsapp.Controller.Fragment_Accounts.Bill;
 import com.example.giftsapp.R;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -55,7 +57,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.nav_order:
-                        gotoFragment("My Order",new MyOrdersFragment(),ORDERS_FRAGMENT);
+                        Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
+                        intent.putExtra("EXTRA_DOCUMENT_OPEN_BILL", true);
+                        startActivity(intent);
+                        finish();
+                        //GotoFragment("My Order",new MyOrdersFragment(),ORDERS_FRAGMENT);
                         break;
                     case R.id.nav_discount:
                         break;
@@ -65,14 +71,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         finish();
                         break;
                     case R.id.nav_cart:
-                        gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
+                        GotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
                         break;
                     case R.id.nav_logout:
                         LogOut();
                         break;
                     case R.id.nav_home:
                         invalidateOptionsMenu();
-                        setFragment(new HomeFragment(),HOME_FRAGMENT);
+                        SetFragment(new HomeFragment(),HOME_FRAGMENT);
                         break;
                     default:
                         break;
@@ -93,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);*/
 
-        setFragment(new HomeFragment(),HOME_FRAGMENT);
+        SetFragment(new HomeFragment(),HOME_FRAGMENT);
     }
 
     @Override
@@ -136,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.main_cart_icon:
                 // xem giỏ hàng chỗ này
-                gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
+                GotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
                 break;
             default:
                 break;
@@ -144,17 +150,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    private void gotoFragment(String title, Fragment fragment, int fragmentNo) { // chuyển tới fragment nào
+    private void GotoFragment(String title, Fragment fragment, int fragmentNo) { // chuyển tới fragment nào
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(title);
         invalidateOptionsMenu();
-        setFragment(fragment,fragmentNo);
+        SetFragment(fragment,fragmentNo);
         if(fragmentNo == CART_FRAGMENT) {
             navigationView.getMenu().getItem(2).setChecked(true);
         }
     }
 
-    private void setFragment(Fragment fragment, int fragmentNo){
+    private void SetFragment(Fragment fragment, int fragmentNo){
         if(fragmentNo!=currentFragment) {
             currentFragment = fragmentNo;
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

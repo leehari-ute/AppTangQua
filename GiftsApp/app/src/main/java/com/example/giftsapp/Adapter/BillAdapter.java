@@ -1,6 +1,8 @@
 package com.example.giftsapp.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.giftsapp.Controller.OrderDetailsActivity;
 import com.example.giftsapp.Model.BillModel;
 import com.example.giftsapp.R;
 
@@ -52,6 +55,7 @@ public class BillAdapter extends BaseAdapter {
         TextView txtQuantity = convertView.findViewById(R.id.txtQuantity);
         TextView txtStatus = convertView.findViewById(R.id.txtStatus);
         TextView txtTotal = convertView.findViewById(R.id.txtTotal);
+        TextView txtViewDetail = convertView.findViewById(R.id.txtViewDetail);
         ImageView imgSp = convertView.findViewById(R.id.imgSp);
 
         //Gán gtri
@@ -65,6 +69,15 @@ public class BillAdapter extends BaseAdapter {
                 .load(billModel.getImgUrl())
                 .into(imgSp);
 
+        txtViewDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OrderDetailsActivity.class);
+                //putExtra parcel bill
+                context.startActivity(intent);
+                ((Activity) context).finish();
+            }
+        });
         return convertView;
     }
 }

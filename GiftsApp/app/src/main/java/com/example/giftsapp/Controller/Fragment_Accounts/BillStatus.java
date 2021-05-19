@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.giftsapp.Adapter.BillAdapter;
 import com.example.giftsapp.Controller.LoginForm;
+import com.example.giftsapp.Controller.OrderDetailsActivity;
 import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.Model.BillModel;
 import com.example.giftsapp.R;
@@ -65,6 +67,16 @@ public class BillStatus extends Fragment {
             startActivity(new Intent(settingAccountForm, LoginForm.class));
             getActivity().finish();
         }
+
+//        listViewBill.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(settingAccountForm, OrderDetailsActivity.class);
+//                //putExtra parcel bill
+//                startActivity(intent);
+//                getActivity().finish();
+//            }
+//        });
         return view;
     }
 
@@ -83,7 +95,7 @@ public class BillStatus extends Fragment {
         userID = user.getUid();
         listViewBill = view.findViewById(R.id.listViewBill);
         arrayListBill = new ArrayList<>();
-        billAdapter = new BillAdapter(settingAccountForm,R.layout.list_bill, arrayListBill);
+        billAdapter = new BillAdapter(settingAccountForm, R.layout.list_bill, arrayListBill);
         listViewBill.setAdapter(billAdapter);
         GetDataFromFireStore();
     }

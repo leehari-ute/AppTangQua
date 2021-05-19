@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -26,9 +27,21 @@ public class OrderDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==android.R.id.home){
+            Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
+            intent.putExtra("EXTRA_DOCUMENT_OPEN_BILL", true);
+            startActivity(intent);
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
+        intent.putExtra("EXTRA_DOCUMENT_OPEN_BILL", true);
+        startActivity(intent);
+        finish();
     }
 }

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.giftsapp.Controller.DistrictForm;
 import com.example.giftsapp.Controller.LoginForm;
 import com.example.giftsapp.Controller.ProvinceForm;
+import com.example.giftsapp.Controller.SelectLocationForm;
 import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.Controller.VillageForm;
 import com.example.giftsapp.R;
@@ -123,7 +124,6 @@ public class AddLocation extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     @Override
@@ -222,17 +222,7 @@ public class AddLocation extends AppCompatActivity {
         detailAddress = txtAddress.getText().toString().trim();
     }
 
-    private void GetDataFromFireStore(ArrayList<Map<String, Object>> addressArray, int i) {
-        addressID = Integer.parseInt(addressArray.get(i).get("ID").toString());
-        name = addressArray.get(i).get("name").toString().trim();
-        phone = addressArray.get(i).get("phone").toString().trim();
-        province = addressArray.get(i).get("province").toString().trim();
-        district = addressArray.get(i).get("district").toString().trim();
-        village = addressArray.get(i).get("village").toString().trim();
-        detailAddress = addressArray.get(i).get("detailAddress").toString().trim();
-    }
-
-    private void SetNotDefault() {
+    private void SetNotDefault(Integer addressID, String name, String phone, String province, String district, String village, String detailAddress) {
         HashMap<String, Object> disableDefault = new HashMap<String, Object>();
         disableDefault.put("ID", addressID);
         disableDefault.put("isDefault", false);
@@ -256,7 +246,14 @@ public class AddLocation extends AppCompatActivity {
                     for (int i = 0; i < addressArray.size(); i++) {
                         if (addressArray.get(i).get("isDefault").toString().equals("true")) {
                             HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
-                            GetDataFromFireStore(addressArray, i);
+                            //GetDataFromFireStore(addressArray, i);
+                            Integer addressID = Integer.parseInt(addressArray.get(i).get("ID").toString());
+                            String name = addressArray.get(i).get("name").toString().trim();
+                            String phone = addressArray.get(i).get("phone").toString().trim();
+                            String province = addressArray.get(i).get("province").toString().trim();
+                            String district = addressArray.get(i).get("district").toString().trim();
+                            String village = addressArray.get(i).get("village").toString().trim();
+                            String detailAddress = addressArray.get(i).get("detailAddress").toString().trim();
                             defaultAddress.put("ID", addressID);
                             defaultAddress.put("isDefault", true);
                             defaultAddress.put("name", name);
@@ -267,7 +264,7 @@ public class AddLocation extends AppCompatActivity {
                             defaultAddress.put("detailAddress", detailAddress);
 
                             fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress));
-                            SetNotDefault();
+                            SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
                         }
                     }
                 } else {

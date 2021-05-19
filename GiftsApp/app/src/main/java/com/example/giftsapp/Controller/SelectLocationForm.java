@@ -1,23 +1,23 @@
-package com.example.giftsapp.Controller.Fragment_Accounts;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+package com.example.giftsapp.Controller;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.giftsapp.Adapter.AddressAdapter;
-import com.example.giftsapp.Controller.LoginForm;
-import com.example.giftsapp.Controller.SettingAccountForm;
+import com.example.giftsapp.Controller.Fragment_Accounts.AddLocation;
 import com.example.giftsapp.Model.Address;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,14 +27,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.jetbrains.annotations.NotNull;
-
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
-
-public class Location extends Fragment {
+public class SelectLocationForm extends AppCompatActivity {
 
     TextView txtAddAddress;
     ListView listViewAddress;
@@ -44,27 +41,47 @@ public class Location extends Fragment {
     FirebaseUser user;
     FirebaseAuth fAuth;
     String userID;
-    private boolean isBackFromAdd;
-    private SettingAccountForm settingAccountForm;
-
-    public Location() {
-        // Required empty public constructor
-    }
+    private boolean isBackFromAdd = false;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isBackFromAdd = false;
+        setContentView(R.layout.activity_select_location_form);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Chọn địa chỉ nhận hàng");
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
+        Init();
+
+        if (user == null) {
+            startActivity(new Intent(getApplicationContext(), LoginForm.class));
+            finish();
+        }
+
+        txtAddAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), AddLocation.class));
+            }
+        });
+
+        listViewAddress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Address addressSelected = (Address) parent.getAdapter().getItem(position);
+                Intent intent = new Intent();
+                intent.putExtra("PARCEL_ADDRESS", addressSelected);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        isBackFromAdd = true;
-    }
-
-    @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         if (isBackFromAdd) {
             GetAddressFromFireStore();
@@ -73,45 +90,36 @@ public class Location extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_location, container, false);
-
-        Init(view);
-        if (user == null) {
-            startActivity(new Intent(settingAccountForm, LoginForm.class));
-            settingAccountForm.finish();
-        }
-
-        txtAddAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(settingAccountForm, AddLocation.class);
-                intent.putExtra("EXTRA_DOCUMENT_FROM_ACTIVITY", false);
-                startActivity(intent);
-            }
-        });
-        return view;
+    protected void onPause() {
+        isBackFromAdd = true;
+        super.onPause();
     }
 
     @Override
-    public void onAttach(@NotNull Context context) {
-        super.onAttach(context);
-        if (context instanceof SettingAccountForm) {
-            this.settingAccountForm = (SettingAccountForm) context;
-        }
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
-    private void Init(View view){
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void Init(){
         fAuth               = FirebaseAuth.getInstance();
         fStore              = FirebaseFirestore.getInstance();
         user                = fAuth.getCurrentUser();
         userID              = user.getUid();
-        txtAddAddress       = view.findViewById(R.id.txtAddAddress);
-        listViewAddress     = view.findViewById(R.id.listViewAddress);
+        txtAddAddress       = findViewById(R.id.txtAddAddress);
+        listViewAddress     = findViewById(R.id.listViewAddress);
         addressArrayList    = new ArrayList<>();
-        addressAdapter      = new AddressAdapter(settingAccountForm, R.layout.layout_lisview_address, addressArrayList);
+        addressAdapter      = new AddressAdapter(getApplicationContext(), R.layout.layout_lisview_address, addressArrayList);
         listViewAddress.setAdapter(addressAdapter);
         GetAddressFromFireStore();
     }
@@ -144,7 +152,4 @@ public class Location extends Fragment {
             }
         });
     }
-
-
-
 }
