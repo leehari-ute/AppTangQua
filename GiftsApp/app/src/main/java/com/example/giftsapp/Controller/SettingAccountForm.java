@@ -46,6 +46,7 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
     FirebaseUser            user;
     FirebaseFirestore       fStore;
     String                  userID;
+    Boolean isOpenBill;
     private static int FRAGMENT_INFOR = 1;
     private static int FRAGMENT_LOCATION = 2;
     private static int FRAGMENT_BANK = 3;
@@ -76,17 +77,24 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
             finish();
         }
 
+
+
         navigationView.bringToFront();
-        toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        ReplaceFragment(new Information());
+        if (isOpenBill) {
+            ReplaceFragment(new Bill());
+        } else {
+            ReplaceFragment(new Information());
+        }
     }
 
     private void Init(){
+        isOpenBill = getIntent().getBooleanExtra("EXTRA_DOCUMENT_OPEN_BILL", false);
         drawerLayout    = findViewById(R.id.drawer_layout);
         navigationView  = findViewById(R.id.nav_view);
         fAuth           = FirebaseAuth.getInstance();

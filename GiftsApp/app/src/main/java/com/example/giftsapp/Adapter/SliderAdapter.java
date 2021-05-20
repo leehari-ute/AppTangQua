@@ -13,6 +13,8 @@ import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.giftsapp.Model.sliderModel;
 import com.example.giftsapp.R;
 
@@ -36,7 +38,7 @@ public class SliderAdapter extends PagerAdapter {
         // Ánh xạ imageview
         ImageView img_banner = view.findViewById(R.id.img_banner_slider);
         // gán image cho banner
-        img_banner.setImageResource(sliderModelList.get(position).getBanner());
+        Glide.with(container.getContext()).load(sliderModelList.get(position).getBanner()).apply(new RequestOptions().placeholder(R.drawable.ic__homec)).into(img_banner);
         container.addView(view,0);
         return view;
     }

@@ -31,8 +31,9 @@
         android:id="@+id/free_VAT_icon"
         android:layout_width="15dp"
         android:layout_height="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_free_VAT"
         app:layout_constraintStart_toStartOf="@+id/product_title"
-        app:layout_constraintTop_toBottomOf="@+id/product_title"
+        app:layout_constraintTop_toTopOf="@+id/tv_free_VAT"
         app:srcCompat="@drawable/sale_tag" />
 
     <TextView

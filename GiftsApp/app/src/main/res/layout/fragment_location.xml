@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border_addlocation"
+<<<<<<< HEAD
             android:drawableEnd="@drawable/add"
             android:text="Thêm địa chỉ mới" />
 
@@ -30,6 +31,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="660dp" />
 
+=======
+            android:text="Thêm địa chỉ mới"
+            app:drawableEndCompat="@drawable/add" />
+
+        <ListView
+            android:id="@+id/listViewAddress"
+            android:layout_width="match_parent"
+            android:layout_height="660dp" />
+
+>>>>>>> 2e40bb4f501e654a2b80c61d0fca506d22e3a3b7
 
     </LinearLayout>
 </FrameLayout>

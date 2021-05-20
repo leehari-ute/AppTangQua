@@ -1,20 +1,22 @@
 package com.example.giftsapp.Model;
 
 public class BillModel {
+    private String firstProductID;
     private String Status;
     private String FirstProduct;
     private String FirstPrice;
     private String Total;
     private String Quantity;
-    private int ImageProduct;
+    private String imgUrl;
 
-    public BillModel(String status, String firstProduct, String firstPrice, String total, String quantity, int imageProduct) {
+    public BillModel(String firstProductID, String status, String firstProduct, String firstPrice, String total, String quantity, String imgUrl) {
+        this.firstProductID = firstProductID;
         Status = status;
         FirstProduct = firstProduct;
         FirstPrice = firstPrice;
         Total = total;
         Quantity = quantity;
-        ImageProduct = imageProduct;
+        this.imgUrl = imgUrl;
     }
 
     public String getStatus() {
@@ -57,11 +59,19 @@ public class BillModel {
         Quantity = quantity;
     }
 
-    public int getImageProduct() {
-        return ImageProduct;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImageProduct(int imageProduct) {
-        ImageProduct = imageProduct;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getFirstProductID() {
+        return firstProductID;
+    }
+
+    public void setFirstProductID(String firstProductID) {
+        this.firstProductID = firstProductID;
     }
 }

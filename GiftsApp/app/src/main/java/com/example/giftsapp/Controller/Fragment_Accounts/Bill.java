@@ -20,10 +20,11 @@ import com.example.giftsapp.Model.BillModel;
 import com.example.giftsapp.R;
 import com.google.android.material.tabs.TabLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class Bill extends Fragment {
-
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -32,7 +33,6 @@ public class Bill extends Fragment {
 
     public Bill() {
         // Required empty public constructor
-
     }
 
     @Override
@@ -46,7 +46,7 @@ public class Bill extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         if (context instanceof SettingAccountForm) {
             this.settingAccountForm = (SettingAccountForm) context;
@@ -60,6 +60,5 @@ public class Bill extends Fragment {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 }

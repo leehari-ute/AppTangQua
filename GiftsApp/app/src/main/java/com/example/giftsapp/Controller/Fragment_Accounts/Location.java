@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,13 +44,33 @@ public class Location extends Fragment {
     FirebaseUser user;
     FirebaseAuth fAuth;
     String userID;
-
+    private boolean isBackFromAdd;
     private SettingAccountForm settingAccountForm;
 
     public Location() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isBackFromAdd = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isBackFromAdd = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isBackFromAdd) {
+            GetAddressFromFireStore();
+        }
+        isBackFromAdd = false;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,14 +87,16 @@ public class Location extends Fragment {
         txtAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(settingAccountForm, AddLocation.class));
+                Intent intent = new Intent(settingAccountForm, AddLocation.class);
+                intent.putExtra("EXTRA_DOCUMENT_FROM_ACTIVITY", false);
+                startActivity(intent);
             }
         });
         return view;
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         if (context instanceof SettingAccountForm) {
             this.settingAccountForm = (SettingAccountForm) context;
@@ -92,6 +117,7 @@ public class Location extends Fragment {
     }
 
     private void GetAddressFromFireStore() {
+        addressArrayList.clear();
         fStore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -99,6 +125,7 @@ public class Location extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
                     for (int i = 0; i < addressArray.size(); i++) {
+                        Integer ID = Integer.parseInt(addressArray.get(i).get("ID").toString());
                         Boolean isDefault = addressArray.get(i).get("isDefault").toString().equals("true");
                         String name = addressArray.get(i).get("name").toString();
                         String phone = addressArray.get(i).get("phone").toString();
@@ -106,13 +133,13 @@ public class Location extends Fragment {
                         String district = addressArray.get(i).get("district").toString();
                         String village = addressArray.get(i).get("village").toString();
                         String detailAddress = addressArray.get(i).get("detailAddress").toString();
-                        Address newAddress = new Address(name, phone, detailAddress, village, district, province, isDefault);
+                        Address newAddress = new Address(ID, name, phone, detailAddress, village, district, province, isDefault);
                         addressArrayList.add(newAddress);
+                        addressAdapter.notifyDataSetChanged();
                     }
-                    addressAdapter.notifyDataSetChanged();
                 }
                 else {
-                    Log.d("QUYNH", "Looxi: " + task.getException());
+                    Log.d("TAG", "Lỗi: " + task.getException());
                 }
             }
         });

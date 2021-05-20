@@ -5,7 +5,11 @@
     <item>
         <shape  android:shape="rectangle">
             <solid android:color="#DCC6C6C6"  />
+<<<<<<< HEAD
             <padding android:bottom="2dp"/>
+=======
+            <padding android:bottom="1dp"/>
+>>>>>>> 2e40bb4f501e654a2b80c61d0fca506d22e3a3b7
 
         </shape>
     </item>
@@ -22,5 +26,8 @@
 
     </item>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2e40bb4f501e654a2b80c61d0fca506d22e3a3b7
 </layer-list>

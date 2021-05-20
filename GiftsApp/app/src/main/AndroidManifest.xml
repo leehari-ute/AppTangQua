@@ -12,7 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
-        <activity android:name=".Controller.VillageForm"></activity>
+        <activity android:name=".Controller.SelectLocationForm"></activity>
+        <activity
+            android:name=".Controller.DeliveryActivity"
+            android:theme="@style/Theme.GiftsApp.NoActionBar" />
+        <activity
+            android:name=".Controller.OrderDetailsActivity"
+            android:theme="@style/Theme.GiftsApp.NoActionBar" />
+        <activity android:name=".Controller.VillageForm" />
         <activity android:name=".Controller.DistrictForm" />
         <activity android:name=".Controller.ProvinceForm" />
         <activity android:name=".Controller.Fragment_Accounts.AddLocation" />
@@ -26,6 +33,9 @@
             android:name=".Controller.CategoryActivity"
             android:theme="@style/Theme.GiftsApp.NoActionBar" />
         <activity
+            android:name=".Controller.ViewAllActivity"
+            android:theme="@style/Theme.GiftsApp.NoActionBar" />
+        <activity
             android:name=".Controller.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
@@ -35,7 +45,9 @@
         <activity android:name=".Controller.AddProductsForm" />
         <activity android:name=".Controller.AdminHome" />
         <activity android:name=".Controller.SignUpForm" />
-        <activity android:name=".Controller.SettingAccountForm" android:theme="@style/Theme.GiftsApp.NoActionBar"/>
+        <activity
+            android:name=".Controller.SettingAccountForm"
+            android:theme="@style/Theme.GiftsApp.NoActionBar" />
         <activity android:name=".Controller.LoginForm">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
