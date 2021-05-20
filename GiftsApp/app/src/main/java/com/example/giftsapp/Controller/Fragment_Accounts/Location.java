@@ -89,9 +89,6 @@ public class Location extends Fragment {
         addressAdapter      = new AddressAdapter(settingAccountForm, R.layout.layout_lisview_address, addressArrayList);
         listViewAddress.setAdapter(addressAdapter);
         GetAddressFromFireStore();
-//        addressArrayList.add(new Address("Đỗ Phạm Trúc Quỳnh", "0393304218", "200", "xã Xuân Trường", "Thành phố Đà Lạt", "Tỉnh Lâm Đồng", true));
-//        addressArrayList.add(new Address("Đỗ Phạm Trúc Quỳnh", "0393304218", "200", "xã Xuân Trường", "Thành phố Đà Lạt", "Tỉnh Lâm Đồng", false));
-
     }
 
     private void GetAddressFromFireStore() {
@@ -120,7 +117,4 @@ public class Location extends Fragment {
             }
         });
     }
-
-
-
 }

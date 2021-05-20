@@ -24,10 +24,9 @@
 | 7 |Giao diện thanh toán gồm: <br>-	Thông tin sản phẩm <br>-	Thông tin thanh toán (hình thức thanh toán, mã giảm giá, phí vận chuyển, tổng tiền)<br>-	Thông tin thiệp mừng và lời chúc<br>-	Thông tin giao hàng (địa chỉ số điện thoại, tên người nhận)|Cho phép xem lại các thông tin cần thiết của đơn hàng trước khi xác nhận|
 | 8 | Thanh toán online | Thanh toán bằng ví điện tử (Momo, Viettelpay, …)|
 | 9 | Chi tiết quá trình giao hàng | Thông báo những giai đoạn nhận đơn, gói hàng, chuyển hàng để người dùng nắm bắt thông tin|
-| 10 | Mục đánh giá đơn hàng | Người dùng có thể đánh giá, góp ý về chất lượng phục vụ của cửa hàng |
-| 11 | Hiển thị lịch sử mua hàng | Người dùng nắm bắt được các hóa đơn mà mình đã thánh toán |
-| 12 | Bảo mật thông tin người dùng | Đảm bảo an toàn cho tài khoản, thông tin người dùng, thông tin thanh toán, thông tin giao dịch |
-| 13 | Quản lý sản phẩm | Thêm, xóa, sửa sản phẩm|
+| 10 | Hiển thị lịch sử mua hàng | Người dùng nắm bắt được các hóa đơn mà mình đã thánh toán |
+| 11 | Bảo mật thông tin người dùng | Đảm bảo an toàn cho tài khoản, thông tin người dùng, thông tin thanh toán, thông tin giao dịch |
+| 12 | Quản lý sản phẩm | Thêm, sửa sản phẩm|
 
 
 ## Hướng dẫn sử dụng (Bổ sung sau) ❓
