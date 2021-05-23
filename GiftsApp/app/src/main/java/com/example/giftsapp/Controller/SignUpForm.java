@@ -114,126 +114,90 @@ public class SignUpForm extends AppCompatActivity {
                 break;
         }
 
-        //validate();
+        if (Validate()) {
+            fAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                userID = fAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = fStore.collection("Users").document(userID);
+                                Map<String, Object> User = new HashMap<>();
+                                User.put("fullName", fullName);
+                                User.put("email", email);
+                                User.put("phone", phone);
+                                User.put("gender", gender);
+                                User.put("role", "Customer");
+                                User.put("bio", "");
+                                User.put("birthday", "28/02/2000");
+                                if (gender == "Nam") {
+                                    User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtMale.jpg?alt=media&token=868c8c7b-21af-4f78-bfa2-41b9d154c0e6");
+                                } else {
+                                    User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtFemale.jpg?alt=media&token=757d5538-61f2-4096-a74b-e2fc0e667012");
+                                }
+                                documentReference.set(User).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("TAG", "onSuccess: user profile is create for "+ userID);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("TAG", "onFailure: "+ e.toString());
+                                    }
+                                });
+                                Intent intent = new Intent(getApplicationContext(), CustomerHome.class);
+                                startActivity(intent);
 
-        if (TextUtils.isEmpty(gender)) {
-            rdBtnMale.setError("Gender is required");
-            rdBtnFemale.setError("Gender is required");
-            return;
-        }
-        rdBtnMale.setError(null);
-        rdBtnFemale.setError(null);
-
-        if (TextUtils.isEmpty(fullName)) {
-            edtFullName.setError("Username is required");
-            return;
-        }
-        edtFullName.setError(null);
-
-        if (TextUtils.isEmpty(email)) {
-            edtEmail.setError("Email is required");
-            return;
-        }
-        edtEmail.setError(null);
-
-        if (TextUtils.isEmpty(password)) {
-            edtPassword.setError("Password is required");
-            return;
-        }
-        edtPassword.setError(null);
-
-        if (TextUtils.isEmpty(phone)) {
-            edtPhone.setError("Phone is required");
-            return;
-        }
-        edtPhone.setError(null);
-
-        if (password.length() < 6) {
-            edtPassword.setError("Password must be more than 5 characters");
-            return;
-        }
-        edtPassword.setError(null);
-        fAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            userID = fAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("Users").document(userID);
-                            Map<String, Object> User = new HashMap<>();
-                            User.put("fullName", fullName);
-                            User.put("email", email);
-                            User.put("phone", phone);
-                            User.put("gender", gender);
-                            User.put("role", "Customer");
-                            User.put("bio", "");
-                            User.put("birthday", "28/02/2000");
-                            if (gender == "Nam") {
-                                User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtMale.jpg?alt=media&token=868c8c7b-21af-4f78-bfa2-41b9d154c0e6");
-                            } else {
-                                User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtFemale.jpg?alt=media&token=757d5538-61f2-4096-a74b-e2fc0e667012");
+                                Toast.makeText(SignUpForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
+                                return;
                             }
-                            documentReference.set(User).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("TAG", "onSuccess: user profile is create for "+ userID);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("TAG", "onFailure: "+ e.toString());
-                                }
-                            });
-                            Intent intent = new Intent(getApplicationContext(), CustomerHome.class);
-                            startActivity(intent);
 
-                            Toast.makeText(SignUpForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
-                            return;
+                            Toast.makeText(SignUpForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
                         }
-
-                        Toast.makeText(SignUpForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+        };
     }
 
-    private void Validate() {
+    private boolean Validate() {
         if (TextUtils.isEmpty(gender)) {
             rdBtnMale.setError("Gender is required");
             rdBtnFemale.setError("Gender is required");
-            return;
+            return false;
         }
         rdBtnMale.setError(null);
         rdBtnFemale.setError(null);
 
         if (TextUtils.isEmpty(fullName)) {
             edtFullName.setError("Username is required");
-            return;
+            return false;
         }
         edtFullName.setError(null);
 
         if (TextUtils.isEmpty(email)) {
             edtEmail.setError("Email is required");
-            return;
+            return false;
         }
         edtEmail.setError(null);
 
         if (TextUtils.isEmpty(password)) {
             edtPassword.setError("Password is required");
-            return;
+            return false;
         }
         edtPassword.setError(null);
 
         if (TextUtils.isEmpty(phone)) {
             edtPhone.setError("Phone is required");
-            return;
+            return false;
         }
         edtPhone.setError(null);
 
         if (password.length() < 6) {
             edtPassword.setError("Password must be more than 5 characters");
-            return;
+            return false;
         }
         edtPassword.setError(null);
+        return true;
     }
 
     public void ShowHidePass(View view) {
@@ -261,7 +225,7 @@ public class SignUpForm extends AppCompatActivity {
                 Intent intent = new Intent();
                 switch (role) {
                     case "Customer":
-                        intent = new Intent(getApplicationContext(), CustomerHome.class);
+                        intent = new Intent(getApplicationContext(), MainActivity.class);
                         break;
                     case "Admin":
                         intent = new Intent(getApplicationContext(), AdminHome.class);

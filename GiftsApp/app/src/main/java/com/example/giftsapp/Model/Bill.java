@@ -1,11 +1,16 @@
 package com.example.giftsapp.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bill {
+public class Bill implements Parcelable {
+    private String id;
     private int addressID;
-    private float createAt;
+    private Date createAt;
     private String paymentType;
     private ArrayList<Products> productsArrayList;
     private ArrayList<StatusBill> status;
@@ -13,7 +18,9 @@ public class Bill {
     private String userID;
     private int quantityProduct;
 
-    public Bill(int addressID, float createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct) {
+    //get from Firebase
+    public Bill(String id, int addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct) {
+        this.id = id;
         this.addressID = addressID;
         this.createAt = createAt;
         this.paymentType = paymentType;
@@ -24,6 +31,82 @@ public class Bill {
         this.quantityProduct = quantityProduct;
     }
 
+    //save to firebase
+    public Bill(int addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct) {
+        this.addressID = addressID;
+        this.createAt = createAt;
+        this.paymentType = paymentType;
+        this.productsArrayList = productsArrayList;
+        this.status = status;
+        this.totalPrice = totalPrice;
+        this.userID = userID;
+        this.quantityProduct = quantityProduct;
+    }
+
+    protected Bill(Parcel in) {
+        id = in.readString();
+        addressID = in.readInt();
+        long tmpCreateAt = in.readLong();
+        createAt = tmpCreateAt != -1 ? new Date(tmpCreateAt) : null;
+        paymentType = in.readString();
+        if (in.readByte() == 0x01) {
+            productsArrayList = new ArrayList<Products>();
+            in.readList(productsArrayList, Products.class.getClassLoader());
+        } else {
+            productsArrayList = null;
+        }
+        if (in.readByte() == 0x01) {
+            status = new ArrayList<StatusBill>();
+            in.readList(status, StatusBill.class.getClassLoader());
+        } else {
+            status = null;
+        }
+        totalPrice = in.readString();
+        userID = in.readString();
+        quantityProduct = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeInt(addressID);
+        dest.writeLong(createAt != null ? createAt.getTime() : -1L);
+        dest.writeString(paymentType);
+        if (productsArrayList == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(productsArrayList);
+        }
+        if (status == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(status);
+        }
+        dest.writeString(totalPrice);
+        dest.writeString(userID);
+        dest.writeInt(quantityProduct);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Bill> CREATOR = new Parcelable.Creator<Bill>() {
+        @Override
+        public Bill createFromParcel(Parcel in) {
+            return new Bill(in);
+        }
+
+        @Override
+        public Bill[] newArray(int size) {
+            return new Bill[size];
+        }
+    };
+
     public int getAddressID() {
         return addressID;
     }
@@ -32,11 +115,11 @@ public class Bill {
         this.addressID = addressID;
     }
 
-    public float getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(float createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
 
@@ -86,5 +169,13 @@ public class Bill {
 
     public void setQuantityProduct(int quantityProduct) {
         this.quantityProduct = quantityProduct;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
