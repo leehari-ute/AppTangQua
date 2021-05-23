@@ -269,7 +269,7 @@ public class AddLocation extends AppCompatActivity {
                             }
                         }
                     }
-                } else {
+                }else {
                     Log.d("TAG", "DocumentSnapshot Fail" + task.getException());
                 }
             }

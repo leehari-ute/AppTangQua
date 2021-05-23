@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -11,39 +13,70 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.giftsapp.Adapter.ProductDetailsAdapter;
 import com.example.giftsapp.Adapter.ProductImageAdapter;
 import com.example.giftsapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.example.giftsapp.Controller.MainActivity;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
+    private TextView AddToCart;
+
     private ViewPager productImagesViewPager;
     private TabLayout viewpagerIndicator;
+    private TextView productTitle;
+    private TextView averageRatingMiniView;
+    private TextView totalRatingMiniView;
+    private TextView productPrice;
+    private TextView cuttedPrice;
+
 
     private  static  boolean ALREADY_ADDED_TO_WISHLIST = false;
     private FloatingActionButton addToWishListBtn;
 
     // product description layout
+    private ConstraintLayout productDetailsOnly;
+    private ConstraintLayout productDetailsTabs;
     private ViewPager productDetailsViewPager;
     private TabLayout productDetailsTabLayout;
+    public static String productOrderDetails;
+    public static String productDescription="Đang cập nhập";
+    public static int tabPosition =-1;
+
+    private String Id_product; // horizontalScollViewAdapter
+    private String Id_product1; // GridProductLayoutAdapter
+    private String Id_product2; // HomePageFragment Adapter
+    private String ProductDetailDescription;
+    private String ProductDetailDescription1;
+    private String ProductDetailDescription2;
     // product description layout
 
     // rate now layout
     private LinearLayout rateNowContainer;
     // rate now layout
     private Button buyNowBtn;
+    private FirebaseFirestore firebaseFirestore;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,16 +93,92 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productDetailsViewPager = findViewById(R.id.product_details_viewpager);
         productDetailsTabLayout = findViewById(R.id.product_details_tabLayout);
         buyNowBtn = findViewById(R.id.buy_now_btn);
+        productTitle = findViewById(R.id.product_title);
+        averageRatingMiniView = findViewById(R.id.tv_product_rating_miniview);
+        totalRatingMiniView = findViewById(R.id.total_ratings_miniview);
+        productPrice = findViewById(R.id.product_price);
+        cuttedPrice = findViewById(R.id.cut_price);
+        productDetailsTabs=findViewById(R.id.product_details_tabs_container);
+        AddToCart = findViewById(R.id.tv_AddToCart); // nút add to cart chỗ này
 
+        Id_product = getIntent().getStringExtra("IdProduct");
+        Id_product1 = getIntent().getStringExtra("IdProduct1");
+        Id_product2 = getIntent().getStringExtra("IdProduct2");
 
-        List<Integer> productImages = new ArrayList<>();
-        productImages.add(R.drawable.son);
+        ProductDetailDescription = getIntent().getStringExtra("productDescription");
+        ProductDetailDescription1 = getIntent().getStringExtra("productDescription1");
+        ProductDetailDescription2 = getIntent().getStringExtra("productDescription2");
+
+        final String[] description_sms = new String[1];
+        List<String> productImages = new ArrayList<>();
+        /*productImages.add(R.drawable.son);
         productImages.add(R.drawable.teddy);
         productImages.add(R.drawable.gmail);
-        productImages.add(R.drawable.facebook);
+        productImages.add(R.drawable.facebook);*/
 
-        ProductImageAdapter productImageAdapter = new ProductImageAdapter(productImages);
-        productImagesViewPager.setAdapter(productImageAdapter);
+        String Id_product_current = "";
+        if(Id_product==null && Id_product1==null)
+        {
+            Id_product_current = Id_product2;
+        }
+        else if(Id_product==null && Id_product2==null)
+        {
+            Id_product_current = Id_product1;
+        }
+        else if(Id_product1 == null && Id_product2==null)
+        {
+            Id_product_current = Id_product;
+        }
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("Products").document(Id_product_current)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+               if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    for (int i = 0; i < 3; i++) {
+                        productImages.add(documentSnapshot.get("imageUrl").toString());
+                    }
+                    ProductImageAdapter productImageAdapter = new ProductImageAdapter(productImages);
+                    productImagesViewPager.setAdapter(productImageAdapter);
+
+                    productTitle.setText(documentSnapshot.get("name").toString());
+                    averageRatingMiniView.setText("4.5");
+                    totalRatingMiniView.setText("( 100 ratings)");
+                    productPrice.setText(documentSnapshot.get("price").toString() + ".VND");
+                    long price = Long.parseLong(documentSnapshot.get("price").toString()) + 20000;
+                    cuttedPrice.setText(price + "" + ".VND");
+
+                   description_sms[0] = documentSnapshot.get("description").toString();
+                } else {
+                    String error = task.getException().getMessage();
+                    Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        if(ProductDetailDescription==null && ProductDetailDescription1==null)
+        {
+            productDescription = ProductDetailDescription2;
+        }else if(ProductDetailDescription==null && ProductDetailDescription2==null)
+        {
+            productDescription = ProductDetailDescription1;
+        }else if(ProductDetailDescription1==null && ProductDetailDescription2==null)
+        {
+            productDescription = ProductDetailDescription;
+        }
+
+        // xử lý thêm vào cart
+        AddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProductDetailsActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         viewpagerIndicator.setupWithViewPager(productImagesViewPager,true);
         addToWishListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +199,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productDetailsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                tabPosition = tab.getPosition();
                 productDetailsViewPager.setCurrentItem(tab.getPosition());
+
             }
 
             @Override
@@ -142,6 +253,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -154,7 +266,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         if(id==android.R.id.home)
         {
-
             finish();
             return true;
         }
@@ -165,6 +276,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
         else if(id == R.id.main_cart_icon)
         {
+            Intent cartIntent = new Intent(ProductDetailsActivity.this,MainActivity.class);
+            com.example.giftsapp.Controller.MainActivity.showCart =true;
+            startActivity(cartIntent);
             // xem giỏ hàng chỗ này
             return true;
         }

@@ -36,7 +36,7 @@ public class GridProductLayoutAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return horizontalProductScrollModelList.get(position);
     }
 
     @Override
@@ -44,10 +44,13 @@ public class GridProductLayoutAdapter extends BaseAdapter {
         return 0;
     }
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
+        String id = horizontalProductScrollModelList.get(position).getId();
         if(convertView == null)
         {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_scroll_item_layout,null);
@@ -58,6 +61,8 @@ public class GridProductLayoutAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent productDetailsIntent = new Intent(parent.getContext(), ProductDetailsActivity.class);
+                    productDetailsIntent.putExtra("IdProduct1",horizontalProductScrollModelList.get(position).getId());
+                    productDetailsIntent.putExtra("productDescription1",horizontalProductScrollModelList.get(position).getProductDetailsDescription());
                     parent.getContext().startActivity(productDetailsIntent);
                 }
             });
@@ -66,6 +71,7 @@ public class GridProductLayoutAdapter extends BaseAdapter {
             TextView productName = view.findViewById(R.id.h_s_product_name);
             TextView productDescription = view.findViewById(R.id.h_s_product_description);
             TextView productPrice = view.findViewById(R.id.h_s_product_price);
+
 
             Glide.with(parent.getContext()).load( horizontalProductScrollModelList.get(position).getProductImage()).apply(new RequestOptions().placeholder(R.drawable.ic__homec)).into(productImage);
             productName.setText(horizontalProductScrollModelList.get(position).getProductName());

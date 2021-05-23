@@ -31,9 +31,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final  int CART_FRAGMENT=1;
     private static final int ORDERS_FRAGMENT=2;
     private  static final int ACCOUNT_FRAGMENT=3;
+    public static Boolean showCart = false;
 
     private FrameLayout frameLayout;
-    private static int currentFragment =-1;
+    private  int currentFragment =-1;
     private NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
+
 
         frameLayout = findViewById(R.id.main_framelayout);
         navigationView = findViewById(R.id.nav_view);
@@ -91,15 +90,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(0).setChecked(true);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
+       /* mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
-                .build();
+                .build();*/
+
         /*NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);*/
 
-        SetFragment(new HomeFragment(),HOME_FRAGMENT);
+        if(showCart)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            GotoFragment("My Cart",new MyCartFragment(),-2);
+        }else
+        {
+            drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(drawerToggle);
+            drawerToggle.syncState();
+            SetFragment(new HomeFragment(),HOME_FRAGMENT);
+        }
+
+
+
     }
 
     @Override
@@ -108,7 +121,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (layout.isDrawerOpen(GravityCompat.START)) {
             layout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(currentFragment == HOME_FRAGMENT)
+            {
+                currentFragment=-1;
+                super.onBackPressed();
+            }
+            else
+            {
+                if(showCart)
+                {
+                    showCart = false;
+                    finish();
+                }
+                else {
+                    invalidateOptionsMenu();
+                    SetFragment(new HomeFragment(), HOME_FRAGMENT);
+                    navigationView.getMenu().getItem(0).setChecked(true);
+                }
+            }
         }
     }
 
@@ -133,20 +163,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.main_search_icon:
-                // search chỗ này
-                break;
-            case R.id.main_notification_icon:
-                // Thông báo chỗ này
-                break;
-            case R.id.main_cart_icon:
-                // xem giỏ hàng chỗ này
-                GotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
-                break;
-            default:
-                break;
-        }
+
+           if(id== R.id.main_search_icon)
+           {
+               // seach ở đây
+               return true;
+           }else if(id == R.id.main_notification_icon)
+           {
+               // Thông báo chỗ này
+               return true;
+           }
+           else if(id==R.id.main_cart_icon)
+           {
+               // xem giỏ hàng chỗ này
+               GotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
+               return true;
+           }
+           else if(id == android.R.id.home){
+               if(showCart){
+                   showCart = false;
+                   finish();
+                   return true;
+               }
+           }
         return super.onOptionsItemSelected(item);
     }
 

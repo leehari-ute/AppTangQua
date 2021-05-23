@@ -4,11 +4,18 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.giftsapp.R;
+
+import org.w3c.dom.Text;
+
+import static com.example.giftsapp.Controller.ProductDetailsActivity.tabPosition;
+import static com.example.giftsapp.Controller.ProductDetailsActivity.productDescription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +28,7 @@ public class ProductDescriptionFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private ProductDetailsActivity productDetailsActivity;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -57,10 +65,21 @@ public class ProductDescriptionFragment extends Fragment {
         }
     }
 
+    private TextView descriptionBody;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_description, container, false);
+        View view = inflater.inflate(R.layout.fragment_product_description, container, false);
+        descriptionBody =  view.findViewById(R.id.tv_product_description);
+        if(tabPosition==0) {
+            descriptionBody.setText(productDescription);
+        }
+        else
+        {
+            descriptionBody.setText(productDescription);
+        }
+        return view;
     }
 }

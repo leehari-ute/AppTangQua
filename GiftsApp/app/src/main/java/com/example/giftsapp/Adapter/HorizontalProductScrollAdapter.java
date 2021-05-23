@@ -1,6 +1,7 @@
 package com.example.giftsapp.Adapter;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,14 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
         this.horizontalProductScrollModelList = horizontalProductScrollModelList;
     }
 
+    public List<HorizontalProductScrollModel> getHorizontalProductScrollModelList() {
+        return horizontalProductScrollModelList;
+    }
+
+    public void setHorizontalProductScrollModelList(List<HorizontalProductScrollModel> horizontalProductScrollModelList) {
+        this.horizontalProductScrollModelList = horizontalProductScrollModelList;
+    }
+
     @NonNull
     @Override
     public HorizontalProductScrollAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,13 +48,20 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
         String name = horizontalProductScrollModelList.get(position).getProductName();
         String description = horizontalProductScrollModelList.get(position).getProductDescription();
         String price = horizontalProductScrollModelList.get(position).getProductPrice();
+        String id = horizontalProductScrollModelList.get(position).getId();
+        String productDetailDescription = horizontalProductScrollModelList.get(position).getProductDetailsDescription();
 
         holder.setProductImage(resource);
         holder.setProductName(name);
         holder.setProductDescription(description);
         holder.setProductPrice(price);
+        holder.setId(id);
+        holder.setProductDetailsDescription(productDetailDescription);
     }
 
+    public String getIdDocument(int position) {
+        return horizontalProductScrollModelList.get(position).getId();
+    }
     @Override
     public int getItemCount() {
         if(horizontalProductScrollModelList.size()>8){
@@ -60,6 +76,9 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
         private TextView productName;
         private TextView productDescription;
         private TextView productPrice;
+        private String Id;
+        private String productDetailsDescription;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.h_s_product_image);
@@ -71,6 +90,8 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
                 @Override
                 public void onClick(View v) {
                     Intent productDetailsIntent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
+                    productDetailsIntent.putExtra("IdProduct",Id);
+                    productDetailsIntent.putExtra("productDescription",productDetailsDescription);
                     itemView.getContext().startActivity(productDetailsIntent);
                 }
             });
@@ -88,6 +109,22 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
         }
         private void setProductPrice (String price){
             productPrice.setText(price+".VND");
+        }
+
+        public String getId() {
+            return Id;
+        }
+
+        public void setId(String id) {
+            Id = id;
+        }
+
+        public String getProductDetailsDescription() {
+            return productDetailsDescription;
+        }
+
+        public void setProductDetailsDescription(String productDetailsDescription) {
+            this.productDetailsDescription = productDetailsDescription;
         }
     }
 }
