@@ -144,19 +144,20 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
         }
         edtPassword.setError(null);
 
-
-        fAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(LoginForm.this, "Success", Toast.LENGTH_SHORT).show();
-                            CheckRole();
-                            return;
+        if (Validate()) {
+            fAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(LoginForm.this, "Success", Toast.LENGTH_SHORT).show();
+                                CheckRole();
+                                return;
+                            }
+                            Toast.makeText(LoginForm.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(LoginForm.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+        }
     }
 
     public void ShowHidePass(View view) {
@@ -208,5 +209,20 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
         });
 
         passwordResetDialog.create().show();
+    }
+
+    private boolean Validate() {
+        if (TextUtils.isEmpty(email)) {
+            edtEmail.setError("Email is required");
+            return false;
+        }
+        edtEmail.setError(null);
+
+        if (TextUtils.isEmpty(password)) {
+            edtPassword.setError("Password is required");
+            return false;
+        }
+        edtPassword.setError(null);
+        return true;
     }
 }

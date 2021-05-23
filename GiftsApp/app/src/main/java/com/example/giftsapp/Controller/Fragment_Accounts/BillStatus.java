@@ -18,25 +18,33 @@ import com.example.giftsapp.Adapter.BillAdapter;
 import com.example.giftsapp.Controller.LoginForm;
 import com.example.giftsapp.Controller.OrderDetailsActivity;
 import com.example.giftsapp.Controller.SettingAccountForm;
+import com.example.giftsapp.Model.Bill;
 import com.example.giftsapp.Model.BillModel;
+import com.example.giftsapp.Model.Products;
+import com.example.giftsapp.Model.StatusBill;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 public class BillStatus extends Fragment {
 
     ListView listViewBill;
-    ArrayList<BillModel> arrayListBill;
+    ArrayList<Bill> billsArrayList;
     FirebaseAuth fAuth;
     FirebaseUser user;
     FirebaseFirestore fStore;
@@ -68,15 +76,6 @@ public class BillStatus extends Fragment {
             getActivity().finish();
         }
 
-//        listViewBill.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(settingAccountForm, OrderDetailsActivity.class);
-//                //putExtra parcel bill
-//                startActivity(intent);
-//                getActivity().finish();
-//            }
-//        });
         return view;
     }
 
@@ -94,8 +93,8 @@ public class BillStatus extends Fragment {
         user = fAuth.getCurrentUser();
         userID = user.getUid();
         listViewBill = view.findViewById(R.id.listViewBill);
-        arrayListBill = new ArrayList<>();
-        billAdapter = new BillAdapter(settingAccountForm, R.layout.list_bill, arrayListBill);
+        billsArrayList = new ArrayList<>();
+        billAdapter = new BillAdapter(settingAccountForm, R.layout.list_bill, billsArrayList);
         listViewBill.setAdapter(billAdapter);
         GetDataFromFireStore();
     }
@@ -106,31 +105,55 @@ public class BillStatus extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        ArrayList<Map<String, Object>> billArrayList = new ArrayList<>();
-                        billArrayList.add(document.getData());
-                        ArrayList<Map<String, Object>> productArrayList = (ArrayList<Map<String, Object>>) billArrayList.get(0).get("products");
-                        ArrayList<Map<String, Object>> statusArrayList = (ArrayList<Map<String, Object>>) billArrayList.get(0).get("status");
-
-                        String productID = productArrayList.get(0).get("productID").toString();
-                        String totalPrice = billArrayList.get(0).get("totalPrice").toString();
-                        String quantity = billArrayList.get(0).get("quantityProduct").toString();
-                        String statusBill = "";
-
-                        for (int i = 0; i < statusArrayList.size(); i++) {
-                            if (statusArrayList.get(i).get("isDone").toString().equals("true")) {
-                                statusBill = statusArrayList.get(i).get("name").toString();
-                                break;
+                    if (!task.getResult().isEmpty()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            ArrayList<Map<String, Object>> billArrayList = new ArrayList<>();
+                            billArrayList.add(document.getData());
+                            ArrayList<Map<String, Object>> statusArrayList = (ArrayList<Map<String, Object>>) billArrayList.get(0).get("status");
+                            String statusBill = "";
+//
+                            for (int i = 0; i < statusArrayList.size(); i++) {
+                                if (statusArrayList.get(i).get("isDone").toString().equals("true")) {
+                                    statusBill = statusArrayList.get(i).get("name").toString();
+                                    break;
+                                }
                             }
-                        }
 
-                        if (statusBill.equals(statusRequest)) {
-                            String firstProduct = productArrayList.get(0).get("name").toString();
-                            String firstPrice = productArrayList.get(0).get("price").toString();
-                            String imgUrl = productArrayList.get(0).get("imageUrl").toString();
-                            BillModel billModel = new BillModel(productID, statusBill, firstProduct, firstPrice, totalPrice, quantity, imgUrl);
-                            arrayListBill.add(billModel);
-                            billAdapter.notifyDataSetChanged();
+                            if (statusBill.equals(statusRequest)) {
+                                ArrayList<StatusBill> statusBillArrayList = new ArrayList<>();
+                                for (int i = 0; i < statusArrayList.size(); i++) {
+                                    Boolean isDone = Boolean.valueOf(statusArrayList.get(i).get("isDone").toString());
+                                    String name = statusArrayList.get(i).get("name").toString();
+                                    Timestamp ts = (Timestamp) statusArrayList.get(i).get("createAt");
+                                    Date createAt = ts.toDate();
+                                    StatusBill status = new StatusBill(isDone, name, createAt);
+                                    statusBillArrayList.add(status);
+                                }
+
+                                ArrayList<Map<String, Object>> productArrayList = (ArrayList<Map<String, Object>>) billArrayList.get(0).get("products");
+                                ArrayList<Products> productsArrayList = new ArrayList<>();
+                                for (int i = 0; i < productArrayList.size(); i++) {
+                                    String id = productArrayList.get(i).get("productID").toString();
+                                    String name = productArrayList.get(i).get("name").toString();
+                                    String price = productArrayList.get(i).get("price").toString();
+                                    String imgUrl = productArrayList.get(i).get("imageUrl").toString();
+                                    Integer quantity = Integer.parseInt(productArrayList.get(i).get("quantity").toString());
+                                    Products product = new Products(id, name, price, imgUrl, quantity);
+                                    productsArrayList.add(product);
+                                }
+                                String id = document.getId();
+                                Integer addressID = Integer.parseInt(billArrayList.get(0).get("addressID").toString());
+                                Timestamp ts = (Timestamp) billArrayList.get(0).get("createAt");
+                                Date createAt = ts.toDate();
+                                String paymentType = billArrayList.get(0).get("paymentType").toString();
+                                Integer quantity = Integer.parseInt(billArrayList.get(0).get("quantityProduct").toString());
+                                String totalPrice = billArrayList.get(0).get("totalPrice").toString();
+                                String uID = billArrayList.get(0).get("userID").toString();
+
+                                Bill bill = new Bill(id, addressID, createAt, paymentType, productsArrayList, statusBillArrayList, totalPrice, uID, quantity);
+                                billsArrayList.add(bill);
+                                billAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 } else {

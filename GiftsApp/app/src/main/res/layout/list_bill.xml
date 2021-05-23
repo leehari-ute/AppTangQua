@@ -21,11 +21,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="290dp"
+                android:layout_height="270dp"
                 android:layout_marginTop="3dp"
                 android:background="@drawable/border_infor"
                 android:orientation="vertical"
-                android:weightSum="7">
+                android:weightSum="6.5">
 
                 <TextView
                     android:id="@+id/txtStatus"
@@ -113,7 +113,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1.5"
                     android:orientation="horizontal"
                     android:layout_marginLeft="-10dp"
                     android:layout_marginTop="5dp"

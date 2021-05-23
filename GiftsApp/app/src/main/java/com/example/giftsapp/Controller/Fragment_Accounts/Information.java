@@ -45,9 +45,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.type.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Information extends Fragment {
 
@@ -76,8 +78,6 @@ public class Information extends Fragment {
         View view = inflater.inflate(R.layout.fragment_information, container, false);
 
         Init(view);
-
-        //txtBirthday.setText(simpleDateFormat.format(calendar.getTime()));
 
         txtName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,8 +191,10 @@ public class Information extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 calendar.set(year, month, dayOfMonth);
-                ChangeBirthday(simpleDateFormat.format(calendar.getTime()));
-                LoadUserInformation();
+                if (calendar.before(new Date())) {
+                    ChangeBirthday(simpleDateFormat.format(calendar.getTime()));
+                    LoadUserInformation();
+                }
             }
         }, year, month, date);
         datePickerDialog.show();
@@ -201,14 +203,19 @@ public class Information extends Fragment {
     private void ForgotPassword(View v) {
         final EditText resetPass  = new EditText(v.getContext());
         final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
-        passwordResetDialog.setTitle("Reset Password?");
-        passwordResetDialog.setMessage("Enter new password to reset password");
+        passwordResetDialog.setTitle("Đổi mật khẩu?");
+        passwordResetDialog.setMessage("Nhập mật khẩu mới để đổi mật khẩu");
         passwordResetDialog.setView(resetPass);
 
-        passwordResetDialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        passwordResetDialog.setPositiveButton("Lưu", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPassword = resetPass.getText().toString();
+                if (newPassword.length() < 6) {
+                    resetPass.setError("Password must be more than 5 characters");
+                    return;
+                }
+                resetPass.setError(null);
                 user.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -223,7 +230,7 @@ public class Information extends Fragment {
             }
         });
 
-        passwordResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        passwordResetDialog.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
