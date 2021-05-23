@@ -6,12 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.giftsapp.Model.Bill;
 import com.example.giftsapp.R;
 
 public class OrderDetailsActivity extends AppCompatActivity {
 
+    Bill bill;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,11 +25,17 @@ public class OrderDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("Order Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            bill = bundle.getParcelable("PARCEL_BILL");
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==android.R.id.home){
+        if(item.getItemId() == android.R.id.home){
             Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
             intent.putExtra("EXTRA_DOCUMENT_OPEN_BILL", true);
             startActivity(intent);

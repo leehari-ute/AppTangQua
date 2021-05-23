@@ -122,21 +122,23 @@ public class Location extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
-                    for (int i = 0; i < addressArray.size(); i++) {
-                        Integer ID = Integer.parseInt(addressArray.get(i).get("ID").toString());
-                        Boolean isDefault = addressArray.get(i).get("isDefault").toString().equals("true");
-                        String name = addressArray.get(i).get("name").toString();
-                        String phone = addressArray.get(i).get("phone").toString();
-                        String province = addressArray.get(i).get("province").toString();
-                        String district = addressArray.get(i).get("district").toString();
-                        String village = addressArray.get(i).get("village").toString();
-                        String detailAddress = addressArray.get(i).get("detailAddress").toString();
-                        Address newAddress = new Address(ID, name, phone, detailAddress, village, district, province, isDefault);
-                        addressArrayList.add(newAddress);
-                        addressAdapter.notifyDataSetChanged();
-                    }
+                        DocumentSnapshot document = task.getResult();
+                        if (document.getData().get("address") != null) {
+                            ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
+                            for (int i = 0; i < addressArray.size(); i++) {
+                                Integer ID = Integer.parseInt(addressArray.get(i).get("ID").toString());
+                                Boolean isDefault = addressArray.get(i).get("isDefault").toString().equals("true");
+                                String name = addressArray.get(i).get("name").toString();
+                                String phone = addressArray.get(i).get("phone").toString();
+                                String province = addressArray.get(i).get("province").toString();
+                                String district = addressArray.get(i).get("district").toString();
+                                String village = addressArray.get(i).get("village").toString();
+                                String detailAddress = addressArray.get(i).get("detailAddress").toString();
+                                Address newAddress = new Address(ID, name, phone, detailAddress, village, district, province, isDefault);
+                                addressArrayList.add(newAddress);
+                                addressAdapter.notifyDataSetChanged();
+                            }
+                        }
                 }
                 else {
                     Log.d("TAG", "Lỗi: " + task.getException());

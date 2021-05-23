@@ -242,29 +242,31 @@ public class AddLocation extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
-                    for (int i = 0; i < addressArray.size(); i++) {
-                        if (addressArray.get(i).get("isDefault").toString().equals("true")) {
-                            HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
-                            //GetDataFromFireStore(addressArray, i);
-                            Integer addressID = Integer.parseInt(addressArray.get(i).get("ID").toString());
-                            String name = addressArray.get(i).get("name").toString().trim();
-                            String phone = addressArray.get(i).get("phone").toString().trim();
-                            String province = addressArray.get(i).get("province").toString().trim();
-                            String district = addressArray.get(i).get("district").toString().trim();
-                            String village = addressArray.get(i).get("village").toString().trim();
-                            String detailAddress = addressArray.get(i).get("detailAddress").toString().trim();
-                            defaultAddress.put("ID", addressID);
-                            defaultAddress.put("isDefault", true);
-                            defaultAddress.put("name", name);
-                            defaultAddress.put("phone", phone);
-                            defaultAddress.put("province", province);
-                            defaultAddress.put("district", district);
-                            defaultAddress.put("village", village);
-                            defaultAddress.put("detailAddress", detailAddress);
+                    if (document.getData().get("address") != null) {
+                        ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
+                        for (int i = 0; i < addressArray.size(); i++) {
+                            if (addressArray.get(i).get("isDefault").toString().equals("true")) {
+                                HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
+                                //GetDataFromFireStore(addressArray, i);
+                                Integer addressID = Integer.parseInt(addressArray.get(i).get("ID").toString());
+                                String name = addressArray.get(i).get("name").toString().trim();
+                                String phone = addressArray.get(i).get("phone").toString().trim();
+                                String province = addressArray.get(i).get("province").toString().trim();
+                                String district = addressArray.get(i).get("district").toString().trim();
+                                String village = addressArray.get(i).get("village").toString().trim();
+                                String detailAddress = addressArray.get(i).get("detailAddress").toString().trim();
+                                defaultAddress.put("ID", addressID);
+                                defaultAddress.put("isDefault", true);
+                                defaultAddress.put("name", name);
+                                defaultAddress.put("phone", phone);
+                                defaultAddress.put("province", province);
+                                defaultAddress.put("district", district);
+                                defaultAddress.put("village", village);
+                                defaultAddress.put("detailAddress", detailAddress);
 
-                            fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress));
-                            SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
+                                fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress));
+                                SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
+                            }
                         }
                     }
                 } else {
