@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +45,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
                             email = "",
                             userID = "";
 
+    public static String currentUser ="";
     @Override
     protected void onStart() {
         super.onStart();
@@ -126,6 +128,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
                 finish();
             }
         });
+        currentUser = userID;
     }
 
     private void Login() {

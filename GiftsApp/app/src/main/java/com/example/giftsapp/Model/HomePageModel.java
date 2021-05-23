@@ -61,6 +61,7 @@ public class HomePageModel {
     ///////////// Horizontal Product Layout && Grid Product Layout
 
     private String title;
+
     private  List<HorizontalProductScrollModel> horizontalProductScrollModelList;
 
     public HomePageModel(int type, String title, List<HorizontalProductScrollModel> horizontalProductScrollModelList) {

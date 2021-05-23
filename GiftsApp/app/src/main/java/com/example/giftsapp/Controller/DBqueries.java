@@ -99,11 +99,16 @@ public class DBqueries {
                         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(documentSnapshot.get("imageUrl").toString()
                                 ,documentSnapshot.get("name").toString()
                                 ,documentSnapshot.get("occasion").toString()
-                                ,documentSnapshot.get("price").toString()));
+                                ,documentSnapshot.get("price").toString()
+                                ,documentSnapshot.getId()
+                                , documentSnapshot.get("description").toString()));
+
+
                     }
                     homePageModelList.add(new HomePageModel(2,"Bán chạy",horizontalProductScrollModelList ));
                     homePageModelList.add(new HomePageModel(3,"#Trending",horizontalProductScrollModelList ));
                     adapter.notifyDataSetChanged();
+
                 }else{
                     String error = task.getException().getMessage();
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show();

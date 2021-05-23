@@ -1,14 +1,19 @@
 package com.example.giftsapp.Adapter;
 
+import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.giftsapp.Model.CartItemModel;
 import com.example.giftsapp.R;
 
@@ -56,14 +61,15 @@ public class CartAdapter extends RecyclerView.Adapter {
         switch (cartItemModelList.get(position).getType()){
             case CartItemModel.CART_ITEM:
             {
-                int resource = cartItemModelList.get(position).getProductImage();
+                String resource = cartItemModelList.get(position).getProductImage();
                 String title = cartItemModelList.get(position).getProductTitle();
                 int freeVAT = cartItemModelList.get(position).getFreeVAT();
                 String price = cartItemModelList.get(position).getProductPrice();
                 String cutPrice = cartItemModelList.get(position).getCuttedPrice();
                 int codesales = cartItemModelList.get(position).getCodeSale();
+                int productQuantitys = cartItemModelList.get(position).getProductQuantity();
 
-                ((CartItemViewholder)holder).setItemDetails(resource,title,freeVAT,price,cutPrice,codesales);
+                ((CartItemViewholder)holder).setItemDetails(resource,title,freeVAT,price,cutPrice,codesales,productQuantitys);
                 break;}
                 case CartItemModel.TOTAL_AMOUNT:
                 {
@@ -105,9 +111,11 @@ public class CartAdapter extends RecyclerView.Adapter {
             productQuantity=itemView.findViewById(R.id.product_quantity);
             codeSale = itemView.findViewById(R.id.tv_codeSale);
         }
-        private void setItemDetails(int resource, String title, int freeVATNo, String productPriceText, String productCuttedPrice, int CodeSale)
+        private void setItemDetails(String resource, String title, int freeVATNo, String productPriceText, String productCuttedPrice
+                , int CodeSale, int productQuantitytext)
         {
-            productImage.setImageResource(resource);
+           // productImage.setImageResource(resource);
+            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.ic__homec)).into(productImage);
             productTitle.setText(title);
 
             if(freeVATNo>0)
@@ -122,8 +130,39 @@ public class CartAdapter extends RecyclerView.Adapter {
             productPrice.setText(productPriceText);
             cuttedPrice.setText(productCuttedPrice);
             codeSale.setText("Mã giảm giá: "+CodeSale+"");
+            productQuantity.setText("SL: "+productQuantitytext);
 
+            productQuantity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog quantityDialog = new Dialog(itemView.getContext());
+                    quantityDialog.setContentView(R.layout.quantity_dialog);
+                    quantityDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                    quantityDialog.setCancelable(false);
+                    EditText quantityNo = quantityDialog.findViewById(R.id.quantity_no);
+                    Button cancelBtn = quantityDialog.findViewById(R.id.cancel_btn);
+                    Button okBtn = quantityDialog.findViewById(R.id.ok_btn);
+
+                    cancelBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            quantityDialog.dismiss();
+                        }
+                    });
+
+                    okBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            productQuantity.setText("SL: "+quantityNo.getText().toString());
+                           // productQuantitytext = Integer.parseInt(quantityNo.getText().toString());
+                            quantityDialog.dismiss();
+                        }
+                    });
+                    quantityDialog.show();
+                }
+            });
         }
+
 
     }
 

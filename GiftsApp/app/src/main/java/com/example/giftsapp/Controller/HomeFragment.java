@@ -241,8 +241,13 @@ public class HomeFragment extends Fragment {
                 }
             }
         });*/
+        if(homePageModelList.size()==0)
+        {
+            loadProductData(adapter,getContext());
+        }else{
+            adapter.notifyDataSetChanged();
+        }
 
-        loadProductData(adapter,getContext());
         ////////////////////////////// Testing
         return root;
     }

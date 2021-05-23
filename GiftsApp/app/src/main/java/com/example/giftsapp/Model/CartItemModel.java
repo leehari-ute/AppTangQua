@@ -15,7 +15,7 @@ public class CartItemModel {
     }
 
     //// Cart item
-    private int productImage;
+    private String productImage;
     private String productTitle; // Name
     private int freeVAT;
     private String productPrice;
@@ -23,7 +23,7 @@ public class CartItemModel {
     private int productQuantity;
     private int codeSale;
 
-    public CartItemModel(int type, int productImage, String productTitle, int freeVAT, String productPrice, String cuttedPrice, int productQuantity, int codeSale) {
+    public CartItemModel(int type, String productImage, String productTitle, int freeVAT, String productPrice, String cuttedPrice, int productQuantity, int codeSale) {
         this.type = type;
         this.productImage = productImage;
         this.productTitle = productTitle;
@@ -34,11 +34,11 @@ public class CartItemModel {
         this.codeSale = codeSale;
     }
 
-    public int getProductImage() {
+    public String getProductImage() {
         return productImage;
     }
 
-    public void setProductImage(int productImage) {
+    public void setProductImage(String productImage) {
         this.productImage = productImage;
     }
 
