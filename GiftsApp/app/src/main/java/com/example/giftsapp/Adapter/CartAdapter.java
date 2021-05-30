@@ -1,6 +1,7 @@
 package com.example.giftsapp.Adapter;
 
 import android.app.Dialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,20 +9,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.giftsapp.Controller.MyCartFragment;
 import com.example.giftsapp.Model.CartItemModel;
 import com.example.giftsapp.R;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.example.giftsapp.Controller.LoginForm.currentUser;
 
 public class CartAdapter extends RecyclerView.Adapter {
 
     private List<CartItemModel> cartItemModelList;
+    FirebaseFirestore firebaseFirestore;
 
     public CartAdapter(List<CartItemModel> cartItemModelList) {
         this.cartItemModelList = cartItemModelList;
@@ -68,8 +78,9 @@ public class CartAdapter extends RecyclerView.Adapter {
                 String cutPrice = cartItemModelList.get(position).getCuttedPrice();
                 int codesales = cartItemModelList.get(position).getCodeSale();
                 int productQuantitys = cartItemModelList.get(position).getProductQuantity();
+                String productId = cartItemModelList.get(position).getProID();
 
-                ((CartItemViewholder)holder).setItemDetails(resource,title,freeVAT,price,cutPrice,codesales,productQuantitys);
+                ((CartItemViewholder)holder).setItemDetails(resource,title,freeVAT,price,cutPrice,codesales,productQuantitys,productId);
                 break;}
                 case CartItemModel.TOTAL_AMOUNT:
                 {
@@ -99,6 +110,8 @@ public class CartAdapter extends RecyclerView.Adapter {
         private TextView productPrice;
         private TextView productQuantity;
         private TextView codeSale;
+        private String productID;
+        private TextView removeItemCart;
 
         public CartItemViewholder(@NonNull View itemView) {
             super(itemView);
@@ -110,9 +123,10 @@ public class CartAdapter extends RecyclerView.Adapter {
             productPrice = itemView.findViewById(R.id.product_price);
             productQuantity=itemView.findViewById(R.id.product_quantity);
             codeSale = itemView.findViewById(R.id.tv_codeSale);
+            removeItemCart = itemView.findViewById(R.id.tv_remove_item);
         }
         private void setItemDetails(String resource, String title, int freeVATNo, String productPriceText, String productCuttedPrice
-                , int CodeSale, int productQuantitytext)
+                , int CodeSale, int productQuantitytext, String productIDtext)
         {
            // productImage.setImageResource(resource);
             Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.ic__homec)).into(productImage);
@@ -131,6 +145,8 @@ public class CartAdapter extends RecyclerView.Adapter {
             cuttedPrice.setText(productCuttedPrice);
             codeSale.setText("Mã giảm giá: "+CodeSale+"");
             productQuantity.setText("SL: "+productQuantitytext);
+
+            firebaseFirestore = FirebaseFirestore.getInstance(); // kết nối DB
 
             productQuantity.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,15 +171,33 @@ public class CartAdapter extends RecyclerView.Adapter {
                         public void onClick(View v) {
                             productQuantity.setText("SL: "+quantityNo.getText().toString());
                            // productQuantitytext = Integer.parseInt(quantityNo.getText().toString());
+
                             quantityDialog.dismiss();
                         }
                     });
                     quantityDialog.show();
                 }
             });
+
+            removeItemCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //removeItemCart.setText(productIDtext);
+                    Map<String,Object> itemRemove = new HashMap<>();
+                    itemRemove.put("ProductID",productIDtext);
+                    itemRemove.put("Quantity",1);
+                    firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove));
+                }
+            });
         }
 
+        public String getProductID() {
+            return productID;
+        }
 
+        public void setProductID(String productID) {
+            this.productID = productID;
+        }
     }
 
     class CartTotalAmountViewholder extends RecyclerView.ViewHolder{
