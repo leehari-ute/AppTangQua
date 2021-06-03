@@ -3,27 +3,25 @@ package com.example.giftsapp.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.firebase.firestore.ServerTimestamp;
-
 import java.util.Date;
 
 public class StatusBill implements Parcelable {
-    private Boolean isDone;
+    private Boolean isPresent;
     private String name;
     private Date date;
 
-    public StatusBill(Boolean isDone, String name, Date date) {
-        this.isDone = isDone;
+    public StatusBill(Boolean isPresent, String name, Date date) {
+        this.isPresent = isPresent;
         this.name = name;
         this.date = date;
     }
 
     public Boolean getDone() {
-        return isDone;
+        return isPresent;
     }
 
     public void setDone(Boolean done) {
-        isDone = done;
+        isPresent = done;
     }
 
     public String getName() {
@@ -44,7 +42,7 @@ public class StatusBill implements Parcelable {
 
     protected StatusBill(Parcel in) {
         byte isDoneVal = in.readByte();
-        isDone = isDoneVal == 0x02 ? null : isDoneVal != 0x00;
+        isPresent = isDoneVal == 0x02 ? null : isDoneVal != 0x00;
         name = in.readString();
         long tmpDate = in.readLong();
         date = tmpDate != -1 ? new Date(tmpDate) : null;
@@ -57,10 +55,10 @@ public class StatusBill implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (isDone == null) {
+        if (isPresent == null) {
             dest.writeByte((byte) (0x02));
         } else {
-            dest.writeByte((byte) (isDone ? 0x01 : 0x00));
+            dest.writeByte((byte) (isPresent ? 0x01 : 0x00));
         }
         dest.writeString(name);
         dest.writeLong(date != null ? date.getTime() : -1L);

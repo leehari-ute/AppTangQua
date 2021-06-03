@@ -113,7 +113,7 @@ public class BillStatus extends Fragment {
                             String statusBill = "";
 //
                             for (int i = 0; i < statusArrayList.size(); i++) {
-                                if (statusArrayList.get(i).get("isDone").toString().equals("true")) {
+                                if (statusArrayList.get(i).get("isPresent").toString().equals("true")) {
                                     statusBill = statusArrayList.get(i).get("name").toString();
                                     break;
                                 }
@@ -122,11 +122,11 @@ public class BillStatus extends Fragment {
                             if (statusBill.equals(statusRequest)) {
                                 ArrayList<StatusBill> statusBillArrayList = new ArrayList<>();
                                 for (int i = 0; i < statusArrayList.size(); i++) {
-                                    Boolean isDone = Boolean.valueOf(statusArrayList.get(i).get("isDone").toString());
+                                    Boolean isPresent = Boolean.valueOf(statusArrayList.get(i).get("isPresent").toString());
                                     String name = statusArrayList.get(i).get("name").toString();
                                     Timestamp ts = (Timestamp) statusArrayList.get(i).get("createAt");
                                     Date createAt = ts.toDate();
-                                    StatusBill status = new StatusBill(isDone, name, createAt);
+                                    StatusBill status = new StatusBill(isPresent, name, createAt);
                                     statusBillArrayList.add(status);
                                 }
 
@@ -149,8 +149,8 @@ public class BillStatus extends Fragment {
                                 Integer quantity = Integer.parseInt(billArrayList.get(0).get("quantityProduct").toString());
                                 String totalPrice = billArrayList.get(0).get("totalPrice").toString();
                                 String uID = billArrayList.get(0).get("userID").toString();
-
-                                Bill bill = new Bill(id, addressID, createAt, paymentType, productsArrayList, statusBillArrayList, totalPrice, uID, quantity);
+                                String feeShip = billArrayList.get(0).get("feeShip").toString();
+                                Bill bill = new Bill(id, addressID, createAt, paymentType, productsArrayList, statusBillArrayList, totalPrice, uID, quantity, feeShip);
                                 billsArrayList.add(bill);
                                 billAdapter.notifyDataSetChanged();
                             }

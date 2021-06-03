@@ -1,8 +1,10 @@
 package com.example.giftsapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ public class ProductAdapter extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("ViewHolder")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,12 +57,14 @@ public class ProductAdapter extends BaseAdapter {
         //map
         TextView txtName = convertView.findViewById(R.id.txtNameProduct);
         TextView txtPrice = convertView.findViewById(R.id.txtPrice);
+        TextView txtQuantity = convertView.findViewById(R.id.txtQuantity);
         ImageView img = convertView.findViewById(R.id.imgProduct);
 
         //assign
         Products products = productsList.get(position);
         txtName.setText(products.getName());
-        txtPrice.setText(products.getPrice());
+        txtPrice.setText(products.getPrice() + " VND");
+        txtQuantity.setText("SL: " + products.getQuantity());
         Glide.with(context.getApplicationContext())
                 .load(products.getImageUrl())
                 .into(img);

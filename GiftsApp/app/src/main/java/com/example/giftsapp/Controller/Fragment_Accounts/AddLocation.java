@@ -247,7 +247,6 @@ public class AddLocation extends AppCompatActivity {
                         for (int i = 0; i < addressArray.size(); i++) {
                             if (addressArray.get(i).get("isDefault").toString().equals("true")) {
                                 HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
-                                //GetDataFromFireStore(addressArray, i);
                                 Integer addressID = Integer.parseInt(addressArray.get(i).get("ID").toString());
                                 String name = addressArray.get(i).get("name").toString().trim();
                                 String phone = addressArray.get(i).get("phone").toString().trim();
