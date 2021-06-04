@@ -1,0 +1,40 @@
+Hướng dẫn xử dụng App quà tặng phiên bản V1.1
+
+Mỗi tài khoản đăng ký vào hệ thống sẽ có role = Customer
+Để tài khoản có role Admin thì lên firebase sửa quyền là Admin
+
+Trường hợp 1: Đăng nhập bằng tài khoản role = Customer
++ Đăng nhập
++ Sau khi đăng nhập thành công sẽ chuyển tới giao diện chính, có danh sách các sản phẩm
++ Xem chi tiết sản phẩm
++ Có thể xem giỏ hàng, thêm sản phẩm vào giỏ hàng, lưu giỏ hàng vào database
++ Bấm vào mục info có thể xem thông tin cá nhân
++ Có thể chỉnh sửa thông tin cá nhan người dùng
++ Có thể đổi mật khẩu
++ Thêm địa chỉ nhận quà
++ Xem danh sách hóa đơn theo từng trạng thái (Đã xác nhận, Đã lấy hàng, Đang giao hàng, Đã giao hàng)
++ Xem chi tiết đơn hàng (tất cả sản phẩm, giá, trạng thái theo giờ , địa chỉ người nhận, hình thức thanh toán)
++ Tạo đơn hàng
+
+
+Trường hợp 2: Đăng nhập bằng tài khoản role = Admin
++ Đăng nhập
++ Chuyển tới trang quản lý của Admin
++ Tại trang quản lý có thể xem được sản phẩm trên Cơ sở dữ liệu
++ Có thể thêm, sửa sản phẩm
++ Tìm kiếm sản phẩm theo tên
+
+Một số thư viện cần dùng trong build.gradle:
++ google-services.json
++ com.google.firebase:firebase-auth:19.3.1
++ platform('com.google.firebase:firebase-bom:26.8.0')
++ 'com.google.firebase:firebase-database'
++ 'com.github.bumptech.glide:glide:4.12.0'
++ 'com.github.bumptech.glide:compiler:4.12.0'
++ 'com.google.firebase:firebase-firestore:22.1.2'
++ 'com.google.firebase:firebase-storage:19.2.2'
++ 'com.google.code.gson:gson:2.8.6'
++ 'com.squareup.retrofit2:retrofit:2.9.0'
++ 'com.squareup.retrofit2:converter-gson:2.9.0'
++ 'com.google.android.material:material:1.1.0'
++ 'de.hdodenhof:circleimageview:3.1.0'
