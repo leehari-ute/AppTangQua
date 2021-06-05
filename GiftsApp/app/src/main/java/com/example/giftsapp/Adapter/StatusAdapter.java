@@ -54,7 +54,7 @@ public class StatusAdapter extends BaseAdapter {
         TextView txtDate = convertView.findViewById(R.id.txtDate);
 
         StatusBill statusModel = statusBills.get(position);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
 
         if (statusModel.getDone()) {
             imgStatus.setImageResource(R.drawable.selected_dot);

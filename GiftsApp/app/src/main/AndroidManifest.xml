@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
-        <activity android:name=".Controller.SelectLocationForm"></activity>
+        <activity android:name=".Controller.EditLocation"></activity>
+        <activity android:name=".Paypal.Activity.PaymentDetails" /> <!-- <activity android:name=".Paypal.Activity.TestSandBox" /> -->
+        <activity android:name=".Controller.SelectLocationForm" />
         <activity
             android:name=".Controller.DeliveryActivity"
             android:theme="@style/Theme.GiftsApp.NoActionBar" />

@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Giá sản phẩm tăng"
-        android:id="@+id/menuSn"/>
+        android:id="@+id/menuAsc"/>
 
     <item android:title="Giá sản phẩm giảm"
-        android:id="@+id/menuWedding"/>
+        android:id="@+id/menuDesc"/>
 
 </menu>

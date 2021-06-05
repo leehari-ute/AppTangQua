@@ -1,5 +1,9 @@
 package com.example.giftsapp.Controller;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -36,6 +41,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
     private RecyclerView deliveryRecyclerView;
     private Button changORAddNewAddressBtn;
+    View shipping_details_layout;
     FirebaseFirestore fStore;
     FirebaseAuth fAuth;
     FirebaseUser user;
@@ -53,18 +59,33 @@ public class DeliveryActivity extends AppCompatActivity {
 
         Init();
 
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            // There are no request codes
+                            Intent data = result.getData();
+                            addressSelected = (Address) data.getParcelableExtra("PARCEL_ADDRESS");
+                            Log.d("ADD", "result=>" + addressSelected.getDistrict());
+                        }
+                    }
+                });
         if (user == null) {
             startActivity(new Intent(getApplicationContext(), LoginForm.class));
             finish();
         }
 
+
         changORAddNewAddressBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getApplicationContext(), SelectLocationForm.class), 1);
+                someActivityResultLauncher.launch(new Intent(getApplicationContext(), SelectLocationForm.class));
             }
         });
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -76,23 +97,25 @@ public class DeliveryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if(resultCode == RESULT_OK) {
-                addressSelected = (Address) data.getParcelableExtra("PARCEL_ADDRESS");
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 1) {
+//            if(resultCode == RESULT_OK) {
+//                addressSelected = (Address) data.getParcelableExtra("PARCEL_ADDRESS");
+//                Log.d("CUCCUNG", "result=>" + addressSelected.getDistrict());
+//            }
+//        }
+//    }
 
     private void Init() {
+        shipping_details_layout = findViewById(R.id.include);
         fAuth = FirebaseAuth.getInstance();
         fStore= FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();
         userID = user.getUid();
         deliveryRecyclerView = findViewById(R.id.delivery_recyclerView);
-        changORAddNewAddressBtn = findViewById(R.id.change_or_add_address_btn);
+        changORAddNewAddressBtn = shipping_details_layout.findViewById(R.id.change_or_add_address_btn);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(linearLayoutManager.VERTICAL);

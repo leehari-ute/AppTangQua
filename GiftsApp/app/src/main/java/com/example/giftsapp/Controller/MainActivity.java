@@ -10,6 +10,7 @@ import com.example.giftsapp.Controller.Fragment_Accounts.Bill;
 import com.example.giftsapp.R;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -36,17 +37,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FrameLayout frameLayout;
     private  int currentFragment =-1;
     private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-
-
         frameLayout = findViewById(R.id.main_framelayout);
         navigationView = findViewById(R.id.nav_view);
 
@@ -110,9 +109,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawerToggle.syncState();
             SetFragment(new HomeFragment(),HOME_FRAGMENT);
         }
-
-
-
     }
 
     @Override
