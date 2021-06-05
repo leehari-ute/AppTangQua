@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#d6d6d6"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#d6d6d6">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -55,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="Phí vận chuyển"
             android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +75,7 @@
             android:id="@+id/delivery_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:text="10000.VND (ship nội thành)"
             android:textColor="#000000"
@@ -85,17 +86,17 @@
             android:id="@+id/divider4"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginTop="16dp"
             android:background="?android:attr/listDivider"
-            app:layout_constraintEnd_toEndOf="@+id/delivery_price"
-            app:layout_constraintStart_toStartOf="@+id/delivery_charge_price"
-            app:layout_constraintTop_toBottomOf="@+id/delivery_charge_price" />
+            app:layout_constraintEnd_toEndOf="@+id/textView26"
+            app:layout_constraintStart_toStartOf="@+id/textView25"
+            app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
         <TextView
             android:id="@+id/textView18"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:text="Tổng tiền"
             android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
@@ -105,6 +106,7 @@
             android:id="@+id/total_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:text="410000.VND"
             android:textColor="#000000"
@@ -130,5 +132,28 @@
             android:textColor="#00AF07"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider5" />
+
+        <TextView
+            android:id="@+id/textView25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="VAT"
+            android:textColor="#000000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/delivery_charge_price" />
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="1%"
+            android:textColor="#000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/delivery_price" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.giftsapp.Adapter;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +13,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.giftsapp.Controller.DeliveryActivity;
+import com.example.giftsapp.Controller.MainActivity;
 import com.example.giftsapp.Controller.MyCartFragment;
+import com.example.giftsapp.Controller.ProductDetailsActivity;
 import com.example.giftsapp.Model.CartItemModel;
 import com.example.giftsapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +43,8 @@ import java.util.Map;
 import static com.example.giftsapp.Controller.LoginForm.currentUser;
 
 public class CartAdapter extends RecyclerView.Adapter {
+    private MainActivity mainActivity;
+
 
     private List<CartItemModel> cartItemModelList;
     FirebaseFirestore firebaseFirestore;
@@ -148,6 +164,8 @@ public class CartAdapter extends RecyclerView.Adapter {
 
             firebaseFirestore = FirebaseFirestore.getInstance(); // kết nối DB
 
+
+
             productQuantity.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -169,8 +187,53 @@ public class CartAdapter extends RecyclerView.Adapter {
                     okBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            productQuantity.setText("SL: "+quantityNo.getText().toString());
-                           // productQuantitytext = Integer.parseInt(quantityNo.getText().toString());
+                            try {
+                                firebaseFirestore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot documentSnapshot = task.getResult();
+                                            if(documentSnapshot.exists()) {
+                                                final double[] totalPrice = {0};
+                                                final ArrayList<Map<String, Object>>[] productArray = new ArrayList[]{(ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts")};
+                                                for (int i = 0; i < productArray[0].size(); i++) {
+                                                    String ProID = productArray[0].get(i).get("ProductID").toString();
+                                                    int quantity = Integer.parseInt(productArray[0].get(i).get("Quantity").toString());
+                                                    if(ProID.equals(productIDtext))
+                                                    {
+                                                        productQuantity.setText("SL: "+quantityNo.getText().toString());
+
+                                                        // productQuantitytext = Integer.parseInt(quantityNo.getText().toString());
+
+                                                        // xóa items với số lượng cũ
+                                                        Map<String,Object> itemRemove = new HashMap<>();
+                                                        itemRemove.put("ProductID",productIDtext);
+                                                        itemRemove.put("Quantity", quantity);
+                                                        firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove));
+
+                                                        // Thêm items lại với số lượng được cập nhập
+                                                        Map<String, Object> ItemCart = new HashMap<>();
+                                                        ItemCart.put("ProductID",productIDtext);
+                                                        ItemCart.put("Quantity",Integer.parseInt( quantityNo.getText().toString()));
+                                                        firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayUnion(ItemCart));
+
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            else{
+                                                Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }catch (Exception e)
+                            {
+                                Toast.makeText(mainActivity, "Chưa có giỏ hàng", Toast.LENGTH_SHORT).show();
+                            }
 
                             quantityDialog.dismiss();
                         }
@@ -179,14 +242,54 @@ public class CartAdapter extends RecyclerView.Adapter {
                 }
             });
 
+
+
             removeItemCart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //removeItemCart.setText(productIDtext);
-                    Map<String,Object> itemRemove = new HashMap<>();
+                    try {
+                        firebaseFirestore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if(documentSnapshot.exists()) {
+                                        final double[] totalPrice = {0};
+                                        final ArrayList<Map<String, Object>>[] productArray = new ArrayList[]{(ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts")};
+                                        for (int i = 0; i < productArray[0].size(); i++) {
+                                            String ProID = productArray[0].get(i).get("ProductID").toString();
+                                            int quantity = Integer.parseInt(productArray[0].get(i).get("Quantity").toString());
+                                            if(ProID.equals(productIDtext))
+                                            {
+                                                Map<String,Object> itemRemove = new HashMap<>();
+                                                itemRemove.put("ProductID",productIDtext);
+                                                itemRemove.put("Quantity",quantity);
+                                                firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove));
+
+                                                break;
+                                            }
+                                        }
+
+                                    }
+                                    else{
+                                        Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    String error = task.getException().getMessage();
+                                    Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(mainActivity, "Chưa có giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+
+                   /* Map<String,Object> itemRemove = new HashMap<>();
                     itemRemove.put("ProductID",productIDtext);
-                    itemRemove.put("Quantity",1);
-                    firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove));
+                    //itemRemove.put("Quantity",finalQuantityCurrent);
+                    firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove));*/
+
                 }
             });
         }
@@ -198,6 +301,7 @@ public class CartAdapter extends RecyclerView.Adapter {
         public void setProductID(String productID) {
             this.productID = productID;
         }
+
     }
 
     class CartTotalAmountViewholder extends RecyclerView.ViewHolder{
