@@ -118,27 +118,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View navigationHeader = navigationView.getHeaderView(0);
         Username = (TextView) navigationHeader.findViewById(R.id.main_fullname);
         Email = (TextView) navigationHeader.findViewById(R.id.main_email);
-        DocumentReference docRef = firebaseFirestore.collection("Users").document(currentUser);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful())
-                    {
+        try {
+            DocumentReference docRef = firebaseFirestore.collection("Users").document(currentUser);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
                         DocumentSnapshot documentSnapshot = task.getResult();
-                        if(documentSnapshot.exists())
-                        {
+                        if (documentSnapshot.exists()) {
                             String name = documentSnapshot.getData().get("fullName").toString();
                             String email = documentSnapshot.getData().get("email").toString();
                             Username.setText(name);
-                            String sub = email.substring(0,4);
-                            Email.setText(sub+"***gmail.com");
+                            String sub = email.substring(0, 4);
+                            Email.setText(sub + "***gmail.com");
                         }
-                    }else
-                    {
-                        Toast.makeText(MainActivity.this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), LoginForm.class);
+                        startActivity(intent);
+                        finish();
                     }
-            }
-        });
+                }
+            });
+        }catch (Exception e)
+        {
+            Intent intent = new Intent(getApplicationContext(), LoginForm.class);
+            startActivity(intent);
+            finish();
+        }
 
         if(showCart)
         {

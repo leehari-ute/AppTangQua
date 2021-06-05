@@ -199,7 +199,8 @@ public class DeliveryActivity extends AppCompatActivity {
     }
 
     private void Init() {
-        shipping_details_layout = findViewById(R.id.include);
+
+        //shipping_details_layout = findViewById(R.id.include);
         fAuth = FirebaseAuth.getInstance();
         fStore= FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();
@@ -324,7 +325,7 @@ public class DeliveryActivity extends AppCompatActivity {
                         DocumentSnapshot documentSnapshot = task.getResult();
                         if(documentSnapshot.exists()) {
                             int S =0;
-                            final double[] totalPrice = {0};
+                            final long[] totalPrice = {0};
                             final int[] finalS = {0};
                             final ArrayList<Map<String, Object>> productArray = (ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts");
                             int l = productArray.size();
@@ -345,16 +346,16 @@ public class DeliveryActivity extends AppCompatActivity {
                                                     documentSnapshotPro.get("price").toString(),
                                                     documentSnapshotPro.get("imageUrl").toString(),
                                                     quantity));
-                                            totalPrice[0] = totalPrice[0] + price*quantity*1.0;
+                                            totalPrice[0] = (long) (totalPrice[0] + price*quantity);
                                             finalS[0] +=quantity;
 
 
                                             if( productsListInBill.size() >= l )
                                             {
-                                                double Cost_S; // tiền tổng cộng
-                                                double SaveTotal = finalS[0] *20000;
-                                                Cost_S = totalPrice[0]*(0.01) + totalPrice[0] +20000;
-
+                                                long Cost_S; // tiền tổng cộng
+                                                long SaveTotal = finalS[0] *20000;
+                                                Cost_S = (long) (totalPrice[0]/100 + totalPrice[0] +20000);
+                                                Log.i("Cost",Cost_S+"");
                                                 String StringChar = "abcdefgtre";
                                                 Random random = new Random();
                                                 long ID = random.nextLong();
@@ -374,7 +375,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                                 bill.put("paymentType",typePay);
                                                 bill.put("createAt",date);
                                                 bill.put("userID",currentUser);
-                                                bill.put("totalPrice",Cost_S);
+                                                bill.put("totalPrice",Cost_S+"");
                                                 bill.put("quantityProduct",finalS[0]);
                                                 bill.put("messenge",getMess);
 
