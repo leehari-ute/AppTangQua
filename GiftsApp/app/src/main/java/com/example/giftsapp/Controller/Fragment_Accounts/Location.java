@@ -12,10 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.giftsapp.Adapter.AddressAdapter;
+import com.example.giftsapp.Controller.EditLocation;
 import com.example.giftsapp.Controller.LoginForm;
 import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.Model.Address;
@@ -92,6 +95,17 @@ public class Location extends Fragment {
                 startActivity(intent);
             }
         });
+
+        listViewAddress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "ssssssss", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), EditLocation.class);
+                Address address = (Address) parent.getAdapter().getItem(position);
+                intent.putExtra("PARCEL_ADDRESS", address);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -146,7 +160,4 @@ public class Location extends Fragment {
             }
         });
     }
-
-
-
 }

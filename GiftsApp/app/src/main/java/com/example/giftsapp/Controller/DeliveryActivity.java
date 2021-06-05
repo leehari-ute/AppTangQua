@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.Instrumentation;
@@ -65,7 +66,6 @@ public class DeliveryActivity extends AppCompatActivity {
     private TextView totalPrice_Vat;
     private Button stylePaymentBtn, PaymentBtn;
     private EditText Mess_edt; // nhập lời chúc
-
     FirebaseFirestore fStore;
     FirebaseAuth fAuth;
     FirebaseUser user;
@@ -187,6 +187,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -197,20 +198,8 @@ public class DeliveryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1) {
-//            if(resultCode == RESULT_OK) {
-//                addressSelected = (Address) data.getParcelableExtra("PARCEL_ADDRESS");
-//                Log.i("ADDR",addressSelected.getDetailAddress()+"");
-//                tv_address.setText("Vận chuyển đến: " +addressSelected.getDetailAddress().toString());
-//            }
-//        }
-//    }
-
-
     private void Init() {
+        shipping_details_layout = findViewById(R.id.include);
         fAuth = FirebaseAuth.getInstance();
         fStore= FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();

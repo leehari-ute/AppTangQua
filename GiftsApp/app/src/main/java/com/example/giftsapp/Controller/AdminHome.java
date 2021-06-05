@@ -70,8 +70,8 @@ public class AdminHome extends AppCompatActivity {
 
     public void Init()
     {
-        flipper         = (ViewFlipper) findViewById(R.id.viewFlipperImages);
-        recyclerview    = (RecyclerView) findViewById(R.id.recycleImages);
+        flipper         = findViewById(R.id.viewFlipperImages);
+        recyclerview    = findViewById(R.id.recycleImages);
         txtLogout       = findViewById(R.id.txtLogout);
     }
 

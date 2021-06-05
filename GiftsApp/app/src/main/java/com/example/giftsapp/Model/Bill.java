@@ -17,10 +17,10 @@ public class Bill implements Parcelable {
     private String totalPrice;
     private String userID;
     private int quantityProduct;
-    //private String feeShip;
+    private String feeShip;
 
     //get from Firebase
-    public Bill(String id, int addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct) {
+    public Bill(String id, int addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip) {
         this.id = id;
         this.addressID = addressID;
         this.createAt = createAt;
@@ -30,11 +30,11 @@ public class Bill implements Parcelable {
         this.totalPrice = totalPrice;
         this.userID = userID;
         this.quantityProduct = quantityProduct;
-        //this.feeShip = feeShip;
+        this.feeShip = feeShip;
     }
 
     //save to firebase
-    public Bill(int addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct) {
+    public Bill(int addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip) {
         this.addressID = addressID;
         this.createAt = createAt;
         this.paymentType = paymentType;
@@ -43,7 +43,7 @@ public class Bill implements Parcelable {
         this.totalPrice = totalPrice;
         this.userID = userID;
         this.quantityProduct = quantityProduct;
-       // this.feeShip = feeShip;
+        this.feeShip = feeShip;
     }
 
     protected Bill(Parcel in) {
@@ -67,7 +67,7 @@ public class Bill implements Parcelable {
         totalPrice = in.readString();
         userID = in.readString();
         quantityProduct = in.readInt();
-        //feeShip = in.readString();
+        feeShip = in.readString();
     }
 
     @Override
@@ -96,7 +96,7 @@ public class Bill implements Parcelable {
         dest.writeString(totalPrice);
         dest.writeString(userID);
         dest.writeInt(quantityProduct);
-       //dest.writeString(feeShip);
+        dest.writeString(feeShip);
     }
 
     @SuppressWarnings("unused")
@@ -184,11 +184,11 @@ public class Bill implements Parcelable {
         this.id = id;
     }
 
-   /* public String getFeeShip() {
+    public String getFeeShip() {
         return feeShip;
     }
 
     public void setFeeShip(String feeShip) {
         this.feeShip = feeShip;
-    }*/
+    }
 }
