@@ -50,7 +50,12 @@ public class MyCartFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        try {
+            super.onCreate(savedInstanceState);
+        }catch(Exception e)
+        {
+            Log.e("err",e.getMessage());
+        }
     }
 
     @Override
@@ -63,6 +68,7 @@ public class MyCartFragment extends Fragment {
 
     private RecyclerView cartItemRecyclerView;
     private Button continueBtn;
+    private TextView TotalPrice_tv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +79,7 @@ public class MyCartFragment extends Fragment {
         // ánh xạ
         cartItemRecyclerView = view.findViewById(R.id.cart_item_recyclerview);
         continueBtn = view.findViewById(R.id.cart_continue_btn);
+        TotalPrice_tv = view.findViewById(R.id.tv_total_price);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -101,9 +108,18 @@ public class MyCartFragment extends Fragment {
                         if (task.isSuccessful()) {
                             DocumentSnapshot documentSnapshot = task.getResult();
                             if(documentSnapshot.exists()) {
-                                ArrayList<Map<String, Object>> productArray = (ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts");
+                                final double[] totalPrice = {0};
+                                final ArrayList<Map<String, Object>> productArray =  (ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts");
+                                if(productArray.size()==0)
+                                {
+                                    continueBtn.setVisibility(View.INVISIBLE);
+                                }
+                                else{
+                                    continueBtn.setVisibility(View.VISIBLE);
+                                }
                                 for (int i = 0; i < productArray.size(); i++) {
                                     String ProID = productArray.get(i).get("ProductID").toString();
+                                    int quantity = Integer.parseInt(productArray.get(i).get("Quantity").toString());
                                     firebaseFirestore.collection("Products").document(ProID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<DocumentSnapshot> taskPro) {
@@ -114,8 +130,11 @@ public class MyCartFragment extends Fragment {
                                                 cartItemModelList.add(new CartItemModel(0
                                                         ,documentSnapshotPro.get("imageUrl").toString()
                                                         , documentSnapshotPro.get("name").toString(), 1
-                                                        , documentSnapshotPro.get("price").toString(), Cuttedprice.toString(), 1, 111));
+                                                        , documentSnapshotPro.get("price").toString(), Cuttedprice.toString(), quantity, 111,ProID));
+                                                totalPrice[0] = totalPrice[0] + price*quantity*1.0;
                                                 cartAdapter.notifyDataSetChanged();
+                                                TotalPrice_tv.setText(totalPrice[0]+""+".VND");
+
                                             } else {
                                                 String error = taskPro.getException().getMessage();
                                                 Toast.makeText(mainActivity, error, Toast.LENGTH_SHORT).show();
@@ -131,6 +150,7 @@ public class MyCartFragment extends Fragment {
                             String error = task.getException().getMessage();
                             Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
 
@@ -149,7 +169,7 @@ public class MyCartFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
+        continueBtn.setVisibility(View.INVISIBLE);
         return view;
     }
 }

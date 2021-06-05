@@ -25,17 +25,31 @@ import android.widget.Toast;
 
 import com.example.giftsapp.Adapter.ProductDetailsAdapter;
 import com.example.giftsapp.Adapter.ProductImageAdapter;
+import com.example.giftsapp.Model.CartCurrentModel;
+import com.example.giftsapp.Model.CartItemModel;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.example.giftsapp.Controller.MainActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.example.giftsapp.Controller.LoginForm.currentUser;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
@@ -75,6 +89,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
     // rate now layout
     private Button buyNowBtn;
     private FirebaseFirestore firebaseFirestore;
+
+
 
 
     @Override
@@ -171,12 +187,95 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
 
         // xử lý thêm vào cart
-        AddToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ProductDetailsActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
-            }
-        });
+        /*List<CartCurrentModel> listProductCart = new ArrayList<>();
+        listProductCart.add(new CartCurrentModel(Id_product_current,1));
+
+        Log.i("size",listProductCart.size()+"");
+        for(int i=0;i<listProductCart.size();i++)
+        {
+            List<Map<String,Object>> listPro = new ArrayList<>();
+            Map<String, Object> ItemCart = new HashMap<>();
+            ItemCart.put("ProductID",listProductCart.get(i).getProductID());
+            ItemCart.put("Quantity",1);
+            listPro.add(ItemCart);
+            Map<String, Object>AddCart = new HashMap<>();
+            AddCart.put("ListProducts",Arrays.asList(listPro.get(i)));
+            Log.i("List",listPro.get(0).toString());
+            AddToCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try{
+                        firebaseFirestore.collection("Carts").document(currentUser)
+                                .set(AddCart).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thất bại 111", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }*/
+        List<CartCurrentModel> cartCurrentModelList = new ArrayList<>();
+        try {
+
+            String finalId_product_current = Id_product_current;
+            firebaseFirestore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if(documentSnapshot.exists()) {
+                            // load dữ liệu của cart cũ
+                            ArrayList<Map<String, Object>> productArray = (ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts");
+                            for (int i = 0; i < productArray.size(); i++) {
+                                String ProID = productArray.get(i).get("ProductID").toString();
+                                int Quantity = Integer.parseInt(productArray.get(i).get("Quantity").toString());
+                                cartCurrentModelList.add(new CartCurrentModel(ProID,Quantity));
+                            }
+                            AddToCart.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    cartCurrentModelList.add(new CartCurrentModel(finalId_product_current,1));
+                                    loadCart(cartCurrentModelList);
+                                    Log.i("TH1","giỏ hàng tồn tại");
+                                    Log.i("sizelist",cartCurrentModelList.size()+"");
+                                }
+                            });
+
+
+                        }
+                        else{
+                            AddToCart.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AddCart(finalId_product_current,1);
+                                    Log.i("TH2","chưa có giỏ hàng trước đó");
+                                }
+
+                            });
+
+                        }
+                    } else {
+                        String error = task.getException().getMessage();
+                        Toast.makeText(ProductDetailsActivity.this, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+
+        }catch (Exception e)
+        {
+            Toast.makeText(ProductDetailsActivity.this, "Lỗi phát sinh", Toast.LENGTH_SHORT).show();
+        }
 
 
         viewpagerIndicator.setupWithViewPager(productImagesViewPager,true);
@@ -253,6 +352,49 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
     }
 
+
+    // thêm Item khi đã có giỏ hàng
+    public void loadCart (List<CartCurrentModel> listProductCart)
+    {
+        Map<String, Object> ItemCart = new HashMap<>();
+        Map<String, Object>AddCart = new HashMap<>();
+        for(int x=0;x<listProductCart.size();x++)
+        {
+            ItemCart.put("ProductID",listProductCart.get(x).getProductID());
+            ItemCart.put("Quantity",listProductCart.get(x).getProductQuantity());
+            firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayUnion(ItemCart));
+            Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thành công", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Thêm item khi chưa có giỏ hàng
+    public void AddCart(String ProductID, int Quantity)
+    {
+        Map<String, Object> ItemCart;
+        Map<String, Object>AddCart = new HashMap<>();
+
+        ItemCart = new HashMap<>();
+        ItemCart.put("ProductID",ProductID);
+        ItemCart.put("Quantity",Quantity);
+        AddCart.put("ListProducts",Arrays.asList(ItemCart));
+        try{
+            firebaseFirestore.collection("Carts").document(currentUser)
+                    .set(AddCart).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thành công", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thất bại", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }catch (Exception e)
+        {
+            Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thất bại 111", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

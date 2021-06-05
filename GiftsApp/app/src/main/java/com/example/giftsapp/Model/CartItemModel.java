@@ -22,8 +22,10 @@ public class CartItemModel {
     private String cuttedPrice;
     private int productQuantity;
     private int codeSale;
+    private String proID;
 
-    public CartItemModel(int type, String productImage, String productTitle, int freeVAT, String productPrice, String cuttedPrice, int productQuantity, int codeSale) {
+    public CartItemModel(int type, String productImage, String productTitle, int freeVAT, String productPrice, String cuttedPrice
+            , int productQuantity, int codeSale, String proID) {
         this.type = type;
         this.productImage = productImage;
         this.productTitle = productTitle;
@@ -32,6 +34,7 @@ public class CartItemModel {
         this.cuttedPrice = cuttedPrice;
         this.productQuantity = productQuantity;
         this.codeSale = codeSale;
+        this.proID = proID;
     }
 
     public String getProductImage() {
@@ -90,7 +93,14 @@ public class CartItemModel {
         this.codeSale = codeSale;
     }
 
-    //// Cart item
+    public String getProID() {
+        return proID;
+    }
+
+    public void setProID(String proID) {
+        this.proID = proID;
+    }
+//// Cart item
 
     ///////// Cart Total Amount
     private int totalItem; // số lượng sản phẩm

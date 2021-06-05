@@ -2,15 +2,26 @@ package com.example.giftsapp.Controller;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.giftsapp.Controller.Fragment_Accounts.Bill;
 import com.example.giftsapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseUser;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -22,6 +33,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import static com.example.giftsapp.Controller.LoginForm.currentUser;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -38,14 +51,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private  int currentFragment =-1;
     private NavigationView navigationView;
 
+    private TextView Username, Email;
+    FirebaseFirestore firebaseFirestore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
         frameLayout = findViewById(R.id.main_framelayout);
         navigationView = findViewById(R.id.nav_view);
 
@@ -97,6 +114,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /*NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);*/
+
+        View navigationHeader = navigationView.getHeaderView(0);
+        Username = (TextView) navigationHeader.findViewById(R.id.main_fullname);
+        Email = (TextView) navigationHeader.findViewById(R.id.main_email);
+        DocumentReference docRef = firebaseFirestore.collection("Users").document(currentUser);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful())
+                    {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if(documentSnapshot.exists())
+                        {
+                            String name = documentSnapshot.getData().get("fullName").toString();
+                            String email = documentSnapshot.getData().get("email").toString();
+                            Username.setText(name);
+                            String sub = email.substring(0,4);
+                            Email.setText(sub+"***gmail.com");
+                        }
+                    }else
+                    {
+                        Toast.makeText(MainActivity.this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                    }
+            }
+        });
 
         if(showCart)
         {
