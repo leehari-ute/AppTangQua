@@ -5,18 +5,13 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,9 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.giftsapp.Adapter.CartAdapter;
-import com.example.giftsapp.Controller.Fragment_Accounts.Location;
 import com.example.giftsapp.Model.Address;
-import com.example.giftsapp.Model.Bill;
 import com.example.giftsapp.Model.CartItemModel;
 import com.example.giftsapp.Model.Products;
 import com.example.giftsapp.Model.StatusBill;
@@ -50,7 +43,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -128,6 +120,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 });
 
                 radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @SuppressLint("NonConstantResourceId")
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         // checkedId trả về id của radio Button
@@ -143,7 +136,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                         Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
                                         Log.d("ADD", "pay=>"+addressSelected.getProvince());
                                         Log.d("typePay", "pay=>"+typePayment);
-                                        createBill(addressSelected.getID(),typePayment);
+                                        CreateBill(addressSelected.getID(),typePayment);
                                         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                                         startActivity(intent);
                                         finish();
@@ -302,21 +295,15 @@ public class DeliveryActivity extends AppCompatActivity {
             });
 
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(DeliveryActivity.this, "Chưa có giỏ hàng", Toast.LENGTH_SHORT).show();
         }
-
-
         changORAddNewAddressBtn.setVisibility(View.VISIBLE);
-
     }
-    private  void createBill(String AddressID,String typePay)
-    {
 
+    private void CreateBill(String AddressID, String typePay) {
         List<Products> productsListInBill = new ArrayList<>();
         try {
-
             fStore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -369,7 +356,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                                 Map<String,Object> listPro=new HashMap<>();
                                                 Map<String,Object> statusbill = new HashMap<>();
                                                 getMess = Mess_edt.getText().toString();
-                                                bill.put("addressID",AddressID);
+                                                bill.put("addressID", AddressID);
                                                 bill.put("feeShip","20000");
                                                 bill.put("paymentType",typePay);
                                                 bill.put("createAt",date);
@@ -409,7 +396,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                                     statusbill.put("createAt",date);
                                                     fStore.collection("Bill").document(Bill_ID).update("status",FieldValue.arrayUnion(statusbill));
                                                 }
-                                                deleteCart();
+                                                DeleteCart();
                                             }
                                         } else {
                                             String error = taskPro.getException().getMessage();
@@ -428,17 +415,13 @@ public class DeliveryActivity extends AppCompatActivity {
                     }
                 }
             });
-
-
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(DeliveryActivity.this, "Chưa có giỏ hàng", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private void deleteCart()
-    {
+    private void DeleteCart() {
         //Tạo bill xong thì xóa giỏ hàng
         fStore.collection("Carts").document(currentUser).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -452,8 +435,8 @@ public class DeliveryActivity extends AppCompatActivity {
             }
         });
     }
-    private void AddressDetail()
-    {
+
+    private void AddressDetail() {
         DocumentReference docRef = fStore.collection("Users").document(currentUser);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
