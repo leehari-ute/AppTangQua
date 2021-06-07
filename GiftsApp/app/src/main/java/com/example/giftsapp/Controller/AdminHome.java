@@ -34,7 +34,7 @@ public class AdminHome extends AppCompatActivity {
         // tạo mảng icon
         int rcImages[] = {R.drawable.contact,R.drawable.documents,R.drawable.product,R.drawable.profile};
         //tao mảng tên cac icon tuong ứng
-        String iconName[] = {"Liên hệ","Chính sách","Sản phẩm","Thông tin"};
+        String iconName[] = {"Liên hệ","Đơn bán","Sản phẩm","Thông tin"};
         Init();
         for(int image:images) // phần carousel
         {
