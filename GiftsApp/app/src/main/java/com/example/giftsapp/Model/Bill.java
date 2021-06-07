@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Bill implements Parcelable {
     private String id;
-    private int addressID;
+    private String addressID;
     private Date createAt;
     private String paymentType;
     private ArrayList<Products> productsArrayList;
@@ -20,7 +20,7 @@ public class Bill implements Parcelable {
     private String feeShip;
 
     //get from Firebase
-    public Bill(String id, int addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip) {
+    public Bill(String id, String addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip) {
         this.id = id;
         this.addressID = addressID;
         this.createAt = createAt;
@@ -34,7 +34,7 @@ public class Bill implements Parcelable {
     }
 
     //save to firebase
-    public Bill(int addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip) {
+    public Bill(String addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip) {
         this.addressID = addressID;
         this.createAt = createAt;
         this.paymentType = paymentType;
@@ -48,7 +48,7 @@ public class Bill implements Parcelable {
 
     protected Bill(Parcel in) {
         id = in.readString();
-        addressID = in.readInt();
+        addressID = in.readString();
         long tmpCreateAt = in.readLong();
         createAt = tmpCreateAt != -1 ? new Date(tmpCreateAt) : null;
         paymentType = in.readString();
@@ -78,7 +78,7 @@ public class Bill implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeInt(addressID);
+        dest.writeString(addressID);
         dest.writeLong(createAt != null ? createAt.getTime() : -1L);
         dest.writeString(paymentType);
         if (productsArrayList == null) {
@@ -112,11 +112,11 @@ public class Bill implements Parcelable {
         }
     };
 
-    public int getAddressID() {
+    public String getAddressID() {
         return addressID;
     }
 
-    public void setAddressID(int addressID) {
+    public void setAddressID(String addressID) {
         this.addressID = addressID;
     }
 

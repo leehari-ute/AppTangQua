@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -17,25 +16,20 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.giftsapp.Controller.DistrictForm;
 import com.example.giftsapp.Controller.LoginForm;
 import com.example.giftsapp.Controller.ProvinceForm;
-import com.example.giftsapp.Controller.SelectLocationForm;
-import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.Controller.VillageForm;
+import com.example.giftsapp.Model.RandomId;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,15 +37,15 @@ import java.util.Map;
 
 public class AddLocation extends AppCompatActivity {
 
-    EditText            edtName, edtPhone;
-    TextView            txtProvince, txtDistrict, txtVillage, txtAddress;
+    EditText            edtName, edtPhone, edtDetailAddress;
+    TextView            txtProvince, txtDistrict, txtVillage;
     Switch              switchDefaultAddress;
     Button              btnSave;
     FirebaseAuth        fAuth;
     FirebaseFirestore   fStore;
     FirebaseUser        user;
-    String              userID, name = "", phone = "", province = "", district = "", village = "", detailAddress = "";
-    Integer             provinceID, districtID, addressID, quantityAddress = 0;
+    String              userID, name = "", phone = "", province = "", district = "", village = "", detailAddress = "", addressID = "";
+    Integer             provinceID, districtID;
     Boolean             isDefault = true;
 
     @Override
@@ -65,25 +59,15 @@ public class AddLocation extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
 
-        Init();
-        if (user == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(new Intent(getApplicationContext(), LoginForm.class));
             finish();
         }
 
+        Init();
+
         txtVillage.setEnabled(false);
         txtDistrict.setEnabled(false);
-
-        switchDefaultAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    isDefault = true;
-                } else {
-                    isDefault = false;
-                }
-            }
-        });
 
         txtProvince.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,10 +112,8 @@ public class AddLocation extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -176,7 +158,7 @@ public class AddLocation extends AppCompatActivity {
         txtProvince             = findViewById(R.id.txtProvince);
         txtDistrict             = findViewById(R.id.txtDistrict);
         txtVillage              = findViewById(R.id.txtVillage);
-        txtAddress              = findViewById(R.id.txtAddAddress);
+        edtDetailAddress        = findViewById(R.id.edtDetailAddress);
         switchDefaultAddress    = findViewById(R.id.switchDefaultAddress);
         btnSave                 = findViewById(R.id.btnSave);
         fAuth                   = FirebaseAuth.getInstance();
@@ -190,10 +172,7 @@ public class AddLocation extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
-                    quantityAddress = addressArray.size();
-                    addressID = quantityAddress + 1;
+                    addressID = RandomId.unique();
                     HashMap<String, Object> newAddress = new HashMap<String, Object>();
                     newAddress.put("ID", addressID);
                     newAddress.put("isDefault", isDefault);
@@ -210,19 +189,19 @@ public class AddLocation extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void GetDataFromUI() {
+        isDefault = switchDefaultAddress.isChecked();
         name = edtName.getText().toString().trim();
         phone = edtPhone.getText().toString().trim();
         province = txtProvince.getText().toString().trim();
         district = txtDistrict.getText().toString().trim();
         village = txtVillage.getText().toString().trim();
-        detailAddress = txtAddress.getText().toString().trim();
+        detailAddress = edtDetailAddress.getText().toString().trim();
     }
 
-    private void SetNotDefault(Integer addressID, String name, String phone, String province, String district, String village, String detailAddress) {
+    private void SetNotDefault(String addressID, String name, String phone, String province, String district, String village, String detailAddress) {
         HashMap<String, Object> disableDefault = new HashMap<String, Object>();
         disableDefault.put("ID", addressID);
         disableDefault.put("isDefault", false);
@@ -247,7 +226,7 @@ public class AddLocation extends AppCompatActivity {
                         for (int i = 0; i < addressArray.size(); i++) {
                             if (addressArray.get(i).get("isDefault").toString().equals("true")) {
                                 HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
-                                Integer addressID = Integer.parseInt(addressArray.get(i).get("ID").toString());
+                                String addressID = addressArray.get(i).get("ID").toString();
                                 String name = addressArray.get(i).get("name").toString().trim();
                                 String phone = addressArray.get(i).get("phone").toString().trim();
                                 String province = addressArray.get(i).get("province").toString().trim();
@@ -307,10 +286,10 @@ public class AddLocation extends AppCompatActivity {
         txtVillage.setError(null);
 
         if (detailAddress.trim().equals("")) {
-            txtAddress.setError("Bạn chưa nhập địa chỉ cụ thể");
+            edtDetailAddress.setError("Bạn chưa nhập địa chỉ cụ thể");
             return false;
         }
-        txtAddress.setError(null);
+        edtDetailAddress.setError(null);
 
         return true;
     }

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (id) {
                     case R.id.nav_order:
                         Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
-                        intent.putExtra("EXTRA_DOCUMENT_OPEN_BILL", true);
+                        intent.putExtra("EXTRA_DOCUMENT_OPEN", "Bill");
                         startActivity(intent);
                         finish();
                         //GotoFragment("My Order",new MyOrdersFragment(),ORDERS_FRAGMENT);

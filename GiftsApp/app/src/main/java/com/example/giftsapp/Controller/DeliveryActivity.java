@@ -80,18 +80,18 @@ public class DeliveryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_delivery);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_delivery);
 
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setTitle("Delivery");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("Delivery");
 
-            Init();
+        Init();
 
-            ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
@@ -106,61 +106,61 @@ public class DeliveryActivity extends AppCompatActivity {
                     }
                 });
 
-            AddressDetail();
-            stylePaymentBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Dialog chosePaymentDialog = new Dialog(DeliveryActivity.this);
-                    chosePaymentDialog.setContentView(R.layout.chose_payment);
-                    chosePaymentDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                    chosePaymentDialog.setCancelable(false);
-                    RadioGroup radioGroup = chosePaymentDialog.findViewById(R.id.radioGroup);
-                    RadioButton radio_Btn_COD = chosePaymentDialog.findViewById(R.id.radioButton_COD);
-                    RadioButton radio_Btn_Onlice = chosePaymentDialog.findViewById(R.id.radioButton_Online);
-                    Button cancelBtn = chosePaymentDialog.findViewById(R.id.cancel_btn);
-                    Button okBtn = chosePaymentDialog.findViewById(R.id.ok_btn);
+        AddressDetail();
+        stylePaymentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog chosePaymentDialog = new Dialog(DeliveryActivity.this);
+                chosePaymentDialog.setContentView(R.layout.chose_payment);
+                chosePaymentDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                chosePaymentDialog.setCancelable(false);
+                RadioGroup radioGroup = chosePaymentDialog.findViewById(R.id.radioGroup);
+                RadioButton radio_Btn_COD = chosePaymentDialog.findViewById(R.id.radioButton_COD);
+                RadioButton radio_Btn_Onlice = chosePaymentDialog.findViewById(R.id.radioButton_Online);
+                Button cancelBtn = chosePaymentDialog.findViewById(R.id.cancel_btn);
+                Button okBtn = chosePaymentDialog.findViewById(R.id.ok_btn);
 
-                    cancelBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            chosePaymentDialog.dismiss();
-                        }
-                    });
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        chosePaymentDialog.dismiss();
+                    }
+                });
 
-                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                    // checkedId trả về id của radio Button
-                                    switch (checkedId)
-                                    {
-                                        case R.id.radioButton_COD:
-                                            Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán COD", Toast.LENGTH_SHORT).show();
-                                            okBtn.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    typePayment = "COD";
-                                                    chosePaymentDialog.dismiss();
-                                                    Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
-                                                    Log.d("ADD", "pay=>"+addressSelected.getProvince());
-                                                    Log.d("typePay", "pay=>"+typePayment);
-                                                    createBill(addressSelected.getID(),typePayment);
-                                                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            });
-                                            break;
-                                        case  R.id.radioButton_Online:
-                                            Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán Online", Toast.LENGTH_SHORT).show();
-                                            break;
-
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        // checkedId trả về id của radio Button
+                        switch (checkedId)
+                        {
+                            case R.id.radioButton_COD:
+                                Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán COD", Toast.LENGTH_SHORT).show();
+                                okBtn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        typePayment = "COD";
+                                        chosePaymentDialog.dismiss();
+                                        Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
+                                        Log.d("ADD", "pay=>"+addressSelected.getProvince());
+                                        Log.d("typePay", "pay=>"+typePayment);
+                                        createBill(addressSelected.getID(),typePayment);
+                                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
                                     }
-                                }
-                            });
+                                });
+                                break;
+                            case  R.id.radioButton_Online:
+                                Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán Online", Toast.LENGTH_SHORT).show();
+                                break;
 
-                    chosePaymentDialog.show();
-                }
-            });
+                        }
+                    }
+                });
+
+                chosePaymentDialog.show();
+            }
+        });
 
        /* PaymentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,10 +172,10 @@ public class DeliveryActivity extends AppCompatActivity {
             }
         });*/
 
-            if (user == null) {
-                startActivity(new Intent(getApplicationContext(), LoginForm.class));
-                finish();
-            }
+        if (user == null) {
+            startActivity(new Intent(getApplicationContext(), LoginForm.class));
+            finish();
+        }
 
 
         changORAddNewAddressBtn.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +199,7 @@ public class DeliveryActivity extends AppCompatActivity {
     }
 
     private void Init() {
-        shipping_details_layout = findViewById(R.id.include);
+        //shipping_details_layout = findViewById(R.id.include);
         fAuth = FirebaseAuth.getInstance();
         fStore= FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();
@@ -311,7 +311,7 @@ public class DeliveryActivity extends AppCompatActivity {
         changORAddNewAddressBtn.setVisibility(View.VISIBLE);
 
     }
-    private  void createBill(int AddressID,String typePay)
+    private  void createBill(String AddressID,String typePay)
     {
 
         List<Products> productsListInBill = new ArrayList<>();
@@ -324,7 +324,7 @@ public class DeliveryActivity extends AppCompatActivity {
                         DocumentSnapshot documentSnapshot = task.getResult();
                         if(documentSnapshot.exists()) {
                             int S =0;
-                            final double[] totalPrice = {0};
+                            final long[] totalPrice = {0};
                             final int[] finalS = {0};
                             final ArrayList<Map<String, Object>> productArray = (ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts");
                             int l = productArray.size();
@@ -345,16 +345,16 @@ public class DeliveryActivity extends AppCompatActivity {
                                                     documentSnapshotPro.get("price").toString(),
                                                     documentSnapshotPro.get("imageUrl").toString(),
                                                     quantity));
-                                            totalPrice[0] = totalPrice[0] + price*quantity*1.0;
+                                            totalPrice[0] = (long) (totalPrice[0] + price*quantity);
                                             finalS[0] +=quantity;
 
 
                                             if( productsListInBill.size() >= l )
                                             {
-                                                double Cost_S; // tiền tổng cộng
-                                                double SaveTotal = finalS[0] *20000;
-                                                Cost_S = totalPrice[0]*(0.01) + totalPrice[0] +20000;
-
+                                                long Cost_S; // tiền tổng cộng
+                                                long SaveTotal = finalS[0] *20000;
+                                                Cost_S = (long) (totalPrice[0]/100 + totalPrice[0] +20000);
+                                                Log.i("Cost",Cost_S+"");
                                                 String StringChar = "abcdefgtre";
                                                 Random random = new Random();
                                                 long ID = random.nextLong();
@@ -374,7 +374,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                                 bill.put("paymentType",typePay);
                                                 bill.put("createAt",date);
                                                 bill.put("userID",currentUser);
-                                                bill.put("totalPrice",Cost_S);
+                                                bill.put("totalPrice",Cost_S+"");
                                                 bill.put("quantityProduct",finalS[0]);
                                                 bill.put("messenge",getMess);
 
@@ -481,15 +481,5 @@ public class DeliveryActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private String getAddressID()
-    {
-        String address =  getIntent().getStringExtra("PARCEL_ADDRESS");
-        if(address==null)
-        {
-            return "Null roi";
-        }
-        return address;
     }
 }

@@ -185,7 +185,7 @@
                 android:textSize="15sp" />
 
             <EditText
-                android:id="@+id/txtAddAddress"
+                android:id="@+id/edtAddAddress"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_height="0dp"
@@ -214,11 +214,24 @@
 
     <Button
         android:layout_marginTop="10dp"
+        android:id="@+id/btnDelete"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:backgroundTint="#F64343"
+        android:layout_weight="1"
+        android:text="Xóa địa chỉ"
+        android:textSize="15sp"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:layout_marginTop="10dp"
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:backgroundTint="#2C4CC3"
         android:layout_weight="1"
+        android:textAllCaps="false"
+        android:textSize="15sp"
         android:text="Lưu" />
 
 </LinearLayout>

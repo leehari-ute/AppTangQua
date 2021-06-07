@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class Location extends Fragment {
@@ -71,8 +72,8 @@ public class Location extends Fragment {
         super.onResume();
         if (isBackFromAdd) {
             GetAddressFromFireStore();
+            isBackFromAdd = false;
         }
-        isBackFromAdd = false;
     }
 
     @Override
@@ -99,7 +100,6 @@ public class Location extends Fragment {
         listViewAddress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "ssssssss", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getContext(), EditLocation.class);
                 Address address = (Address) parent.getAdapter().getItem(position);
                 intent.putExtra("PARCEL_ADDRESS", address);
@@ -140,7 +140,7 @@ public class Location extends Fragment {
                         if (document.getData().get("address") != null) {
                             ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
                             for (int i = 0; i < addressArray.size(); i++) {
-                                Integer ID = Integer.parseInt(addressArray.get(i).get("ID").toString());
+                                String ID = addressArray.get(i).get("ID").toString();
                                 Boolean isDefault = addressArray.get(i).get("isDefault").toString().equals("true");
                                 String name = addressArray.get(i).get("name").toString();
                                 String phone = addressArray.get(i).get("phone").toString();

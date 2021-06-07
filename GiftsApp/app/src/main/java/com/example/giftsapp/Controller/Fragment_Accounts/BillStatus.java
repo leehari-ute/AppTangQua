@@ -142,7 +142,7 @@ public class BillStatus extends Fragment {
                                     productsArrayList.add(product);
                                 }
                                 String id = document.getId();
-                                Integer addressID = Integer.parseInt(billArrayList.get(0).get("addressID").toString());
+                                String addressID = billArrayList.get(0).get("addressID").toString();
                                 Timestamp ts = (Timestamp) billArrayList.get(0).get("createAt");
                                 Date createAt = ts.toDate();
                                 String paymentType = billArrayList.get(0).get("paymentType").toString();

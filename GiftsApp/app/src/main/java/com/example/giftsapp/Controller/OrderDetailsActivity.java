@@ -102,7 +102,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
-        intent.putExtra("EXTRA_DOCUMENT_OPEN_BILL", true);
+        intent.putExtra("EXTRA_DOCUMENT_OPEN", "Bill");
         startActivity(intent);
         finish();
     }
@@ -152,7 +152,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     if (document.getData().get("address") != null) {
                         ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
                         for (int i = 0; i < addressArray.size(); i++) {
-                            if (Integer.parseInt(addressArray.get(i).get("ID").toString()) == bill.getAddressID()) {
+                            if (addressArray.get(i).get("ID").toString() == bill.getAddressID()) {
                                 txtName.setText(addressArray.get(i).get("name").toString().trim());
                                 txtPhone.setText(addressArray.get(i).get("phone").toString().trim());
                                 txtProvince.setText(addressArray.get(i).get("province").toString().trim());
