@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragInformation"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +8,6 @@
     android:background="#ECECEC"
     tools:context=".Controller.Fragment_Accounts.Information">
 
-    <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,7 +17,7 @@
             android:orientation="vertical"
             android:weightSum="11"
             android:background="#ECECEC"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/imgAvt"
@@ -197,6 +196,4 @@
                 app:drawableEndCompat="@drawable/right" />
         </LinearLayout>
     </ScrollView>
-
-
-</FrameLayout>
+</LinearLayout>

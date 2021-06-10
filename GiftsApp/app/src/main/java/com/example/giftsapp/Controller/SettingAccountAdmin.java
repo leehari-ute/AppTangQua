@@ -1,29 +1,27 @@
-package com.example.giftsapp.Controller.Fragment_Accounts;
+package com.example.giftsapp.Controller;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,9 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.giftsapp.Controller.LoginForm;
-import com.example.giftsapp.Controller.SettingAccountAdmin;
-import com.example.giftsapp.Controller.SettingAccountForm;
+import com.example.giftsapp.Controller.Fragment_Accounts.ChangeBiography;
+import com.example.giftsapp.Controller.Fragment_Accounts.ChangeName;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,51 +46,46 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.type.DateTime;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Information extends Fragment {
+public class SettingAccountAdmin extends AppCompatActivity {
 
-    TextView            txtName, txtGender, txtBirthday, txtBio, txtPhone, txtEmail, txtChangePass, txtChangeAvt;
-    ImageView           imgAvt;
-    Calendar            calendar = Calendar.getInstance();
+    TextView txtName, txtGender, txtBirthday, txtBio, txtPhone, txtEmail, txtChangePass, txtChangeAvt;
+    ImageView imgAvt;
+    Calendar calendar = Calendar.getInstance();
     @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat    simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     Uri                 filePath;
     final int           PICK_IMAGE_REQUEST = 71;
-    FirebaseAuth        fAuth;
-    FirebaseFirestore   fStore;
-    StorageReference    storageRef;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    StorageReference storageRef;
     String              userID;
-    FirebaseUser        user;
-
-    private SettingAccountForm settingAccountForm;
-
-    public Information() {
-        // Required empty public constructor
-    }
-
-
+    FirebaseUser user;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_information, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting_account_admin);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Cài đặt tài khoản");
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setLogo(R.drawable.supply1);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
 
-        Init(view);
+        Init();
 
         txtName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(settingAccountForm, ChangeName.class);
+                Intent intent = new Intent(SettingAccountAdmin.this, ChangeName.class);
                 intent.putExtra("EXTRA_DOCUMENT_USER_NAME", txtName.getText().toString());
+                intent.putExtra("EXTRA_IS_FROM_ADMIN", true);
                 startActivity(intent);
             }
         });
@@ -116,8 +108,9 @@ public class Information extends Fragment {
         txtBio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(settingAccountForm, ChangeBiography.class);
+                Intent intent = new Intent(SettingAccountAdmin.this, ChangeBiography.class);
                 intent.putExtra("EXTRA_DOCUMENT_USER_BIO", txtBio.getText().toString());
+                intent.putExtra("EXTRA_IS_FROM_ADMIN", true);
                 startActivity(intent);
             }
         });
@@ -135,28 +128,18 @@ public class Information extends Fragment {
                 ChooseImage();
             }
         });
-
-        return view;
     }
 
-    @Override
-    public void onAttach(@NotNull Context context) {
-        super.onAttach(context);
-        if (context instanceof SettingAccountForm) {
-            this.settingAccountForm = (SettingAccountForm) context;
-        }
-    }
-
-    private void Init(View view) {
-        txtChangePass   = view.findViewById(R.id.txtChangePass);
-        txtChangeAvt    = view.findViewById(R.id.txtChangeAvt);
-        txtName         = view.findViewById(R.id.txtName);
-        txtGender       = view.findViewById(R.id.txtGender);
-        txtBirthday     = view.findViewById(R.id.txtBirthday);
-        txtBio          = view.findViewById(R.id.txtBio);
-        txtPhone        = view.findViewById(R.id.txtPhone);
-        txtEmail        = view.findViewById(R.id.txtEmail);
-        imgAvt          = view.findViewById(R.id.imgAvt);
+    private void Init() {
+        txtChangePass   = findViewById(R.id.txtChangePass);
+        txtChangeAvt    = findViewById(R.id.txtChangeAvt);
+        txtName         = findViewById(R.id.txtName);
+        txtGender       = findViewById(R.id.txtGender);
+        txtBirthday     = findViewById(R.id.txtBirthday);
+        txtBio          = findViewById(R.id.txtBio);
+        txtPhone        = findViewById(R.id.txtPhone);
+        txtEmail        = findViewById(R.id.txtEmail);
+        imgAvt          = findViewById(R.id.imgAvt);
         fAuth           = FirebaseAuth.getInstance();
         fStore          = FirebaseFirestore.getInstance();
         storageRef      = FirebaseStorage.getInstance().getReference();
@@ -165,11 +148,35 @@ public class Information extends Fragment {
         LoadUserInformation();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(getApplicationContext(), AdminHome.class));
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent(getApplicationContext(), AdminHome.class);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void ChooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
     private void Dialog_Gender() {
-        Dialog dialog = new Dialog(settingAccountForm);
+        Dialog dialog = new Dialog(SettingAccountAdmin.this);
         dialog.setContentView(R.layout.dialog_gender);
         TextView            txtMale     = dialog.findViewById(R.id.txtMale),
-                            txtFemale   = dialog.findViewById(R.id.txtFemale);
+                txtFemale   = dialog.findViewById(R.id.txtFemale);
 
         txtMale.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,7 +200,7 @@ public class Information extends Fragment {
         int date    = calendar.get(Calendar.DATE);
         int month   = calendar.get(Calendar.MONTH);
         int year    = calendar.get(Calendar.YEAR);
-        DatePickerDialog datePickerDialog = new DatePickerDialog(settingAccountForm, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(SettingAccountAdmin.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 calendar.set(year, month, dayOfMonth);
@@ -222,12 +229,12 @@ public class Information extends Fragment {
                 user.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(settingAccountForm, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingAccountAdmin.this, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(settingAccountForm, "Lỗi vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingAccountAdmin.this, "Lỗi vui lòng thử lại", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -259,7 +266,7 @@ public class Information extends Fragment {
                         txtPhone.setText(document.getString("phone"));
                         txtEmail.setText(document.getString("email"));
                         String avtUrl =  document.getString("avtUrl");
-                        Glide.with(settingAccountForm)
+                        Glide.with(getApplicationContext())
                                 .load(avtUrl)
                                 .into(imgAvt);
                     } else {
@@ -272,21 +279,14 @@ public class Information extends Fragment {
         });
     }
 
-    private void ChooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null ) {
             filePath = data.getData();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imgAvt.setImageBitmap(bitmap);
                 UploadImage();
             } catch (IOException e) {
@@ -297,7 +297,7 @@ public class Information extends Fragment {
 
     private void UploadImage() {
         if(filePath != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(settingAccountForm);
+            final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Đang tải lên...");
             progressDialog.show();
 
@@ -307,14 +307,14 @@ public class Information extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(settingAccountForm, "Uploaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingAccountAdmin.this, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(settingAccountForm, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingAccountAdmin.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -347,18 +347,18 @@ public class Information extends Fragment {
                     String imgUrl = downloadUri.toString();
                     fStore.collection("Users").document(userID).update("avtUrl", imgUrl)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("TAG", "DocumentSnapshot successfully updated!");
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("TAG", "DocumentSnapshot successfully updated!");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.w("TAG", "Error updating document", e);
                         }
                     });
                 } else {
-                    Toast.makeText(settingAccountForm, "Failed "+task.getException(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingAccountAdmin.this, "Failed "+task.getException(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -373,10 +373,10 @@ public class Information extends Fragment {
                         LoadUserInformation();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error updating document", e);
-                    }
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("TAG", "Error updating document", e);
+            }
         });
     }
 
