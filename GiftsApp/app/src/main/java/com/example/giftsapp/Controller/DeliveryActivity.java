@@ -189,9 +189,15 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if(id == android.R.id.home){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
             finish();
             return true;
         }
@@ -341,7 +347,6 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                                                     quantity));
                                             totalPrice[0] = (long) (totalPrice[0] + price*quantity);
                                             finalS[0] +=quantity;
-
 
                                             if( productsListInBill.size() >= l )
                                             {
