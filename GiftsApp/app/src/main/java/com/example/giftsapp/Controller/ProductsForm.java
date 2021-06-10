@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,13 +20,16 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.giftsapp.Model.Products;
 import com.example.giftsapp.R;
 import com.example.giftsapp.Adapter.ProductAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -130,8 +134,8 @@ public class ProductsForm extends AppCompatActivity{
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), EditProductForm.class);
-                String productID = productsList.get(position).id;
-                intent.putExtra("EXTRA_DOCUMENT_PRODUCT", productID);
+                Products product = (Products) parent.getAdapter().getItem(position);
+                intent.putExtra("EXTRA_DOCUMENT_PRODUCT", product);
                 startActivity(intent);
                 finish();
                 return true;
@@ -267,19 +271,14 @@ public class ProductsForm extends AppCompatActivity{
         return true;
     }
 
-    private void Filter() {
-        searchProductsList.clear();
-        
-    }
-
     private void GetProducts() {
+        productsList.clear();
         CollectionReference productRefs = fStore.collection("Products");
         productRefs.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public  void onSuccess(QuerySnapshot documentSnapshots) {
                 if (documentSnapshots.isEmpty()) {
                     Log.d("TAG", "onSuccess: LIST EMPTY");
-                    return;
                 } else {
                     for (DocumentSnapshot document : documentSnapshots) {
                         String id           = document.getId();

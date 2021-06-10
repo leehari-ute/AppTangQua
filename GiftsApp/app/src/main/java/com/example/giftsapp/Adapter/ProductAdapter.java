@@ -23,8 +23,8 @@ import java.util.List;
 
 public class ProductAdapter extends BaseAdapter {
 
-    private Context context;
-    private  int layout;
+    private final Context context;
+    private final int layout;
     private List<Products> productsList;
 
     public ProductAdapter(Context context, int layout, List<Products> productsList) {
@@ -40,12 +40,12 @@ public class ProductAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return productsList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @SuppressLint("ViewHolder")

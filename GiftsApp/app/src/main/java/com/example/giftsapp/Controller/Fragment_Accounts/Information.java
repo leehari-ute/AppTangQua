@@ -1,5 +1,6 @@
 package com.example.giftsapp.Controller.Fragment_Accounts;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -47,6 +48,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.type.DateTime;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,6 +59,7 @@ public class Information extends Fragment {
     TextView            txtName, txtGender, txtBirthday, txtBio, txtPhone, txtEmail, txtChangePass, txtChangeAvt;
     ImageView           imgAvt;
     Calendar            calendar = Calendar.getInstance();
+    @SuppressLint("SimpleDateFormat")
     SimpleDateFormat    simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     FirebaseAuth        fAuth;
     FirebaseFirestore   fStore;
@@ -131,7 +135,7 @@ public class Information extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         if (context instanceof SettingAccountForm) {
             this.settingAccountForm = (SettingAccountForm) context;
