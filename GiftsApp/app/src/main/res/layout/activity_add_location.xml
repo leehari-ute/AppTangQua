@@ -185,7 +185,7 @@
                 android:textSize="15sp" />
 
             <EditText
-                android:id="@+id/txtAddAddress"
+                android:id="@+id/edtDetailAddress"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_height="0dp"

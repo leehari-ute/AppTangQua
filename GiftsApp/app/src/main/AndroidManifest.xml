@@ -15,8 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
         <activity android:name=".Controller.SearchProductActivity"></activity>
-        <activity android:name=".Controller.EditLocation" /> <!-- <activity android:name=".Paypal.Activity.PaymentDetails" /> -->
-        <!-- <activity android:name=".Paypal.Activity.TestSandBox" /> -->
+        <activity android:name=".Controller.BillAdmin"></activity>
+        <activity android:name=".Controller.EditLocation" />
+        <activity android:name=".Paypal.Activity.PaymentDetails" /> <!-- <activity android:name=".Paypal.Activity.TestSandBox" /> -->
         <activity android:name=".Controller.SelectLocationForm" />
         <activity
             android:name=".Controller.DeliveryActivity"
@@ -53,7 +54,9 @@
         <activity
             android:name=".Controller.SettingAccountForm"
             android:theme="@style/Theme.GiftsApp.NoActionBar" />
-        <activity android:name=".Controller.LoginForm">
+
+        <activity android:name=".Controller.RazorPay.TestPay"/>
+            <activity android:name=".Controller.LoginForm">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

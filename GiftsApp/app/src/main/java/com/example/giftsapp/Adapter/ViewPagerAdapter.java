@@ -9,18 +9,26 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.giftsapp.Controller.Fragment_Accounts.BillStatus;
+import com.example.giftsapp.Controller.Fragment_Accounts.BillStatusAdmin;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     CharSequence Titles[] = {"Chờ xác nhận", "Chờ lấy hàng", "Đang giao hàng", "Đã giao hàng"};
-    public ViewPagerAdapter(@NonNull FragmentManager fm) {
+    private final boolean isAdmin;
+    public ViewPagerAdapter(@NonNull FragmentManager fm, boolean isAdmin) {
         super(fm);
+        this.isAdmin = isAdmin;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
-        BillStatus fragObj = new BillStatus();
+        Fragment fragObj;
+        if (isAdmin) {
+            fragObj = new BillStatusAdmin();
+        } else {
+            fragObj = new BillStatus();
+        }
         String status = "Error";
         switch (position){
             case 0:

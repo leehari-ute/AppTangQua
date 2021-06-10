@@ -11,10 +11,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,13 +48,9 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
     FirebaseUser            user;
     FirebaseFirestore       fStore;
     String                  userID;
-    Boolean isOpenBill;
-    private static int FRAGMENT_INFOR = 1;
-    private static int FRAGMENT_LOCATION = 2;
-    private static int FRAGMENT_BANK = 3;
-    private static int FRAGMENT_INTRODUCTION = 4;
-    private  static  int FRAGMENT_HISTORY = 5;
-    private  int currentFragment = FRAGMENT_INFOR;
+    String openFragment = "Information";
+
+    private  int currentFragment = 1;
 
 
     @Override
@@ -70,14 +68,12 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
         fm = getSupportFragmentManager();
 
-        Init();
-
-        if (fAuth.getCurrentUser() == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(new Intent(getApplicationContext(), LoginForm.class));
             finish();
         }
 
-
+        Init();
 
         navigationView.bringToFront();
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -86,15 +82,23 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (isOpenBill) {
-            ReplaceFragment(new Bill());
-        } else {
-            ReplaceFragment(new Information());
+        if (getIntent().getStringExtra("EXTRA_DOCUMENT_OPEN") != null) {
+            openFragment = getIntent().getStringExtra("EXTRA_DOCUMENT_OPEN");
+        }
+        switch (openFragment) {
+            case "Bill":
+                ReplaceFragment(new Bill());
+                break;
+            case "Address":
+                ReplaceFragment(new Location());
+                break;
+            default:
+                ReplaceFragment(new Information());
+                break;
         }
     }
 
     private void Init(){
-        isOpenBill = getIntent().getBooleanExtra("EXTRA_DOCUMENT_OPEN_BILL", false);
         drawerLayout    = findViewById(R.id.drawer_layout);
         navigationView  = findViewById(R.id.nav_view);
         fAuth           = FirebaseAuth.getInstance();
@@ -125,19 +129,22 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menuHome:
-                Intent intent = new Intent(getApplicationContext(), CustomerHome.class);
-                startActivity(intent);
-                finish();
-                break;
+        if (item.getItemId() == R.id.menuHome) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        final int FRAGMENT_INFOR = 1;
+        final int FRAGMENT_LOCATION = 2;
+        final int FRAGMENT_BANK = 3;
+        final int FRAGMENT_INTRODUCTION = 4;
+        final int FRAGMENT_HISTORY = 5;
         switch (item.getItemId()) {
             case R.id.nav_infor:
                 if(FRAGMENT_INFOR != currentFragment){
@@ -194,11 +201,14 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
 
     private void GetDataUser() {
         fStore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    navHello.setText("Xìn chào " + document.getString("fullName"));
+                    if (document != null) {
+                        navHello.setText("Xìn chào " + document.getString("fullName"));
+                    }
                 }
             }
         });

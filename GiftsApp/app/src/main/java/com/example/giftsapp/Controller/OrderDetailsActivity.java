@@ -50,7 +50,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     ProductAdapter productAdapter;
     StatusAdapter statusAdapter;
     TextView txtName, txtPhone, txtDetailAddress, txtVillage, txtDistrict, txtProvince,
-            txtTotalProduct, txtTotalPrice, txtPriceProduct, txtFeeShip;
+            txtTotalProduct, txtTotalPrice, txtPriceProduct, txtFeeShip, txtMessage, txtTypePayment;
     FirebaseUser user;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
@@ -83,6 +83,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
             GetAddress();
             GetPrice();
+            GetAnotherData();
         }
     }
 
@@ -102,7 +103,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
-        intent.putExtra("EXTRA_DOCUMENT_OPEN_BILL", true);
+        intent.putExtra("EXTRA_DOCUMENT_OPEN", "Bill");
         startActivity(intent);
         finish();
     }
@@ -117,6 +118,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
             finish();
         }
         userID = user.getUid();
+        txtMessage = findViewById(R.id.txtMessage);
+        txtTypePayment = findViewById(R.id.txtTypePayment);
         includeProductLayout = findViewById(R.id.layoutProduct);
         listViewProduct = includeProductLayout.findViewById(R.id.listViewProduct);
         listViewStatus = includeProductLayout.findViewById(R.id.listViewStatus);
@@ -152,7 +155,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     if (document.getData().get("address") != null) {
                         ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
                         for (int i = 0; i < addressArray.size(); i++) {
-                            if (Integer.parseInt(addressArray.get(i).get("ID").toString()) == bill.getAddressID()) {
+                            if (addressArray.get(i).get("ID").toString() == bill.getAddressID()) {
                                 txtName.setText(addressArray.get(i).get("name").toString().trim());
                                 txtPhone.setText(addressArray.get(i).get("phone").toString().trim());
                                 txtProvince.setText(addressArray.get(i).get("province").toString().trim());
@@ -175,5 +178,16 @@ public class OrderDetailsActivity extends AppCompatActivity {
         Integer priceAllProduct = Integer.parseInt(bill.getTotalPrice()) - Integer.parseInt(bill.getFeeShip());
         txtPriceProduct.setText(priceAllProduct + "");
         txtFeeShip.setText(bill.getFeeShip() + " VND");
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void GetAnotherData() {
+        if (bill.getPaymentType().equals("COD")) {
+            txtTypePayment.setText("Thanh toán khi nhận hàng");
+        } else {
+            txtTypePayment.setText("Thẻ tín dụng/Ghi nợ");
+        }
+
+        txtMessage.setText(bill.getMessage());
     }
 }

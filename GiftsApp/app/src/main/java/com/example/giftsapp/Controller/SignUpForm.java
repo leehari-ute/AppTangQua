@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,6 +34,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +100,7 @@ public class SignUpForm extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void Register() {
         fullName     = edtFullName.getText().toString().trim();
         email        = edtEmail.getText().toString().trim();
@@ -130,7 +134,9 @@ public class SignUpForm extends AppCompatActivity {
                                 User.put("role", "Customer");
                                 User.put("bio", "");
                                 User.put("birthday", "28/02/2000");
-                                if (gender == "Nam") {
+                                ArrayList<String> address = new ArrayList<>();
+                                User.put("address", address);
+                                if (gender.equals("Nam")) {
                                     User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtMale.jpg?alt=media&token=868c8c7b-21af-4f78-bfa2-41b9d154c0e6");
                                 } else {
                                     User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtFemale.jpg?alt=media&token=757d5538-61f2-4096-a74b-e2fc0e667012");
@@ -146,14 +152,15 @@ public class SignUpForm extends AppCompatActivity {
                                         Log.d("TAG", "onFailure: "+ e.toString());
                                     }
                                 });
-                                Intent intent = new Intent(getApplicationContext(), CustomerHome.class);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
+                                finish();
 
-                                Toast.makeText(SignUpForm.this, "Success!!!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUpForm.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
-                            Toast.makeText(SignUpForm.this, "Error!!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpForm.this, "Lỗi: " + task.getException(), Toast.LENGTH_SHORT).show();
                         }
                     });
         };
@@ -161,39 +168,39 @@ public class SignUpForm extends AppCompatActivity {
 
     private boolean Validate() {
         if (TextUtils.isEmpty(gender)) {
-            rdBtnMale.setError("Gender is required");
-            rdBtnFemale.setError("Gender is required");
+            rdBtnMale.setError("Hãy chọn giới tính");
+            rdBtnFemale.setError("Hãy chọn giới tính");
             return false;
         }
         rdBtnMale.setError(null);
         rdBtnFemale.setError(null);
 
         if (TextUtils.isEmpty(fullName)) {
-            edtFullName.setError("Username is required");
+            edtFullName.setError("Hãy nhập tên người dùng");
             return false;
         }
         edtFullName.setError(null);
 
         if (TextUtils.isEmpty(email)) {
-            edtEmail.setError("Email is required");
+            edtEmail.setError("Hãy nhập email");
             return false;
         }
         edtEmail.setError(null);
 
         if (TextUtils.isEmpty(password)) {
-            edtPassword.setError("Password is required");
+            edtPassword.setError("Hãy nhập mật khẩu");
             return false;
         }
         edtPassword.setError(null);
 
         if (TextUtils.isEmpty(phone)) {
-            edtPhone.setError("Phone is required");
+            edtPhone.setError("Hãy nhập số điện thoại");
             return false;
         }
         edtPhone.setError(null);
 
         if (password.length() < 6) {
-            edtPassword.setError("Password must be more than 5 characters");
+            edtPassword.setError("Mật khẩu phải có hơn 5 ký tự");
             return false;
         }
         edtPassword.setError(null);
@@ -221,20 +228,24 @@ public class SignUpForm extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                String role = value.getString("role");
-                Intent intent = new Intent();
-                switch (role) {
-                    case "Customer":
-                        intent = new Intent(getApplicationContext(), MainActivity.class);
-                        break;
-                    case "Admin":
-                        intent = new Intent(getApplicationContext(), AdminHome.class);
-                        break;
-                    default:
-                        break;
+                if (value != null) {
+                    String role = value.getString("role");
+                    if (role != null) {
+                        Intent intent = new Intent();
+                        switch (role) {
+                            case "Customer":
+                                intent = new Intent(getApplicationContext(), MainActivity.class);
+                                break;
+                            case "Admin":
+                                intent = new Intent(getApplicationContext(), AdminHome.class);
+                                break;
+                            default:
+                                break;
+                        }
+                        startActivity(intent);
+                        finish();
+                    }
                 }
-                startActivity(intent);
-                finish();
             }
         });
     }

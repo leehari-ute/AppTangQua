@@ -142,7 +142,7 @@ public class BillStatus extends Fragment {
                                     productsArrayList.add(product);
                                 }
                                 String id = document.getId();
-                                Integer addressID = Integer.parseInt(billArrayList.get(0).get("addressID").toString());
+                                String addressID = billArrayList.get(0).get("addressID").toString();
                                 Timestamp ts = (Timestamp) billArrayList.get(0).get("createAt");
                                 Date createAt = ts.toDate();
                                 String paymentType = billArrayList.get(0).get("paymentType").toString();
@@ -150,7 +150,8 @@ public class BillStatus extends Fragment {
                                 String totalPrice = billArrayList.get(0).get("totalPrice").toString();
                                 String uID = billArrayList.get(0).get("userID").toString();
                                 String feeShip = billArrayList.get(0).get("feeShip").toString();
-                                Bill bill = new Bill(id, addressID, createAt, paymentType, productsArrayList, statusBillArrayList, totalPrice, uID, quantity, feeShip);
+                                String message = billArrayList.get(0).get("message").toString();
+                                Bill bill = new Bill(id, addressID, createAt, paymentType, productsArrayList, statusBillArrayList, totalPrice, uID, quantity, feeShip, message);
                                 billsArrayList.add(bill);
                                 billAdapter.notifyDataSetChanged();
                             }
