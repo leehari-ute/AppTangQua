@@ -42,6 +42,54 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="4">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:text="Phương thức thanh toán"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:id="@+id/txtTypePayment"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:text="Thanh toán khi nhận hàng"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:text="Lời nhắn"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:id="@+id/txtMessage"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:text="Sinh nhật vui vẻ"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="10dp"/>
+
+            </LinearLayout>
+
             <include
                 android:id="@+id/layoutAddress"
                 android:layout_width="match_parent"
@@ -61,6 +109,7 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"

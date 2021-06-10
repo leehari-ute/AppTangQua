@@ -150,7 +150,8 @@ public class BillStatus extends Fragment {
                                 String totalPrice = billArrayList.get(0).get("totalPrice").toString();
                                 String uID = billArrayList.get(0).get("userID").toString();
                                 String feeShip = billArrayList.get(0).get("feeShip").toString();
-                                Bill bill = new Bill(id, addressID, createAt, paymentType, productsArrayList, statusBillArrayList, totalPrice, uID, quantity, feeShip);
+                                String message = billArrayList.get(0).get("message").toString();
+                                Bill bill = new Bill(id, addressID, createAt, paymentType, productsArrayList, statusBillArrayList, totalPrice, uID, quantity, feeShip, message);
                                 billsArrayList.add(bill);
                                 billAdapter.notifyDataSetChanged();
                             }

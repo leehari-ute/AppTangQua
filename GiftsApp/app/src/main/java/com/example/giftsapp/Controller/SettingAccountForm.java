@@ -49,12 +49,8 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
     FirebaseFirestore       fStore;
     String                  userID;
     String openFragment = "Information";
-    private static final int FRAGMENT_INFOR = 1;
-    private static final int FRAGMENT_LOCATION = 2;
-    private static final int FRAGMENT_BANK = 3;
-    private static final int FRAGMENT_INTRODUCTION = 4;
-    private  static final int FRAGMENT_HISTORY = 5;
-    private  int currentFragment = FRAGMENT_INFOR;
+
+    private  int currentFragment = 1;
 
 
     @Override
@@ -144,6 +140,11 @@ public class SettingAccountForm extends AppCompatActivity implements NavigationV
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        final int FRAGMENT_INFOR = 1;
+        final int FRAGMENT_LOCATION = 2;
+        final int FRAGMENT_BANK = 3;
+        final int FRAGMENT_INTRODUCTION = 4;
+        final int FRAGMENT_HISTORY = 5;
         switch (item.getItemId()) {
             case R.id.nav_infor:
                 if(FRAGMENT_INFOR != currentFragment){

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftsapp.Controller.ProductsForm;
+import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.Model.MainModel;
 import com.example.giftsapp.R;
 
@@ -91,16 +92,24 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(position ==2)
-                    {
-                        Intent intent = new Intent(v.getContext(), ProductsForm.class);
-                        v.getContext().startActivity(intent);
-                        ((Activity)context).finish();
+                    Intent intent = new Intent(v.getContext(), ProductsForm.class);
+                    switch (position) {
+                        case 1:
+                            intent.putExtra("EXTRA_DOCUMENT_OPEN", "Bill");
+                            break;
+                        case 2:
+                            intent = new Intent(v.getContext(), ProductsForm.class);
+                            break;
+                        case 3:
+                            break;
+                        default:
+                            break;
                     }
+
+                    v.getContext().startActivity(intent);
+                    ((Activity)context).finish();
                 }
             });
-
-
         }
     }
 

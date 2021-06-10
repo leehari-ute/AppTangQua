@@ -18,9 +18,10 @@ public class Bill implements Parcelable {
     private String userID;
     private int quantityProduct;
     private String feeShip;
+    private String message;
 
     //get from Firebase
-    public Bill(String id, String addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip) {
+    public Bill(String id, String addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip, String message) {
         this.id = id;
         this.addressID = addressID;
         this.createAt = createAt;
@@ -31,10 +32,11 @@ public class Bill implements Parcelable {
         this.userID = userID;
         this.quantityProduct = quantityProduct;
         this.feeShip = feeShip;
+        this.message = message;
     }
 
     //save to firebase
-    public Bill(String addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip) {
+    public Bill(String addressID, Date createAt, String paymentType, ArrayList<Products> productsArrayList, ArrayList<StatusBill> status, String totalPrice, String userID, int quantityProduct, String feeShip, String message) {
         this.addressID = addressID;
         this.createAt = createAt;
         this.paymentType = paymentType;
@@ -44,6 +46,7 @@ public class Bill implements Parcelable {
         this.userID = userID;
         this.quantityProduct = quantityProduct;
         this.feeShip = feeShip;
+        this.message = message;
     }
 
     protected Bill(Parcel in) {
@@ -68,6 +71,7 @@ public class Bill implements Parcelable {
         userID = in.readString();
         quantityProduct = in.readInt();
         feeShip = in.readString();
+        message = in.readString();
     }
 
     @Override
@@ -97,6 +101,7 @@ public class Bill implements Parcelable {
         dest.writeString(userID);
         dest.writeInt(quantityProduct);
         dest.writeString(feeShip);
+        dest.writeString(message);
     }
 
     @SuppressWarnings("unused")
@@ -190,5 +195,13 @@ public class Bill implements Parcelable {
 
     public void setFeeShip(String feeShip) {
         this.feeShip = feeShip;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

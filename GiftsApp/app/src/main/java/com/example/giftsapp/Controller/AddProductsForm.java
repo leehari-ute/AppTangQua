@@ -163,7 +163,7 @@ public class AddProductsForm extends AppCompatActivity {
         if (!CheckRequired()) {
             return;
         }
-        Products product    = new Products(name, price, "", description, createAt, quantity, holiday, object, occasion);
+        Products product  = new Products(name, price, "", description, createAt, quantity, holiday, object, occasion);
         fStore.collection("Products")
                 .add(product)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
