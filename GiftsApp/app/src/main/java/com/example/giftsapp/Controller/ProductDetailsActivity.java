@@ -391,6 +391,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             Intent cartIntent = new Intent(ProductDetailsActivity.this,MainActivity.class);
             com.example.giftsapp.Controller.MainActivity.showCart =true;
             startActivity(cartIntent);
+            finish();
             // xem giỏ hàng chỗ này
             return true;
         }

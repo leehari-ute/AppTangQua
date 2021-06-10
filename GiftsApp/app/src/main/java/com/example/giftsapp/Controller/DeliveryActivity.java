@@ -114,28 +114,15 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                 chosePaymentDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
                 chosePaymentDialog.setCancelable(false);
                 RadioGroup radioGroup = chosePaymentDialog.findViewById(R.id.radioGroup);
-                RadioButton radio_Btn_COD = chosePaymentDialog.findViewById(R.id.radioButton_COD);
-                RadioButton radio_Btn_Onlice = chosePaymentDialog.findViewById(R.id.radioButton_Online);
-//                Button cancelBtn = chosePaymentDialog.findViewById(R.id.cancel_btn);
-//                Button okBtn = chosePaymentDialog.findViewById(R.id.ok_btn);
-
-//                cancelBtn.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        chosePaymentDialog.dismiss();
-//                    }
-//                });
 
                 radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @SuppressLint("NonConstantResourceId")
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        // checkedId trả về id của radio Button
                         switch (checkedId) {
                             case R.id.radioButton_COD:
                                 Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán COD", Toast.LENGTH_SHORT).show();
                                 typePayment = "COD";
-                                //Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
                                 Log.d("ADD", "pay=>"+addressSelected.getProvince());
                                 Log.d("typePay", "pay=>"+typePayment);
                                 break;
@@ -220,18 +207,12 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
         tv_address = findViewById(R.id.address);
         tv_pinCode = findViewById(R.id.pincode);
         // Shipping_details_layout
-
+        GetNameUser();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(linearLayoutManager.VERTICAL);
         deliveryRecyclerView.setLayoutManager(linearLayoutManager);
 
         List<CartItemModel> cartItemModelList = new ArrayList<>();
-        /*cartItemModelList.add(new CartItemModel(0,R.drawable.teddy,"Gấu bông",1,"200000.VND","220000.VND",1,111));
-        cartItemModelList.add(new CartItemModel(0,R.drawable.teddy,"Gấu bông",0,"200000.VND","220000.VND",1,111));
-        cartItemModelList.add(new CartItemModel(0,R.drawable.teddy,"Gấu bông",1,"200000.VND","220000.VND",1,111));
-        cartItemModelList.add(new CartItemModel(0,R.drawable.teddy,"Gấu bông",0,"200000.VND","220000.VND",1,111));*/
-        //cartItemModelList.add(new CartItemModel(1,4,"800000.VND","10000.VND","80000.VND","814000.VND"));
-        GetNameUser();
         CartAdapter cartAdapter = new CartAdapter(cartItemModelList);
         deliveryRecyclerView.setAdapter(cartAdapter);
         try {
@@ -512,11 +493,8 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
     }
 
     public void StartPayment() {
-        Log.d("CUCCUNG","haha" + priceVND + "");
-        Log.d("CUCCUNG","haha" + userName + "");
         double priceUSD = priceVND / 23000;
         int amount = (int) Math. round(priceUSD);
-        Log.d("CUCCUNG","haha" + priceUSD + "");
         Checkout checkout = new Checkout();
         checkout.setKeyID("rzp_test_agSuWkI0TetOjD");
         final Activity activity = this;

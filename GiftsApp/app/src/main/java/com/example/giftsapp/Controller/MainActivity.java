@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         finish();
                         break;
                     case R.id.nav_cart:
+                        showCart = false;
                         GotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
                         break;
                     case R.id.nav_logout:
@@ -152,8 +153,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             GotoFragment("My Cart",new MyCartFragment(),-2);
-        }else
-        {
+        } else {
             drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.addDrawerListener(drawerToggle);
             drawerToggle.syncState();
