@@ -1,14 +1,20 @@
 package com.example.giftsapp.Controller.Fragment_Accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -39,12 +45,14 @@ import java.util.Map;
 public class BillStatusAdmin extends Fragment {
 
     ListView listViewBill;
-    ArrayList<Bill> billsArrayList;
+    static ArrayList<Bill> billsArrayList;
     FirebaseAuth fAuth;
     FirebaseUser user;
+
     FirebaseFirestore fStore;
     BillAdapter billAdapter;
-    String statusRequest, userID;
+    static String statusRequest;
+    String userID;
     private BillAdmin billAdmin;
 
     public BillStatusAdmin() {
@@ -63,6 +71,7 @@ public class BillStatusAdmin extends Fragment {
 
         assert getArguments() != null;
         statusRequest = getArguments().getString("status");
+
         RenameStatus();
         Init(view);
 
@@ -70,7 +79,6 @@ public class BillStatusAdmin extends Fragment {
             startActivity(new Intent(billAdmin, LoginForm.class));
             getActivity().finish();
         }
-
         return view;
     }
 
@@ -95,6 +103,7 @@ public class BillStatusAdmin extends Fragment {
     }
 
     private void GetDataFromFireStore() {
+        billsArrayList.clear();
         fStore.collection("Bill").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

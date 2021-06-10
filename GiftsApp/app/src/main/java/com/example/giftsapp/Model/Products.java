@@ -21,7 +21,6 @@ public class Products implements Parcelable {
     public String object;
     public String occasion;
 
-
     //load history bill
     public Products(String id, String name, String price, String imageUrl, int quantity) {
         this.id = id;

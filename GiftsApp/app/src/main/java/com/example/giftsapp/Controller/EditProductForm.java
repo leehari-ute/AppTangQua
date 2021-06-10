@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.giftsapp.Model.Products;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,7 +55,7 @@ public class EditProductForm extends AppCompatActivity {
     ArrayAdapter<String> holidayAdapter;
     ArrayAdapter<String> objectAdapter;
     ArrayAdapter<String> occasionAdapter;
-    Button btnSave;
+    Button btnSave, btnDelete;
     EditText edtDes, edtNameProduct, edtQuantity, edtPrice;
     ImageView imgProduct;
     Spinner spnHoliday, spnObject, spnOccasion;
@@ -67,6 +70,7 @@ public class EditProductForm extends AppCompatActivity {
     String   userID, productID, name, price, description, holiday, object, occasion;
     Integer  quantity;
     TextView txtHoliday, txtObject, txtOccasion;
+    Products product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +83,6 @@ public class EditProductForm extends AppCompatActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2C4CC3")));
-
 
         Init();
 
@@ -103,17 +106,21 @@ public class EditProductForm extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteProduct();
+            }
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                //onBackPressed();
-                Intent intent = new Intent(getApplicationContext(), ProductsForm.class);
-                startActivity(intent);
-                finish();
-                break;
+        if (item.getItemId() == android.R.id.home) {//onBackPressed();
+            Intent intent = new Intent(getApplicationContext(), ProductsForm.class);
+            startActivity(intent);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -125,8 +132,9 @@ public class EditProductForm extends AppCompatActivity {
         storageRef          = fStorage.getReference();
         user                = fAuth.getCurrentUser();
         userID              = user.getUid();
-        productID           = getIntent().getStringExtra("EXTRA_DOCUMENT_PRODUCT");
+        product             = getIntent().getParcelableExtra("EXTRA_DOCUMENT_PRODUCT");
         btnSave             = findViewById(R.id.btnSave);
+        btnDelete           = findViewById(R.id.btnDelete);
         edtDes              = findViewById(R.id.edtDesProduct);
         edtNameProduct      = findViewById(R.id.edtNameProduct);
         edtQuantity         = findViewById(R.id.edtQuantity);
@@ -201,34 +209,19 @@ public class EditProductForm extends AppCompatActivity {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void LoadProduct() {
-        DocumentReference docRef = fStore.collection("Products").document(productID);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("TAG", "DocumentSnapshot data: " + document.getData());
-                        edtNameProduct.setText(document.getString("name"));
-                        edtPrice.setText(document.getString("price"));
-                        edtDes.setText(document.getString("description"));
-                        edtQuantity.setText(document.get("quantity").toString());
-                        spnHoliday.setSelection(holidayAdapter.getPosition(document.getString("holiday")));
-                        spnObject.setSelection(objectAdapter.getPosition(document.getString("object")));
-                        spnOccasion.setSelection(occasionAdapter.getPosition(document.getString("occasion")));
-                        String imgUrl       =  document.getString("imageUrl");
-                        Glide.with(getApplicationContext())
-                                .load(imgUrl)
-                                .into(imgProduct);
-                    } else {
-                        Log.d("TAG", "No such document");
-                    }
-                } else {
-                    Log.d("TAG", "get failed with ", task.getException());
-                }
-            }
-        });
+        edtNameProduct.setText(product.getName());
+        edtPrice.setText(product.getPrice());
+        edtDes.setText(product.getDescription());
+        edtQuantity.setText(product.getQuantity()+"");
+        spnHoliday.setSelection(holidayAdapter.getPosition(product.getHoliday()));
+        spnObject.setSelection(objectAdapter.getPosition(product.getObject()));
+        spnOccasion.setSelection(occasionAdapter.getPosition(product.getOccasion()));
+        String imgUrl = product.getImageUrl();
+        Glide.with(getApplicationContext())
+                .load(imgUrl)
+                .into(imgProduct);
     }
 
     private void ChooseImage() {
@@ -242,23 +235,19 @@ public class EditProductForm extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
+                && data != null && data.getData() != null ) {
             filePath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imgProduct.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
     private void UploadImage(String productID) {
-        if(filePath != null)
-        {
+        if(filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
@@ -362,5 +351,21 @@ public class EditProductForm extends AppCompatActivity {
         edtQuantity.setError(null);
 
         return true;
+    }
+
+    private void DeleteProduct() {
+        fStore.collection("Products").document(product.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getApplicationContext(), "Đã xóa thành công", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), ProductsForm.class));
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Lỗi vui lòng thử lại", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
