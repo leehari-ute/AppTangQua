@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +43,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +57,7 @@ import java.util.Random;
 
 import static com.example.giftsapp.Controller.LoginForm.currentUser;
 
-public class DeliveryActivity extends AppCompatActivity {
+public class DeliveryActivity extends AppCompatActivity implements PaymentResultListener {
 
     private RecyclerView deliveryRecyclerView;
     private Button changORAddNewAddressBtn, EnterMessBtn;
@@ -66,9 +72,9 @@ public class DeliveryActivity extends AppCompatActivity {
 
     // Shipping_details_layout
     private TextView tv_name,tv_address,tv_pinCode;
-    private String getMess = " "; // lấy lời chúc
-    private String typePayment=" ";
-
+    private String getMess = ""; // lấy lời chúc
+    private String typePayment= "COD", userName;
+    private double priceVND = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +88,7 @@ public class DeliveryActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Delivery");
 
         Init();
+        Checkout.preload(getApplicationContext());
 
         ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -109,61 +116,62 @@ public class DeliveryActivity extends AppCompatActivity {
                 RadioGroup radioGroup = chosePaymentDialog.findViewById(R.id.radioGroup);
                 RadioButton radio_Btn_COD = chosePaymentDialog.findViewById(R.id.radioButton_COD);
                 RadioButton radio_Btn_Onlice = chosePaymentDialog.findViewById(R.id.radioButton_Online);
-                Button cancelBtn = chosePaymentDialog.findViewById(R.id.cancel_btn);
-                Button okBtn = chosePaymentDialog.findViewById(R.id.ok_btn);
+//                Button cancelBtn = chosePaymentDialog.findViewById(R.id.cancel_btn);
+//                Button okBtn = chosePaymentDialog.findViewById(R.id.ok_btn);
 
-                cancelBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        chosePaymentDialog.dismiss();
-                    }
-                });
+//                cancelBtn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        chosePaymentDialog.dismiss();
+//                    }
+//                });
 
                 radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @SuppressLint("NonConstantResourceId")
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         // checkedId trả về id của radio Button
-                        switch (checkedId)
-                        {
+                        switch (checkedId) {
                             case R.id.radioButton_COD:
                                 Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán COD", Toast.LENGTH_SHORT).show();
-                                okBtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        typePayment = "COD";
-                                        chosePaymentDialog.dismiss();
-                                        Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
-                                        Log.d("ADD", "pay=>"+addressSelected.getProvince());
-                                        Log.d("typePay", "pay=>"+typePayment);
-                                        CreateBill(addressSelected.getID(),typePayment);
-                                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                });
+                                typePayment = "COD";
+                                //Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
+                                Log.d("ADD", "pay=>"+addressSelected.getProvince());
+                                Log.d("typePay", "pay=>"+typePayment);
                                 break;
                             case  R.id.radioButton_Online:
+                                typePayment = "ONL";
                                 Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán Online", Toast.LENGTH_SHORT).show();
                                 break;
-
+                            default:
+                                break;
                         }
+                        stylePaymentBtn.setText(typePayment);
+                        chosePaymentDialog.dismiss();
                     }
                 });
-
                 chosePaymentDialog.show();
             }
         });
 
-       /* PaymentBtn.setOnClickListener(new View.OnClickListener() {
+        PaymentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
-                Log.d("ADD", "pay=>"+addressSelected.getProvince());
-                Log.d("typePay", "pay=>"+typePayment);
-                createBill(addressSelected.getID());
+                if (CheckRequired()) {
+                    if (typePayment.equals("ONL")) {
+                        StartPayment();
+                    } else {
+                        Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
+                        Log.d("ADD", "pay=>"+addressSelected.getProvince());
+                        Log.d("typePay", "pay=>"+typePayment);
+                        CreateBill(addressSelected.getID(),typePayment);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
             }
-        });*/
+        });
 
         if (user == null) {
             startActivity(new Intent(getApplicationContext(), LoginForm.class));
@@ -180,7 +188,6 @@ public class DeliveryActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -192,7 +199,6 @@ public class DeliveryActivity extends AppCompatActivity {
     }
 
     private void Init() {
-        //shipping_details_layout = findViewById(R.id.include);
         fAuth = FirebaseAuth.getInstance();
         fStore= FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();
@@ -201,7 +207,7 @@ public class DeliveryActivity extends AppCompatActivity {
         changORAddNewAddressBtn = findViewById(R.id.change_or_add_address_btn);
         totalPrice_Vat = findViewById(R.id.total_priceD);
         stylePaymentBtn= findViewById(R.id.Style_payment_btn);
-        PaymentBtn = findViewById(R.id.cart_continue_btn);
+        PaymentBtn = findViewById(R.id.btnPay);
         Mess_edt = findViewById(R.id.edt_messenge);
         // Shipping_details_layout
         tv_name = findViewById(R.id.fullName);
@@ -219,7 +225,7 @@ public class DeliveryActivity extends AppCompatActivity {
         cartItemModelList.add(new CartItemModel(0,R.drawable.teddy,"Gấu bông",1,"200000.VND","220000.VND",1,111));
         cartItemModelList.add(new CartItemModel(0,R.drawable.teddy,"Gấu bông",0,"200000.VND","220000.VND",1,111));*/
         //cartItemModelList.add(new CartItemModel(1,4,"800000.VND","10000.VND","80000.VND","814000.VND"));
-
+        GetNameUser();
         CartAdapter cartAdapter = new CartAdapter(cartItemModelList);
         deliveryRecyclerView.setAdapter(cartAdapter);
         try {
@@ -262,6 +268,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                             totalPrice[0] = totalPrice[0] + price*quantity*1.0;
                                             finalS[0] +=quantity;
                                             totalPrice_Vat.setText((totalPrice[0]*(0.01) + totalPrice[0] +20000)+""+".VND");
+                                            priceVND = totalPrice[0]*(0.01) + totalPrice[0] +20000;
 
                                             Log.i("KQQ111", finalS[0] +"");
                                             if( cartItemModelList.size() >= l )
@@ -363,7 +370,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                                 bill.put("userID",currentUser);
                                                 bill.put("totalPrice",Cost_S+"");
                                                 bill.put("quantityProduct",finalS[0]);
-                                                bill.put("messenge",getMess);
+                                                bill.put("message", getMess);
 
                                                 fStore.collection("Bill").document(Bill_ID).set(bill)
                                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -461,6 +468,74 @@ public class DeliveryActivity extends AppCompatActivity {
                 }else
                 {
                     Toast.makeText(DeliveryActivity.this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private boolean CheckRequired() {
+        if (addressSelected == null) {
+            tv_pinCode.setError("Bạn chưa chọn địa chỉ giao hàng");
+            return false;
+        }
+        tv_pinCode.setError(null);
+
+        if (TextUtils.isEmpty(Mess_edt.getText())) {
+            Mess_edt.setError("Bạn chưa nhập lời nhắn");
+            return false;
+        }
+        Mess_edt.setError(null);
+
+        return true;
+    }
+
+    @Override
+    public void onPaymentSuccess(String s) {
+        Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
+        Log.d("ADD", "pay=>"+addressSelected.getProvince());
+        Log.d("typePay", "pay=>"+typePayment);
+        CreateBill(addressSelected.getID(),typePayment);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        Log.d("TAG", "Lỗi thanh toán: => " + s);
+    }
+
+    public void StartPayment() {
+        Log.d("CUCCUNG","haha" + priceVND + "");
+        Log.d("CUCCUNG","haha" + userName + "");
+        double priceUSD = priceVND / 23000;
+        int amount = (int) Math. round(priceUSD);
+        Log.d("CUCCUNG","haha" + priceUSD + "");
+        Checkout checkout = new Checkout();
+        checkout.setKeyID("rzp_test_agSuWkI0TetOjD");
+        final Activity activity = this;
+        try {
+            JSONObject options = new JSONObject();
+            options.put("name", userName);
+            options.put("description", "Reference No. #123456");
+            options.put("currency", "USD");
+            options.put("amount", amount*100); // 100 means 1$
+            checkout.open(activity, options);
+        } catch(Exception e) {
+            Log.e("TAG", "Error in starting Razorpay Checkout", e);
+        }
+    }
+
+    private void GetNameUser() {
+        fStore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        userName = document.getString("fullName");
+                    }
                 }
             }
         });

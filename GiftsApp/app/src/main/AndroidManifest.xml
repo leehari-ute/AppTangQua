@@ -53,7 +53,9 @@
         <activity
             android:name=".Controller.SettingAccountForm"
             android:theme="@style/Theme.GiftsApp.NoActionBar" />
-        <activity android:name=".Controller.LoginForm">
+
+        <activity android:name=".Controller.RazorPay.TestPay"/>
+            <activity android:name=".Controller.LoginForm">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

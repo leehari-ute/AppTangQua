@@ -34,6 +34,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -267,10 +269,7 @@ public class ProductsForm extends AppCompatActivity{
 
     private void Filter() {
         searchProductsList.clear();
-        searchProductsList.addAll(productsList);
-        for (int i = 0; i < searchProductsList.size(); i++) {
-
-        }
+        
     }
 
     private void GetProducts() {

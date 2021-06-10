@@ -185,48 +185,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         {
             productDescription = ProductDetailDescription;
         }
-
-        // xử lý thêm vào cart
-        /*List<CartCurrentModel> listProductCart = new ArrayList<>();
-        listProductCart.add(new CartCurrentModel(Id_product_current,1));
-
-        Log.i("size",listProductCart.size()+"");
-        for(int i=0;i<listProductCart.size();i++)
-        {
-            List<Map<String,Object>> listPro = new ArrayList<>();
-            Map<String, Object> ItemCart = new HashMap<>();
-            ItemCart.put("ProductID",listProductCart.get(i).getProductID());
-            ItemCart.put("Quantity",1);
-            listPro.add(ItemCart);
-            Map<String, Object>AddCart = new HashMap<>();
-            AddCart.put("ListProducts",Arrays.asList(listPro.get(i)));
-            Log.i("List",listPro.get(0).toString());
-            AddToCart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        firebaseFirestore.collection("Carts").document(currentUser)
-                                .set(AddCart).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thành công", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thất bại", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }catch (Exception e)
-                    {
-                        Toast.makeText(ProductDetailsActivity.this, "Thêm vào giỏ thất bại 111", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }*/
         List<CartCurrentModel> cartCurrentModelList = new ArrayList<>();
-        try {
 
+        try {
             String finalId_product_current = Id_product_current;
             firebaseFirestore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -250,8 +211,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                     Log.i("sizelist",cartCurrentModelList.size()+"");
                                 }
                             });
-
-
                         }
                         else{
                             AddToCart.setOnClickListener(new View.OnClickListener() {
@@ -270,8 +229,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     }
                 }
             });
-
-
         }catch (Exception e)
         {
             Toast.makeText(ProductDetailsActivity.this, "Lỗi phát sinh", Toast.LENGTH_SHORT).show();
