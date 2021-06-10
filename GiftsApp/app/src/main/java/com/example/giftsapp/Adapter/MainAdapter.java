@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftsapp.Controller.BillAdmin;
 import com.example.giftsapp.Controller.ProductsForm;
 import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.Model.MainModel;
@@ -95,17 +96,15 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
                     Intent intent = new Intent(v.getContext(), ProductsForm.class);
                     switch (position) {
                         case 1:
-                            intent.putExtra("EXTRA_DOCUMENT_OPEN", "Bill");
+                            intent = new Intent(v.getContext(), BillAdmin.class);
                             break;
                         case 2:
                             intent = new Intent(v.getContext(), ProductsForm.class);
                             break;
                         case 3:
-                            break;
                         default:
                             break;
                     }
-
                     v.getContext().startActivity(intent);
                     ((Activity)context).finish();
                 }
