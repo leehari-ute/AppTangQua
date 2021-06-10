@@ -79,9 +79,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private String Id_product; // horizontalScollViewAdapter
     private String Id_product1; // GridProductLayoutAdapter
     private String Id_product2; // HomePageFragment Adapter
+    private String Id_product3; // SearchProductAdapter
     private String ProductDetailDescription;
     private String ProductDetailDescription1;
     private String ProductDetailDescription2;
+    private String ProductDetailDescription3; // ProDescriptionSearch
     // product description layout
 
     // rate now layout
@@ -120,11 +122,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
         Id_product = getIntent().getStringExtra("IdProduct");
         Id_product1 = getIntent().getStringExtra("IdProduct1");
         Id_product2 = getIntent().getStringExtra("IdProduct2");
+        Id_product3 = getIntent().getStringExtra("IdProductSearch");
+
 
         ProductDetailDescription = getIntent().getStringExtra("productDescription");
         ProductDetailDescription1 = getIntent().getStringExtra("productDescription1");
         ProductDetailDescription2 = getIntent().getStringExtra("productDescription2");
-
+        ProductDetailDescription3 = getIntent().getStringExtra("ProDescriptionSearch");
         final String[] description_sms = new String[1];
         List<String> productImages = new ArrayList<>();
         /*productImages.add(R.drawable.son);
@@ -133,17 +137,21 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productImages.add(R.drawable.facebook);*/
 
         String Id_product_current = "";
-        if(Id_product==null && Id_product1==null)
+        if(Id_product==null && Id_product1==null && Id_product3==null)
         {
             Id_product_current = Id_product2;
         }
-        else if(Id_product==null && Id_product2==null)
+        else if(Id_product==null && Id_product2==null && Id_product3==null)
         {
             Id_product_current = Id_product1;
         }
-        else if(Id_product1 == null && Id_product2==null)
+        else if(Id_product1 == null && Id_product2==null && Id_product3==null)
         {
             Id_product_current = Id_product;
+        }
+        else if(Id_product == null && Id_product2==null && Id_product1==null)
+        {
+            Id_product_current = Id_product3;
         }
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -175,16 +183,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
 
-        if(ProductDetailDescription==null && ProductDetailDescription1==null)
+        if(ProductDetailDescription==null && ProductDetailDescription1==null && ProductDetailDescription3==null)
         {
             productDescription = ProductDetailDescription2;
-        }else if(ProductDetailDescription==null && ProductDetailDescription2==null)
+        }else if(ProductDetailDescription==null && ProductDetailDescription2==null && ProductDetailDescription3==null)
         {
             productDescription = ProductDetailDescription1;
-        }else if(ProductDetailDescription1==null && ProductDetailDescription2==null)
+        }else if(ProductDetailDescription1==null && ProductDetailDescription2==null && ProductDetailDescription3==null)
         {
             productDescription = ProductDetailDescription;
+        }else if(ProductDetailDescription1==null && ProductDetailDescription2==null && ProductDetailDescription==null)
+        {
+            productDescription = ProductDetailDescription3;
         }
+
 
         // xử lý thêm vào cart
         /*List<CartCurrentModel> listProductCart = new ArrayList<>();
@@ -414,6 +426,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         else if(id == R.id.main_search_icon)
         {
             // search chỗ này
+
             return true;
         }
         else if(id == R.id.main_cart_icon)

@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -211,6 +213,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
            if(id== R.id.main_search_icon)
            {
                // seach ở đây
+               Intent intent = new Intent(getApplicationContext(),SearchProductActivity.class);
+               startActivity(intent);
                return true;
            }else if(id == R.id.main_notification_icon)
            {
