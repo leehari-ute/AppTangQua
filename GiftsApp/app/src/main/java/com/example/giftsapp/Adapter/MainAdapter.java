@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftsapp.Controller.BillAdmin;
 import com.example.giftsapp.Controller.ProductsForm;
+import com.example.giftsapp.Controller.SettingAccountAdmin;
 import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.Model.MainModel;
 import com.example.giftsapp.R;
@@ -102,6 +103,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
                             intent = new Intent(v.getContext(), ProductsForm.class);
                             break;
                         case 3:
+                            intent = new Intent(v.getContext(), SettingAccountAdmin.class);
                         default:
                             break;
                     }

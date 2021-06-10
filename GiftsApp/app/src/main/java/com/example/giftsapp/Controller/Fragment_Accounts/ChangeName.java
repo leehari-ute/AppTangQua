@@ -13,16 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.example.giftsapp.Controller.AddProductsForm;
 import com.example.giftsapp.Controller.LoginForm;
+import com.example.giftsapp.Controller.SettingAccountAdmin;
 import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ChangeName extends AppCompatActivity {
@@ -32,6 +30,7 @@ public class ChangeName extends AppCompatActivity {
     FirebaseAuth        fAuth;
     FirebaseFirestore   fStore;
     String              userID, name = "";
+    boolean isFromAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +60,13 @@ public class ChangeName extends AppCompatActivity {
                     return;
                 };
                 edtFullName.setError(null);
-                ChangeName();
-                startActivity(new Intent(getApplicationContext(), SettingAccountForm.class));
+                ChangeUserName();
+                if (isFromAdmin) {
+                    startActivity(new Intent(getApplicationContext(), SettingAccountAdmin.class));
+                } else {
+                    startActivity(new Intent(getApplicationContext(), SettingAccountForm.class));
+                }
+                finish();
             }
         });
 
@@ -72,7 +76,12 @@ public class ChangeName extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                startActivity(new Intent(getApplicationContext(), SettingAccountForm.class));
+                if (isFromAdmin) {
+                    startActivity(new Intent(this, SettingAccountAdmin.class));
+                } else {
+                    startActivity(new Intent(this, SettingAccountForm.class));
+                }
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -85,10 +94,10 @@ public class ChangeName extends AppCompatActivity {
         fStore      = FirebaseFirestore.getInstance();
         userID      = fAuth.getCurrentUser().getUid();
         edtFullName.setText(getIntent().getStringExtra("EXTRA_DOCUMENT_USER_NAME"));
+        isFromAdmin = getIntent().getBooleanExtra("EXTRA_IS_FROM_ADMIN", false);
     }
 
-    private void ChangeName() {
-
+    private void ChangeUserName() {
         fStore.collection("Users").document(userID).update("fullName", name)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
