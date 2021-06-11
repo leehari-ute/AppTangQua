@@ -70,7 +70,6 @@ public class BillAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(layout,null);
 
-
         TextView txtFirstPro = convertView.findViewById(R.id.txtFirstPro);
         TextView txtFirstPrice = convertView.findViewById(R.id.txtFirstPrice);
         TextView txtQuantity = convertView.findViewById(R.id.txtQuantity);

@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
-        <activity android:name=".Controller.SettingAccountAdmin"></activity>
+        <activity android:name=".Controller.ManageUser"></activity>
+        <activity android:name=".Controller.SettingAccountAdmin" />
         <activity android:name=".Controller.SearchProductActivity" />
         <activity android:name=".Controller.BillAdmin" />
         <activity android:name=".Controller.EditLocation" />

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftsapp.Controller.BillAdmin;
+import com.example.giftsapp.Controller.ManageUser;
 import com.example.giftsapp.Controller.ProductsForm;
 import com.example.giftsapp.Controller.SettingAccountAdmin;
 import com.example.giftsapp.Controller.SettingAccountForm;
@@ -94,7 +95,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ProductsForm.class);
+                    Intent intent = new Intent(v.getContext(), ManageUser.class);
                     switch (position) {
                         case 1:
                             intent = new Intent(v.getContext(), BillAdmin.class);
