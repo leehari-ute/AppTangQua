@@ -32,9 +32,9 @@ public class AdminHome extends AppCompatActivity {
         setContentView(R.layout.activity_admin_home);
         int images[] = {R.drawable.quatangmot,R.drawable.quatanghai,R.drawable.quatangba};
         // tạo mảng icon
-        int rcImages[] = {R.drawable.contact,R.drawable.documents,R.drawable.product,R.drawable.profile};
+        int rcImages[] = {R.drawable.ic_user,R.drawable.documents,R.drawable.product,R.drawable.profile};
         //tao mảng tên cac icon tuong ứng
-        String iconName[] = {"Liên hệ","Đơn bán","Sản phẩm","Thông tin"};
+        String iconName[] = {"Người dùng","Đơn bán","Sản phẩm","Thông tin"};
         Init();
         for(int image:images) // phần carousel
         {
