@@ -147,47 +147,113 @@ public class BillAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-                    String nextStatus = "Null";
-                    switch (finalStatusPresent) {
-                        case  "Chờ xác nhận":
-                            nextStatus = "Chờ lấy hàng";
-                            break;
-                        case "Chờ lấy hàng":
-                            nextStatus = "Đang giao hàng";
-                            break;
-                        case "Đang giao hàng":
-                            nextStatus = "Đã giao hàng";
-                            break;
-                        default:
-                            break;
-                    }
-                    Date date = java.util.Calendar.getInstance().getTime();
-                    HashMap<String, Object> newStatus = new HashMap<String, Object>();
-                    newStatus.put("createAt", date);
-                    newStatus.put("isPresent", true);
-                    newStatus.put("name", nextStatus);
-                    String finalNextStatus = nextStatus;
-                    fStore.collection("Bill").document(bill.getId()).update("status", FieldValue.arrayUnion(newStatus))
+                    HashMap<String, Object> oldStatus = new HashMap<String, Object>();
+                    oldStatus.put("createAt", bill.getStatus().get(finalPositionPresent).getDate());
+                    oldStatus.put("isPresent", true);
+                    oldStatus.put("name", finalStatusPresent);
+                    fStore.collection("Bill").document(bill.getId()).update("status", FieldValue.arrayRemove(oldStatus))
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            HashMap<String, Object> oldStatus = new HashMap<String, Object>();
-                            oldStatus.put("createAt", bill.getStatus().get(finalPositionPresent).getDate());
-                            oldStatus.put("isPresent", true);
-                            oldStatus.put("name", finalStatusPresent);
-                            fStore.collection("Bill").document(bill.getId()).update("status", FieldValue.arrayRemove(oldStatus))
+                            HashMap<String, Object> updateOldStatus = new HashMap<String, Object>();
+                            updateOldStatus.put("createAt", bill.getStatus().get(finalPositionPresent).getDate());
+                            updateOldStatus.put("isPresent", false);
+                            updateOldStatus.put("name", finalStatusPresent);
+                            fStore.collection("Bill").document(bill.getId()).update("status", FieldValue.arrayUnion(updateOldStatus))
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    HashMap<String, Object> updateOldStatus = new HashMap<String, Object>();
-                                    updateOldStatus.put("createAt", bill.getStatus().get(finalPositionPresent).getDate());
-                                    updateOldStatus.put("isPresent", false);
-                                    updateOldStatus.put("name", finalStatusPresent);
-                                    fStore.collection("Bill").document(bill.getId()).update("status", FieldValue.arrayUnion(updateOldStatus))
+                                    String nextStatus = "Null";
+                                    switch (finalStatusPresent) {
+                                        case  "Chờ xác nhận":
+                                            nextStatus = "Chờ lấy hàng";
+                                            break;
+                                        case "Chờ lấy hàng":
+                                            nextStatus = "Đang giao hàng";
+                                            break;
+                                        case "Đang giao hàng":
+                                            nextStatus = "Đã giao hàng";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    Date date = java.util.Calendar.getInstance().getTime();
+                                    HashMap<String, Object> newStatus = new HashMap<String, Object>();
+                                    newStatus.put("createAt", date);
+                                    newStatus.put("isPresent", true);
+                                    newStatus.put("name", nextStatus);
+                                    String finalNextStatus = nextStatus;
+                                    fStore.collection("Bill").document(bill.getId()).update("status", FieldValue.arrayUnion(newStatus))
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             Toast.makeText(context, "Đã chuyển trạng thái", Toast.LENGTH_SHORT).show();
+                                            if (finalNextStatus.equals("Đã giao hàng")) {
+                                                int year = Calendar.getInstance().get(Calendar.YEAR);
+                                                fStore.collection("Revenue").whereEqualTo("year", year).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.getResult().isEmpty()) {
+                                                            Revenue revenue = new Revenue("0",0);
+                                                            Map<String, Object> revenueInCurrentYear = new HashMap<>();
+                                                            revenueInCurrentYear.put("January", revenue);
+                                                            revenueInCurrentYear.put("February", revenue);
+                                                            revenueInCurrentYear.put("March", revenue);
+                                                            revenueInCurrentYear.put("April", revenue);
+                                                            revenueInCurrentYear.put("May", revenue);
+                                                            revenueInCurrentYear.put("June", revenue);
+                                                            revenueInCurrentYear.put("July", revenue);
+                                                            revenueInCurrentYear.put("August", revenue);
+                                                            revenueInCurrentYear.put("September", revenue);
+                                                            revenueInCurrentYear.put("October", revenue);
+                                                            revenueInCurrentYear.put("November", revenue);
+                                                            revenueInCurrentYear.put("December", revenue);
+                                                            revenueInCurrentYear.put("year", year);
+                                                            fStore.collection("Revenue").add(revenueInCurrentYear)
+                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                        @Override
+                                                                        public void onSuccess(DocumentReference documentReference) {
+                                                                            Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
+
+
+                                                                        }}).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w("TAG", "Error adding document", e);
+                                                                }
+                                                            });
+                                                        } else {
+                                                            String idRevenue = "";
+                                                            long recentRevenue = 0;
+                                                            int recentTotalBill = 0;
+                                                            Map<String, Object> revenue = new HashMap<>();
+                                                            String month = Revenue.getMonth();
+                                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                Log.d("TAG", document.getId() + " => " + document.getData());
+                                                                revenue = (Map<String, Object>) document.get(month);
+                                                                idRevenue = document.getId();
+                                                                recentRevenue = Long.parseLong(revenue.get("revenue").toString());
+                                                                recentTotalBill = Integer.parseInt(revenue.get("totalBill").toString());
+                                                                Log.d("TAG", "doanh thu hiện tại: " + recentRevenue + "- tổng bill hiện tại: " + recentTotalBill);
+                                                            }
+
+                                                            String newRevenue = String.valueOf(recentRevenue + Long.parseLong(bill.getTotalPrice()));
+
+                                                            int newTotalBill = recentTotalBill + 1;
+                                                            Log.d("TAG", "-doanh thu mới: " + newRevenue + "-tổng bill mới: " + newTotalBill + "-tháng: " + month);
+                                                            fStore.collection("Revenue").document(idRevenue).update(
+                                                                    month+".revenue", newRevenue,
+                                                                    month+".totalBill", newTotalBill)
+                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            Log.d("TAG", "Đã cộng doanh thu");
+                                                                        }
+                                                                    });
+                                                        }
+                                                    }
+                                                });
+                                            }
                                         }
                                     });
                                 }
