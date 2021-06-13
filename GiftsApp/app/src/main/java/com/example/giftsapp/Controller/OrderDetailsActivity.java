@@ -55,6 +55,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
+    boolean fromAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             bill = bundle.getParcelable("PARCEL_BILL");
-            Log.d("CUCCUNG", "sl=>" + bill.getQuantityProduct());
             productsArrayList.addAll(bill.getProductsArrayList());
             productAdapter.notifyDataSetChanged();
             Helper.getListViewProductSize(listViewProduct);
@@ -90,8 +90,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home){
-            Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
-            intent.putExtra("EXTRA_DOCUMENT_OPEN_BILL", true);
+            Intent intent;
+            if (fromAdmin) {
+                intent = new Intent(getApplicationContext(), BillAdmin.class);
+            } else {
+                intent = new Intent(getApplicationContext(), SettingAccountForm.class);
+                intent.putExtra("EXTRA_DOCUMENT_OPEN", "Bill");
+            }
             startActivity(intent);
             finish();
             return true;
@@ -102,8 +107,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), SettingAccountForm.class);
-        intent.putExtra("EXTRA_DOCUMENT_OPEN", "Bill");
+        Intent intent;
+        if (fromAdmin) {
+            intent = new Intent(getApplicationContext(), BillAdmin.class);
+        } else {
+            intent = new Intent(getApplicationContext(), SettingAccountForm.class);
+            intent.putExtra("EXTRA_DOCUMENT_OPEN", "Bill");
+        }
         startActivity(intent);
         finish();
     }
@@ -117,6 +127,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), LoginForm.class));
             finish();
         }
+
+        fromAdmin = getIntent().getBooleanExtra("FROM_ADMIN", false);
         userID = user.getUid();
         txtMessage = findViewById(R.id.txtMessage);
         txtTypePayment = findViewById(R.id.txtTypePayment);
@@ -155,7 +167,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     if (document.getData().get("address") != null) {
                         ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
                         for (int i = 0; i < addressArray.size(); i++) {
-                            if (addressArray.get(i).get("ID").toString() == bill.getAddressID()) {
+                            if (addressArray.get(i).get("ID").toString().equals(bill.getAddressID())) {
                                 txtName.setText(addressArray.get(i).get("name").toString().trim());
                                 txtPhone.setText(addressArray.get(i).get("phone").toString().trim());
                                 txtProvince.setText(addressArray.get(i).get("province").toString().trim());
