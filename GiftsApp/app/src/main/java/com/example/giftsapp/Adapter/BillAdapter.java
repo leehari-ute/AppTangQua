@@ -23,30 +23,42 @@ import com.example.giftsapp.Controller.Fragment_Accounts.BillStatusAdmin;
 import com.example.giftsapp.Controller.OrderDetailsActivity;
 import com.example.giftsapp.Model.Bill;
 import com.example.giftsapp.Model.BillModel;
+import com.example.giftsapp.Model.Revenue;
 import com.example.giftsapp.Model.StatusBill;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BillAdapter extends BaseAdapter {
     private final Context context;
     private final int layout;
     private List<Bill> billList;
+    private final boolean isAdmin;
+    FirebaseFirestore fStore;
 
-    public BillAdapter(Context context, int layout, List<Bill> billList) {
+    public BillAdapter(Context context, int layout, List<Bill> billList, boolean isAdmin) {
         this.context = context;
         this.layout = layout;
         this.billList = billList;
+        this.fStore = FirebaseFirestore.getInstance();
+        this.isAdmin = isAdmin;
     }
 
     @Override
@@ -101,7 +113,6 @@ public class BillAdapter extends BaseAdapter {
         if ( this.context instanceof BillAdmin ) {
             Button btnChangeStatus = convertView.findViewById(R.id.btnChangeStatus);
             TextView txtBuyerName = convertView.findViewById(R.id.txtBuyerName);
-            FirebaseFirestore fStore = FirebaseFirestore.getInstance();
             fStore.collection("Users").document(bill.getUserID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -193,6 +204,7 @@ public class BillAdapter extends BaseAdapter {
                 Intent intent = new Intent(context, OrderDetailsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("PARCEL_BILL", bill);
+                bundle.putBoolean("FROM_ADMIN", isAdmin);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
                 ((Activity) context).finish();
