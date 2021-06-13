@@ -31,37 +31,37 @@ public class Revenue {
         int month = Calendar.getInstance().get(Calendar.MONTH);
         String monthEnglish = "January";
         switch (month) {
-            case 2:
+            case 1:
                 monthEnglish = "February";
                 break;
-            case 3:
+            case 2:
                 monthEnglish = "March";
                 break;
-            case 4:
+            case 3:
                 monthEnglish = "April";
                 break;
-            case 5:
+            case 4:
                 monthEnglish = "May";
                 break;
-            case 6:
+            case 5:
                 monthEnglish = "June";
                 break;
-            case 7:
+            case 6:
                 monthEnglish = "July";
                 break;
-            case 8:
+            case 7:
                 monthEnglish = "August";
                 break;
-            case 9:
+            case 8:
                 monthEnglish = "September";
                 break;
-            case 10:
+            case 9:
                 monthEnglish = "October";
                 break;
-            case 11:
+            case 10:
                 monthEnglish = "November";
                 break;
-            case 12:
+            case 11:
                 monthEnglish = "December";
                 break;
             default:

@@ -1,5 +1,6 @@
 package com.example.giftsapp.Controller;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -73,6 +74,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             bill = bundle.getParcelable("PARCEL_BILL");
+            fromAdmin = getIntent().getBooleanExtra("FROM_ADMIN", false);
+            if (fromAdmin) {
+                userID = bill.getUserID();
+            }
             productsArrayList.addAll(bill.getProductsArrayList());
             productAdapter.notifyDataSetChanged();
             Helper.getListViewProductSize(listViewProduct);
@@ -127,8 +132,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), LoginForm.class));
             finish();
         }
-
-        fromAdmin = getIntent().getBooleanExtra("FROM_ADMIN", false);
         userID = user.getUid();
         txtMessage = findViewById(R.id.txtMessage);
         txtTypePayment = findViewById(R.id.txtTypePayment);
