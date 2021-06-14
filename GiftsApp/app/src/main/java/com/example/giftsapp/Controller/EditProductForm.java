@@ -43,6 +43,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -133,6 +135,7 @@ public class EditProductForm extends AppCompatActivity {
         user                = fAuth.getCurrentUser();
         userID              = user.getUid();
         product             = getIntent().getParcelableExtra("EXTRA_DOCUMENT_PRODUCT");
+        productID           = product.getId();
         btnSave             = findViewById(R.id.btnSave);
         btnDelete           = findViewById(R.id.btnDelete);
         edtDes              = findViewById(R.id.edtDesProduct);
@@ -184,7 +187,7 @@ public class EditProductForm extends AppCompatActivity {
         if (!CheckRequired()) {
             return;
         }
-
+        Log.d("TAG", "Successfully updated!");
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
         map.put("price", price);
@@ -249,7 +252,7 @@ public class EditProductForm extends AppCompatActivity {
     private void UploadImage(String productID) {
         if(filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
+            progressDialog.setTitle("Đang tải...");
             progressDialog.show();
 
             StorageReference ref = storageRef.child("products/"+ productID);
@@ -270,10 +273,10 @@ public class EditProductForm extends AppCompatActivity {
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        public void onProgress(@NotNull UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                                     .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                            progressDialog.setMessage("Đang tải "+(int)progress+"%");
                         }
                     });
             GetImageUrl(ref, productID);
