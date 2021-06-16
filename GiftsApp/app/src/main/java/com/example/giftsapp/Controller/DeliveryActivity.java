@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -123,8 +125,8 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                             case R.id.radioButton_COD:
                                 Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán COD", Toast.LENGTH_SHORT).show();
                                 typePayment = "COD";
-                                Log.d("ADD", "pay=>"+addressSelected.getProvince());
-                                Log.d("typePay", "pay=>"+typePayment);
+                               // Log.d("ADD", "pay=>"+addressSelected.getProvince());
+                               // Log.d("typePay", "pay=>"+typePayment);
                                 break;
                             case  R.id.radioButton_Online:
                                 typePayment = "ONL";
@@ -148,13 +150,12 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                     if (typePayment.equals("ONL")) {
                         StartPayment();
                     } else {
-                        Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
                         Log.d("ADD", "pay=>"+addressSelected.getProvince());
                         Log.d("typePay", "pay=>"+typePayment);
+                        //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        //startActivity(intent);
                         CreateBill(addressSelected.getID(),typePayment);
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        //finish();
                     }
                 }
             }
@@ -236,7 +237,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                                 S += quantity;
 
                                 int finalCountPro = countPro ;
-                                Log.i("KQQ", finalS[0] +"");
+                                //Log.i("KQQ", finalS[0] +"");
                                 fStore.collection("Products").document(ProID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> taskPro) {
@@ -245,11 +246,21 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                                             DocumentSnapshot documentSnapshotPro = taskPro.getResult();
                                             Long price = Long.parseLong(documentSnapshotPro.get("price").toString());
                                             Long Cuttedprice = price + 20000;
-
+                                            int QuantityInStock = Integer.parseInt(documentSnapshotPro.get("quantity").toString());
+                                            String status="";
+                                            if(QuantityInStock >= quantity)
+                                            {
+                                                status = "Còn hàng";
+                                            }
+                                            else if(QuantityInStock < quantity)
+                                            {
+                                                status = "Hết hàng";
+                                            }
                                             cartItemModelList.add(new CartItemModel(0
                                                     ,documentSnapshotPro.get("imageUrl").toString()
                                                     , documentSnapshotPro.get("name").toString(), 1
-                                                    , documentSnapshotPro.get("price").toString(), Cuttedprice.toString(), quantity, 111,ProID));
+                                                    , documentSnapshotPro.get("price").toString(), Cuttedprice.toString(), quantity, 111,ProID
+                                                    ,status));
 
                                             cartAdapter.notifyDataSetChanged();
                                             totalPrice[0] = totalPrice[0] + price*quantity*1.0;
@@ -257,7 +268,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                                             totalPrice_Vat.setText((totalPrice[0]*(0.01) + totalPrice[0] +20000)+""+".VND");
                                             priceVND = totalPrice[0]*(0.01) + totalPrice[0] +20000;
 
-                                            Log.i("KQQ111", finalS[0] +"");
+                                            //Log.i("KQQ111", finalS[0] +"");
                                             if( cartItemModelList.size() >= l )
                                             {
                                                 double Cost_S; // tiền tổng cộng
@@ -321,6 +332,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                                         if (taskPro.isSuccessful()) {
                                             DocumentSnapshot documentSnapshotPro = taskPro.getResult();
                                             Long price = Long.parseLong(documentSnapshotPro.get("price").toString());
+                                            int quantityProductInStock = Integer.parseInt(documentSnapshotPro.get("quantity").toString());
                                             productsListInBill.add(new Products(ProID,
                                                     documentSnapshotPro.get("name").toString(),
                                                     documentSnapshotPro.get("price").toString(),
@@ -329,68 +341,91 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                                             totalPrice[0] = (long) (totalPrice[0] + price*quantity);
                                             finalS[0] +=quantity;
 
-                                            if( productsListInBill.size() >= l )
+                                            if(quantity>quantityProductInStock)
                                             {
-                                                long Cost_S; // tiền tổng cộng
-                                                long SaveTotal = finalS[0] *20000;
-                                                Cost_S = (long) (totalPrice[0]/100 + totalPrice[0] +20000);
-                                                Log.i("Cost",Cost_S+"");
-                                                String StringChar = "abcdefgtre";
-                                                Random random = new Random();
-                                                long ID = random.nextLong();
-                                                int r = random.nextInt(10);
-                                                String a = StringChar.substring(0,r);
-                                                String Bill_ID = ID+"" + a;
-
-                                                Date date = java.util.Calendar.getInstance().getTime();
-                                                List<StatusBill> statusBillList = new ArrayList<>();
-                                                statusBillList.add(new StatusBill(true,"Chờ xác nhận",date));
-                                                Map<String, Object> bill = new HashMap<>();
-                                                Map<String,Object> listPro=new HashMap<>();
-                                                Map<String,Object> statusbill = new HashMap<>();
-                                                getMess = Mess_edt.getText().toString();
-                                                bill.put("addressID", AddressID);
-                                                bill.put("feeShip","20000");
-                                                bill.put("paymentType",typePay);
-                                                bill.put("createAt",date);
-                                                bill.put("userID",currentUser);
-                                                bill.put("totalPrice",Cost_S+"");
-                                                bill.put("quantityProduct",finalS[0]);
-                                                bill.put("message", getMess);
-
-                                                fStore.collection("Bill").document(Bill_ID).set(bill)
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                Toast.makeText(DeliveryActivity.this, "Lưu bill thành công", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                AlertDialog.Builder Message = new AlertDialog.Builder(DeliveryActivity.this);
+                                                Message.setTitle("Thông báo");
+                                                Message.setIcon(R.drawable.cancel);
+                                                Message.setMessage("Sản phẩm " + documentSnapshotPro.get("name").toString()+ " đã hết hàng "
+                                                +"\nQuý khách vui lòng xóa sản phẩm này hoặc đợi 2 ngày để tiếp tục thanh toán");
+                                                Message.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                                     @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(DeliveryActivity.this, "Lưu bill thất bại", Toast.LENGTH_SHORT).show();
+                                                    public void onClick(DialogInterface dialog, int which) {
                                                     }
                                                 });
+                                                Message.show();
 
-                                                for(int i=0;i<productsListInBill.size();i++)
-                                                {
-                                                    listPro.put("imageUrl",productsListInBill.get(i).getImageUrl().toString());
-                                                    listPro.put("name",productsListInBill.get(i).getName().toString());
-                                                    listPro.put("price",productsListInBill.get(i).getPrice().toString());
-                                                    listPro.put("productID",productsListInBill.get(i).getId().toString());
-                                                    listPro.put("quantity",productsListInBill.get(i).getQuantity());
-                                                    Log.i("DATASP",productsListInBill.get(i).getId().toString());
-                                                    fStore.collection("Bill").document(Bill_ID).update("products", FieldValue.arrayUnion(listPro));
-                                                }
-
-                                                for(int x=0;x<statusBillList.size();x++)
-                                                {
-                                                    statusbill.put("isPresent",true);
-                                                    statusbill.put("name","Chờ xác nhận");
-                                                    statusbill.put("createAt",date);
-                                                    fStore.collection("Bill").document(Bill_ID).update("status",FieldValue.arrayUnion(statusbill));
-                                                }
-                                                DeleteCart();
                                             }
+                                            else{
+                                                // code cập nhập số lượng sản phẩm tại đây
+                                                int quantityProductAfterCreateBill = quantityProductInStock - quantity;
+                                                fStore.collection("Products").document(ProID).update("quantity",quantityProductAfterCreateBill);
+
+                                                if( productsListInBill.size() >= l )
+                                                {
+                                                    long Cost_S; // tiền tổng cộng
+                                                    long SaveTotal = finalS[0] *20000;
+                                                    Cost_S = (long) (totalPrice[0]/100 + totalPrice[0] +20000);
+                                                    Log.i("Cost",Cost_S+"");
+                                                    String StringChar = "abcdefgtre";
+                                                    Random random = new Random();
+                                                    long ID = random.nextLong();
+                                                    int r = random.nextInt(10);
+                                                    String a = StringChar.substring(0,r);
+                                                    String Bill_ID = ID+"" + a;
+
+                                                    Date date = java.util.Calendar.getInstance().getTime();
+                                                    List<StatusBill> statusBillList = new ArrayList<>();
+                                                    statusBillList.add(new StatusBill(true,"Chờ xác nhận",date));
+                                                    Map<String, Object> bill = new HashMap<>();
+                                                    Map<String,Object> listPro=new HashMap<>();
+                                                    Map<String,Object> statusbill = new HashMap<>();
+                                                    getMess = Mess_edt.getText().toString();
+                                                    bill.put("addressID", AddressID);
+                                                    bill.put("feeShip","20000");
+                                                    bill.put("paymentType",typePay);
+                                                    bill.put("createAt",date);
+                                                    bill.put("userID",currentUser);
+                                                    bill.put("totalPrice",Cost_S+"");
+                                                    bill.put("quantityProduct",finalS[0]);
+                                                    bill.put("message", getMess);
+
+                                                    fStore.collection("Bill").document(Bill_ID).set(bill)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(DeliveryActivity.this, "Lưu bill thành công", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(DeliveryActivity.this, "Lưu bill thất bại", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+
+                                                    for(int i=0;i<productsListInBill.size();i++)
+                                                    {
+                                                        listPro.put("imageUrl",productsListInBill.get(i).getImageUrl().toString());
+                                                        listPro.put("name",productsListInBill.get(i).getName().toString());
+                                                        listPro.put("price",productsListInBill.get(i).getPrice().toString());
+                                                        listPro.put("productID",productsListInBill.get(i).getId().toString());
+                                                        listPro.put("quantity",productsListInBill.get(i).getQuantity());
+                                                        Log.i("DATASP",productsListInBill.get(i).getId().toString());
+                                                        fStore.collection("Bill").document(Bill_ID).update("products", FieldValue.arrayUnion(listPro));
+                                                    }
+
+                                                    for(int x=0;x<statusBillList.size();x++)
+                                                    {
+                                                        statusbill.put("isPresent",true);
+                                                        statusbill.put("name","Chờ xác nhận");
+                                                        statusbill.put("createAt",date);
+                                                        fStore.collection("Bill").document(Bill_ID).update("status",FieldValue.arrayUnion(statusbill));
+                                                    }
+                                                    Toast.makeText(DeliveryActivity.this, "Tạo hóa đơn thành công", Toast.LENGTH_SHORT).show();
+                                                    DeleteCart();
+                                                }
+                                            }
+
                                         } else {
                                             String error = taskPro.getException().getMessage();
                                             Toast.makeText(DeliveryActivity.this, error, Toast.LENGTH_SHORT).show();
@@ -427,6 +462,10 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                 Log.i("result","xóa giỏ hàng thất bại");
             }
         });
+
+        DocumentReference docRef = fStore.collection("Carts").document(currentUser);
+        Map<String,Object> updates = new HashMap<>();
+        
     }
 
     private void AddressDetail() {

@@ -125,15 +125,30 @@ public class MyCartFragment extends Fragment {
                                         public void onComplete(@NonNull Task<DocumentSnapshot> taskPro) {
                                             if (taskPro.isSuccessful()) {
                                                 DocumentSnapshot documentSnapshotPro = taskPro.getResult();
-                                                Long price = Long.parseLong(documentSnapshotPro.get("price").toString());
-                                                Long Cuttedprice = price + 20000;
-                                                cartItemModelList.add(new CartItemModel(0
-                                                        ,documentSnapshotPro.get("imageUrl").toString()
-                                                        , documentSnapshotPro.get("name").toString(), 1
-                                                        , documentSnapshotPro.get("price").toString(), Cuttedprice.toString(), quantity, 111,ProID));
-                                                totalPrice[0] = totalPrice[0] + price*quantity*1.0;
-                                                cartAdapter.notifyDataSetChanged();
-                                                TotalPrice_tv.setText(totalPrice[0]+""+".VND");
+                                                if(documentSnapshotPro!=null) {
+                                                    long prices = Long.parseLong(documentSnapshotPro.get("price").toString());
+                                                    long Cuttedprice = prices + 20000;
+                                                    int QuantityInStock = Integer.parseInt(documentSnapshotPro.get("quantity").toString());
+                                                    String status="";
+                                                    if(QuantityInStock >= quantity)
+                                                    {
+                                                        status = "Còn hàng";
+                                                    }
+                                                    else if(QuantityInStock < quantity)
+                                                    {
+                                                        status = "Hết hàng";
+                                                    }
+                                                    cartItemModelList.add(new CartItemModel(0
+                                                            , documentSnapshotPro.get("imageUrl").toString()
+                                                            , documentSnapshotPro.get("name").toString(), 1
+                                                            , documentSnapshotPro.get("price").toString(), Cuttedprice + "", quantity, 111, ProID
+                                                            ,status));
+                                                    totalPrice[0] = totalPrice[0] + prices * quantity * 1.0;
+                                                    cartAdapter.notifyDataSetChanged();
+                                                    TotalPrice_tv.setText(totalPrice[0] + "" + ".VND");
+                                                }else{
+                                                    Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                                }
 
                                             } else {
                                                 String error = taskPro.getException().getMessage();

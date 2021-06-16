@@ -165,4 +165,19 @@
             android:drawableStart="@drawable/ic_delete"
             />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:text="Còn hàng"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/product_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/product_title"
+        app:layout_constraintTop_toTopOf="@+id/product_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,14 +44,19 @@ public class ViewAllActivity extends AppCompatActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);*/
 
-        if(layout_code==1 || layout_code==0)
+        if(layout_code==1 )
         {
             gridView.setVisibility(View.VISIBLE);
             GridProductLayoutAdapter gridProductLayoutAdapter = new GridProductLayoutAdapter(horizontalProductScrollModelList);
             gridView.setAdapter(gridProductLayoutAdapter);
         }
 
-
+        else if( layout_code==0)
+        {
+            gridView.setVisibility(View.VISIBLE);
+            GridProductLayoutAdapter gridProductLayoutAdapter = new GridProductLayoutAdapter(horizontalProductScrollModelList);
+            gridView.setAdapter(gridProductLayoutAdapter);
+        }
 
     }
     @Override
