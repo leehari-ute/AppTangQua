@@ -14,6 +14,7 @@ import com.example.giftsapp.Model.HorizontalProductScrollModel;
 import com.example.giftsapp.Model.sliderModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -94,15 +95,15 @@ public class DBqueries {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful())
                 {
-                    for(QueryDocumentSnapshot documentSnapshot:task.getResult())
+                    int dem =0;
+                    for(DocumentSnapshot documentSnapshot:task.getResult())
                     {
                         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(documentSnapshot.get("imageUrl").toString()
                                 ,documentSnapshot.get("name").toString()
-                                ,documentSnapshot.get("occasion").toString()
+                                ,documentSnapshot.get("object").toString()
                                 ,documentSnapshot.get("price").toString()
                                 ,documentSnapshot.getId()
                                 , documentSnapshot.get("description").toString()));
-
 
                     }
                     homePageModelList.add(new HomePageModel(2,"Bán chạy",horizontalProductScrollModelList ));

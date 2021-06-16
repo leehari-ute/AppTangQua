@@ -2,6 +2,7 @@ package com.example.giftsapp.Adapter;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,8 +96,9 @@ public class CartAdapter extends RecyclerView.Adapter {
                 int codesales = cartItemModelList.get(position).getCodeSale();
                 int productQuantitys = cartItemModelList.get(position).getProductQuantity();
                 String productId = cartItemModelList.get(position).getProID();
+                String proStatus = cartItemModelList.get(position).getProStatus();
 
-                ((CartItemViewholder)holder).setItemDetails(resource,title,freeVAT,price,cutPrice,codesales,productQuantitys,productId);
+                ((CartItemViewholder)holder).setItemDetails(resource,title,freeVAT,price,cutPrice,codesales,productQuantitys,productId,proStatus);
                 break;}
                 case CartItemModel.TOTAL_AMOUNT:
                 {
@@ -128,6 +130,7 @@ public class CartAdapter extends RecyclerView.Adapter {
         private TextView codeSale;
         private String productID;
         private TextView removeItemCart;
+        private TextView ProductStatus; // check còn sản phẩm trong kho không
 
         public CartItemViewholder(@NonNull View itemView) {
             super(itemView);
@@ -140,9 +143,10 @@ public class CartAdapter extends RecyclerView.Adapter {
             productQuantity=itemView.findViewById(R.id.product_quantity);
             codeSale = itemView.findViewById(R.id.tv_codeSale);
             removeItemCart = itemView.findViewById(R.id.tv_remove_item);
+            ProductStatus = itemView.findViewById(R.id.tv_status);
         }
         private void setItemDetails(String resource, String title, int freeVATNo, String productPriceText, String productCuttedPrice
-                , int CodeSale, int productQuantitytext, String productIDtext)
+                , int CodeSale, int productQuantitytext, String productIDtext, String productStatusText)
         {
            // productImage.setImageResource(resource);
             Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.ic__homec)).into(productImage);
@@ -161,6 +165,15 @@ public class CartAdapter extends RecyclerView.Adapter {
             cuttedPrice.setText(productCuttedPrice);
             codeSale.setText("Mã giảm giá: "+CodeSale+"");
             productQuantity.setText("SL: "+productQuantitytext);
+
+            if(productStatusText.equals("Còn hàng")) {
+                ProductStatus.setText(productStatusText);
+                ProductStatus.setTextColor(Color.parseColor("#2BCC6F"));
+            }else
+            {
+                ProductStatus.setText(productStatusText);
+                ProductStatus.setTextColor(Color.parseColor("#DF0404"));
+            }
 
             firebaseFirestore = FirebaseFirestore.getInstance(); // kết nối DB
 

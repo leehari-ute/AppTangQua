@@ -263,7 +263,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             horizontalLayoutTitle.setText(title);// set title cho horizontal Layout product
             if(horizontalProductScrollModelList.size()>8)
             {
-                horizontalLayoutViewAllBtn.setVisibility(View.VISIBLE);
+                horizontalLayoutViewAllBtn.setVisibility(View.INVISIBLE);
                 horizontalLayoutViewAllBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

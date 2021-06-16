@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="3dp"
-    >
+    android:elevation="3dp">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/product_images_viewpager"
@@ -111,8 +110,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="200000.VND/-"
-        android:textSize="24sp"
         android:textColor="#000000"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
@@ -161,35 +160,59 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
+        android:layout_marginTop="4dp"
         android:background="@color/colorOranges"
-        android:padding="16dp"
         android:gravity="right"
+        android:orientation="horizontal"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/product_price">
-    <TextView
-        android:id="@+id/tv_Evaluate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:text="Giao hàng tận nơi an tâm về giá"
-        />
-       <Button
-           android:id="@+id/Evaluate_Btn"
-           android:layout_width="100dp"
-           android:layout_height="35dp"
-           android:background="@drawable/border_background"
-           android:text="Evaluate"
-           android:textSize="12sp"
-           android:textColor="@color/white"
-           />
+        app:layout_constraintTop_toBottomOf="@+id/textView27">
+
+        <TextView
+            android:id="@+id/tv_Evaluate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Giao hàng tận nơi an tâm về giá"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/Evaluate_Btn"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:background="@drawable/border_background"
+            android:text="Evaluate"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView27"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:text="Tình trạng: "
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/product_price" />
+
+    <TextView
+        android:id="@+id/tv_current_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Còn hàng"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView27"
+        app:layout_constraintStart_toEndOf="@+id/textView27" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

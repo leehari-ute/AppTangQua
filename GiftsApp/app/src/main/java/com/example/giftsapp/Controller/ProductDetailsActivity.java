@@ -62,7 +62,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView totalRatingMiniView;
     private TextView productPrice;
     private TextView cuttedPrice;
-
+    private TextView currentState; // trạng thái còn hàng hay hết hàng
 
     private  static  boolean ALREADY_ADDED_TO_WISHLIST = false;
     private FloatingActionButton addToWishListBtn;
@@ -118,6 +118,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         cuttedPrice = findViewById(R.id.cut_price);
         productDetailsTabs=findViewById(R.id.product_details_tabs_container);
         AddToCart = findViewById(R.id.tv_AddToCart); // nút add to cart chỗ này
+        currentState = findViewById(R.id.tv_current_state); // trạng thái còn hàng hay hết hàng
 
         Id_product = getIntent().getStringExtra("IdProduct");
         Id_product1 = getIntent().getStringExtra("IdProduct1");
@@ -173,6 +174,21 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     productPrice.setText(documentSnapshot.get("price").toString() + ".VND");
                     long price = Long.parseLong(documentSnapshot.get("price").toString()) + 20000;
                     cuttedPrice.setText(price + "" + ".VND");
+                    int Quantity = Integer.parseInt(documentSnapshot.get("quantity").toString());
+                    if(Quantity >0)
+                    {
+                        currentState.setText("Còn hàng");
+                        currentState.setTextColor(Color.parseColor("#2BCC6F"));
+                        AddToCart.setVisibility(View.VISIBLE);
+                        buyNowBtn.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        currentState.setText("Hết hàng");
+                        currentState.setTextColor(Color.parseColor("#DF0404"));
+                        AddToCart.setVisibility(View.INVISIBLE);
+                        buyNowBtn.setVisibility(View.INVISIBLE);
+                    }
 
                    description_sms[0] = documentSnapshot.get("description").toString();
                 } else {
@@ -197,8 +213,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
             productDescription = ProductDetailDescription3;
         }
 
+        //thêm giỏ hàng khúc này
         List<CartCurrentModel> cartCurrentModelList = new ArrayList<>();
-
         try {
             String finalId_product_current = Id_product_current;
             firebaseFirestore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
