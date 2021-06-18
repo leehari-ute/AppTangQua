@@ -210,7 +210,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
         deliveryRecyclerView.setLayoutManager(linearLayoutManager);
 
         List<CartItemModel> cartItemModelList = new ArrayList<>();
-        CartAdapter cartAdapter = new CartAdapter(cartItemModelList);
+        CartAdapter cartAdapter = new CartAdapter(cartItemModelList, false);
         deliveryRecyclerView.setAdapter(cartAdapter);
         try {
 
