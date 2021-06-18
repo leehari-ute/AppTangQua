@@ -96,7 +96,7 @@ public class MyCartFragment extends Fragment {
         cartItemModelList.add(new CartItemModel(0,R.drawable.teddy,"Gấu bông",0,"200000.VND","220000.VND",1,111));
         cartItemModelList.add(new CartItemModel(1,4,"800000.VND","10000.VND","80000.VND","814000.VND"));*/
 
-        CartAdapter cartAdapter = new CartAdapter(cartItemModelList);
+        CartAdapter cartAdapter =new CartAdapter(cartItemModelList, true);
         cartItemRecyclerView.setAdapter(cartAdapter);
 
         // lấy thông tin các sản phẩm trong cart của USer
