@@ -278,7 +278,7 @@ public class CartAdapter extends RecyclerView.Adapter {
                                                 itemRemove.put("ProductID",productIDtext);
                                                 itemRemove.put("Quantity",quantity);
                                                 firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove));
-
+                                                notifyDataSetChanged();
                                                 break;
                                             }
                                         }
