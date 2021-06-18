@@ -66,11 +66,7 @@ public class SignUpForm extends AppCompatActivity {
         actionBar.hide();
 
         Init();
-
-        if (fAuth.getCurrentUser() != null) {
-            CheckRole();
-            finish();
-        }
+        
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +97,7 @@ public class SignUpForm extends AppCompatActivity {
         txtLoginHere    = findViewById(R.id.txtLoginHere);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        fAuth.signOut();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -267,9 +264,16 @@ public class SignUpForm extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     Log.d("TAG", "onSuccess: user profile is create for "+ userID);
                                     Toast.makeText(SignUpForm.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(SignUpForm.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                      fAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                          @Override
+                                          public void onSuccess(AuthResult authResult) {
+                                              if (task.isSuccessful()) {
+                                                  Toast.makeText(SignUpForm.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                                                  startActivity(new Intent(SignUpForm.this, MainActivity.class));
+                                                  finish();
+                                              }
+                                          }
+                                      });
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
