@@ -34,7 +34,7 @@ import java.util.Map;
 public class BillAdmin extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    ViewPagerAdapter viewPagerAdapter;
+    public static ViewPagerAdapter viewPagerAdapter;
     ArrayList<Bill> billsArrayList;
     FirebaseFirestore fStore;
 
@@ -60,7 +60,6 @@ public class BillAdmin extends AppCompatActivity {
                 onBackPressed();
                 break;
             case R.id.menuReload:
-                viewPagerAdapter.notifyDataSetChanged();
                 startActivity(new Intent(this, BillAdmin.class));
                 finish();
                 break;

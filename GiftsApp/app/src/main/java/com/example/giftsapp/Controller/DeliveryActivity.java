@@ -125,8 +125,6 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                             case R.id.radioButton_COD:
                                 Toast.makeText(DeliveryActivity.this, "Bạn chọn thanh toán COD", Toast.LENGTH_SHORT).show();
                                 typePayment = "COD";
-                               // Log.d("ADD", "pay=>"+addressSelected.getProvince());
-                               // Log.d("typePay", "pay=>"+typePayment);
                                 break;
                             case  R.id.radioButton_Online:
                                 typePayment = "ONL";
@@ -152,10 +150,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                     } else {
                         Log.d("ADD", "pay=>"+addressSelected.getProvince());
                         Log.d("typePay", "pay=>"+typePayment);
-                        //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        //startActivity(intent);
                         CreateBill(addressSelected.getID(),typePayment);
-                        //finish();
                     }
                 }
             }
@@ -304,6 +299,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
             Toast.makeText(DeliveryActivity.this, "Chưa có giỏ hàng", Toast.LENGTH_SHORT).show();
         }
         changORAddNewAddressBtn.setVisibility(View.VISIBLE);
+        GetDefaultAddress();
     }
 
     private void CreateBill(String AddressID, String typePay) {
@@ -394,7 +390,7 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
-                                                                    Toast.makeText(DeliveryActivity.this, "Lưu bill thành công", Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(DeliveryActivity.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
                                                                 }
                                                             }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
@@ -500,10 +496,9 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
 
     private boolean CheckRequired() {
         if (addressSelected == null) {
-            tv_pinCode.setError("Bạn chưa chọn địa chỉ giao hàng");
+            Toast.makeText(this, "Bạn chưa chọn địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
             return false;
         }
-        tv_pinCode.setError(null);
 
         if (TextUtils.isEmpty(Mess_edt.getText())) {
             Mess_edt.setError("Bạn chưa nhập lời nhắn");
@@ -558,6 +553,36 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
                     if (document != null) {
                         userName = document.getString("fullName");
                     }
+                }
+            }
+        });
+    }
+
+    private void GetDefaultAddress() {
+        fStore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.getData().get("address") != null) {
+                        ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
+                        for (int i = 0; i < addressArray.size(); i++) {
+                            if (addressArray.get(i).get("isDefault").toString().equals("true")) {
+                                HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
+                                String addressID = addressArray.get(i).get("ID").toString();
+                                String name = addressArray.get(i).get("name").toString().trim();
+                                String phone = addressArray.get(i).get("phone").toString().trim();
+                                String province = addressArray.get(i).get("province").toString().trim();
+                                String district = addressArray.get(i).get("district").toString().trim();
+                                String village = addressArray.get(i).get("village").toString().trim();
+                                String detailAddress = addressArray.get(i).get("detailAddress").toString().trim();
+                                addressSelected = new Address(addressID, name, phone, detailAddress, village, district, province, true);
+                                break;
+                            }
+                        }
+                    }
+                }else {
+                    Log.d("TAG", "DocumentSnapshot Fail" + task.getException());
                 }
             }
         });

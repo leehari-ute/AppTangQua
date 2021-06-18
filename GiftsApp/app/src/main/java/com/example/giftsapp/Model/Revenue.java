@@ -26,47 +26,4 @@ public class Revenue {
     public void setTotalBill(Integer totalBill) {
         this.totalBill = totalBill;
     }
-
-    public static String getMonth() {
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        String monthEnglish = "January";
-        switch (month) {
-            case 1:
-                monthEnglish = "February";
-                break;
-            case 2:
-                monthEnglish = "March";
-                break;
-            case 3:
-                monthEnglish = "April";
-                break;
-            case 4:
-                monthEnglish = "May";
-                break;
-            case 5:
-                monthEnglish = "June";
-                break;
-            case 6:
-                monthEnglish = "July";
-                break;
-            case 7:
-                monthEnglish = "August";
-                break;
-            case 8:
-                monthEnglish = "September";
-                break;
-            case 9:
-                monthEnglish = "October";
-                break;
-            case 10:
-                monthEnglish = "November";
-                break;
-            case 11:
-                monthEnglish = "December";
-                break;
-            default:
-                break;
-        }
-        return monthEnglish;
-    }
 }

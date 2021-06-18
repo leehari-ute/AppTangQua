@@ -96,9 +96,12 @@ public class BillStatusAdmin extends Fragment {
         listViewBill = view.findViewById(R.id.listViewBill);
         bills = new ArrayList<>();
         billsArrayList = new ArrayList<>();
-        billAdapter = new BillAdapter(billAdmin, R.layout.list_bill_admin, bills, true);
+        assert getArguments() != null;
+        statusRequest = getArguments().getString("STATUS");
+        billsArrayList = getArguments().getParcelableArrayList("LIST_BILL");
+        billAdapter = new BillAdapter(billAdmin, R.layout.list_bill_admin, billsArrayList, true, statusRequest);
         listViewBill.setAdapter(billAdapter);
-        GetBillsByStatus();
+        //GetBillsByStatus();
     }
 
     private void GetBillsByStatus() {

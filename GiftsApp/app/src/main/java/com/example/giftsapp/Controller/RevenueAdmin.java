@@ -59,6 +59,7 @@ public class RevenueAdmin extends AppCompatActivity {
     int t10=0;
     int t11=0;
     int t12=0;
+
     FirebaseFirestore fStore=FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {

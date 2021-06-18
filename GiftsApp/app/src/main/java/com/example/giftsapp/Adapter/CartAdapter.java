@@ -1,8 +1,10 @@
 package com.example.giftsapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,7 +83,6 @@ public class CartAdapter extends RecyclerView.Adapter {
             default:
                 return null;
         }
-
     }
 
     @Override
@@ -98,7 +100,7 @@ public class CartAdapter extends RecyclerView.Adapter {
                 String productId = cartItemModelList.get(position).getProID();
                 String proStatus = cartItemModelList.get(position).getProStatus();
 
-                ((CartItemViewholder)holder).setItemDetails(resource,title,freeVAT,price,cutPrice,codesales,productQuantitys,productId,proStatus);
+                ((CartItemViewholder)holder).setItemDetails(resource,title,freeVAT,price,cutPrice,codesales,productQuantitys,productId,proStatus, position);
                 break;}
                 case CartItemModel.TOTAL_AMOUNT:
                 {
@@ -118,7 +120,7 @@ public class CartAdapter extends RecyclerView.Adapter {
         return cartItemModelList.size();
     }
 
-    class CartItemViewholder extends RecyclerView.ViewHolder{
+    class CartItemViewholder extends RecyclerView.ViewHolder {
 
         private ImageView productImage;
         private ImageView freeVATIcon;
@@ -146,19 +148,16 @@ public class CartAdapter extends RecyclerView.Adapter {
             ProductStatus = itemView.findViewById(R.id.tv_status);
         }
         private void setItemDetails(String resource, String title, int freeVATNo, String productPriceText, String productCuttedPrice
-                , int CodeSale, int productQuantitytext, String productIDtext, String productStatusText)
-        {
+                , int CodeSale, int productQuantitytext, String productIDtext, String productStatusText, int pos) {
            // productImage.setImageResource(resource);
             Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.ic__homec)).into(productImage);
             productTitle.setText(title);
 
-            if(freeVATNo>0)
-            {
+            if(freeVATNo>0) {
                 freeVATIcon.setVisibility(View.VISIBLE);
                 freeVAT.setVisibility(View.VISIBLE);
                 freeVAT.setText(freeVATNo+""+"% VAT");
-            }
-            else{
+            } else {
                 freeVAT.setText("0% VAT");
             }
             productPrice.setText(productPriceText);
@@ -169,15 +168,12 @@ public class CartAdapter extends RecyclerView.Adapter {
             if(productStatusText.equals("Còn hàng")) {
                 ProductStatus.setText(productStatusText);
                 ProductStatus.setTextColor(Color.parseColor("#2BCC6F"));
-            }else
-            {
+            } else {
                 ProductStatus.setText(productStatusText);
                 ProductStatus.setTextColor(Color.parseColor("#DF0404"));
             }
 
             firebaseFirestore = FirebaseFirestore.getInstance(); // kết nối DB
-
-
 
             productQuantity.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -201,60 +197,74 @@ public class CartAdapter extends RecyclerView.Adapter {
                         @Override
                         public void onClick(View v) {
                             try {
+                                int newQuantity = Integer.parseInt(quantityNo.getText().toString());
+                                if (newQuantity <= 0) {
+                                    quantityNo.setError("Vui lòng nhập số lượng hợp lý");
+                                    return;
+                                }
+                                quantityNo.setError(null);
                                 firebaseFirestore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @SuppressLint("SetTextI18n")
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         if (task.isSuccessful()) {
                                             DocumentSnapshot documentSnapshot = task.getResult();
                                             if(documentSnapshot.exists()) {
-                                                final double[] totalPrice = {0};
                                                 final ArrayList<Map<String, Object>>[] productArray = new ArrayList[]{(ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts")};
                                                 for (int i = 0; i < productArray[0].size(); i++) {
                                                     String ProID = productArray[0].get(i).get("ProductID").toString();
                                                     int quantity = Integer.parseInt(productArray[0].get(i).get("Quantity").toString());
-                                                    if(ProID.equals(productIDtext))
-                                                    {
-                                                        productQuantity.setText("SL: "+quantityNo.getText().toString());
-
-                                                        // productQuantitytext = Integer.parseInt(quantityNo.getText().toString());
-
+                                                    if (ProID.equals(productIDtext)) {
+                                                        productQuantity.setText("SL: "+ newQuantity);
                                                         // xóa items với số lượng cũ
                                                         Map<String,Object> itemRemove = new HashMap<>();
                                                         itemRemove.put("ProductID",productIDtext);
                                                         itemRemove.put("Quantity", quantity);
-                                                        firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove));
-
-                                                        // Thêm items lại với số lượng được cập nhập
-                                                        Map<String, Object> ItemCart = new HashMap<>();
-                                                        ItemCart.put("ProductID",productIDtext);
-                                                        ItemCart.put("Quantity",Integer.parseInt( quantityNo.getText().toString()));
-                                                        firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayUnion(ItemCart));
-
+                                                        firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                // Thêm items lại với số lượng được cập nhập
+                                                                Map<String, Object> ItemCart = new HashMap<>();
+                                                                ItemCart.put("ProductID",productIDtext);
+                                                                ItemCart.put("Quantity", newQuantity);
+                                                                firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayUnion(ItemCart)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        CartItemModel cartItemModel = cartItemModelList.get(pos);
+                                                                        cartItemModelList.remove(pos);
+                                                                        cartItemModel.setProductQuantity(newQuantity);
+                                                                        cartItemModelList.add(cartItemModel);
+                                                                        MyCartFragment.TotalPrice_tv.setText(CartItemModel.calculateTotalPrice(cartItemModelList) + "" + ".VND");
+                                                                        notifyDataSetChanged();
+                                                                        quantityDialog.dismiss();
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
                                                         break;
                                                     }
                                                 }
                                             }
                                             else{
                                                 Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                                quantityDialog.dismiss();
                                             }
                                         } else {
                                             String error = task.getException().getMessage();
                                             Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                            quantityDialog.dismiss();
                                         }
                                     }
                                 });
-                            }catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 Toast.makeText(mainActivity, "Chưa có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                quantityDialog.dismiss();
                             }
-
-                            quantityDialog.dismiss();
                         }
                     });
                     quantityDialog.show();
                 }
             });
-
 
 
             removeItemCart.setOnClickListener(new View.OnClickListener() {
@@ -267,18 +277,23 @@ public class CartAdapter extends RecyclerView.Adapter {
                                 if (task.isSuccessful()) {
                                     DocumentSnapshot documentSnapshot = task.getResult();
                                     if(documentSnapshot.exists()) {
-                                        final double[] totalPrice = {0};
                                         final ArrayList<Map<String, Object>>[] productArray = new ArrayList[]{(ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts")};
                                         for (int i = 0; i < productArray[0].size(); i++) {
                                             String ProID = productArray[0].get(i).get("ProductID").toString();
                                             int quantity = Integer.parseInt(productArray[0].get(i).get("Quantity").toString());
-                                            if(ProID.equals(productIDtext))
-                                            {
+                                            if (ProID.equals(productIDtext)) {
                                                 Map<String,Object> itemRemove = new HashMap<>();
                                                 itemRemove.put("ProductID",productIDtext);
                                                 itemRemove.put("Quantity",quantity);
-                                                firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove));
-
+                                                firebaseFirestore.collection("Carts").document(currentUser).update("ListProducts", FieldValue.arrayRemove(itemRemove)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @SuppressLint("SetTextI18n")
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        cartItemModelList.remove(pos);
+                                                        MyCartFragment.TotalPrice_tv.setText(CartItemModel.calculateTotalPrice(cartItemModelList) + "" + ".VND");
+                                                        notifyDataSetChanged();
+                                                    }
+                                                });
                                                 break;
                                             }
                                         }

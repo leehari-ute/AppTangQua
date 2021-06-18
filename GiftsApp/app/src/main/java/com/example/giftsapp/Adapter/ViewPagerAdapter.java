@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.giftsapp.Controller.Fragment_Accounts.BillStatus;
 import com.example.giftsapp.Controller.Fragment_Accounts.BillStatusAdmin;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     CharSequence[] Titles = {"Chờ xác nhận", "Chờ lấy hàng", "Đang giao hàng", "Đã giao hàng"};
     private final boolean isAdmin;
-    private final ArrayList<com.example.giftsapp.Model.Bill> billArrayList;
+    private ArrayList<com.example.giftsapp.Model.Bill> billArrayList;
     public ViewPagerAdapter(@NonNull FragmentManager fm, boolean isAdmin, ArrayList<Bill> billArrayList) {
         super(fm);
         this.isAdmin = isAdmin;
@@ -66,5 +67,15 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return Titles[position];
+    }
+
+    public void setBillArrayList(ArrayList<Bill> billArrayList) {
+        this.billArrayList = billArrayList;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        // refresh all fragments when data set changed
+        return PagerAdapter.POSITION_NONE;
     }
 }

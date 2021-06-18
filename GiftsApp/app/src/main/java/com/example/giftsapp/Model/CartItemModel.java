@@ -1,5 +1,10 @@
 package com.example.giftsapp.Model;
 
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class CartItemModel {
     public static final int CART_ITEM = 0;
     public static final int TOTAL_AMOUNT = 1; // số lượng
@@ -38,6 +43,7 @@ public class CartItemModel {
         this.proID = proID;
         this.proStatus = proStatus;
     }
+
 
     public String getProductImage() {
         return productImage;
@@ -109,6 +115,15 @@ public class CartItemModel {
 
     public void setProStatus(String proStatus) {
         this.proStatus = proStatus;
+    }
+
+    public static double calculateTotalPrice (List<CartItemModel> cartItemModels) {
+        final double[] totalPrice = {0};
+        for (int i = 0; i < cartItemModels.size(); i++) {
+            CartItemModel cartItemModel = cartItemModels.get(i);
+            totalPrice[0] += cartItemModel.getProductQuantity() * Double.parseDouble(cartItemModel.getProductPrice());
+        }
+        return totalPrice[0];
     }
 
     //// Cart item

@@ -1,5 +1,6 @@
 package com.example.giftsapp.Controller;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -68,7 +69,7 @@ public class MyCartFragment extends Fragment {
 
     private RecyclerView cartItemRecyclerView;
     private Button continueBtn;
-    private TextView TotalPrice_tv;
+    public static TextView TotalPrice_tv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,7 +102,6 @@ public class MyCartFragment extends Fragment {
         // lấy thông tin các sản phẩm trong cart của USer
         Log.i("User",currentUser);
         try {
-
                 firebaseFirestore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -121,6 +121,7 @@ public class MyCartFragment extends Fragment {
                                     String ProID = productArray.get(i).get("ProductID").toString();
                                     int quantity = Integer.parseInt(productArray.get(i).get("Quantity").toString());
                                     firebaseFirestore.collection("Products").document(ProID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @SuppressLint("SetTextI18n")
                                         @Override
                                         public void onComplete(@NonNull Task<DocumentSnapshot> taskPro) {
                                             if (taskPro.isSuccessful()) {
