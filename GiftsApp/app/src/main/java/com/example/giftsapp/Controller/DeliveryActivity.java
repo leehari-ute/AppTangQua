@@ -146,7 +146,8 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
             public void onClick(View v) {
                 if (CheckRequired()) {
                     if (typePayment.equals("ONL")) {
-                        StartPayment();
+                        //StartPayment();
+                        checkEnoughQuantityProduct();
                     } else {
                         Log.d("ADD", "pay=>"+addressSelected.getProvince());
                         Log.d("typePay", "pay=>"+typePayment);
@@ -557,6 +558,74 @@ public class DeliveryActivity extends AppCompatActivity implements PaymentResult
             }
         });
     }
+
+    private void checkEnoughQuantityProduct()
+    {
+        List<Products> productsListInBill = new ArrayList<>();
+        try {
+            fStore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if(documentSnapshot.exists()) {
+                            int S =0;
+                            final long[] totalPrice = {0};
+                            final int[] finalS = {0};
+                            final ArrayList<Map<String, Object>> productArray = (ArrayList<Map<String, Object>>) documentSnapshot.getData().get("ListProducts");
+                            int l = productArray.size();
+                            for(Map<String,Object> obj: productArray)
+                            {
+                                String ProID = obj.get("ProductID").toString();
+                                int quantity = Integer.parseInt(obj.get("Quantity").toString());
+                                S += quantity;
+
+                                fStore.collection("Products").document(ProID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> taskPro) {
+                                        if (taskPro.isSuccessful()) {
+                                            DocumentSnapshot documentSnapshotPro = taskPro.getResult();
+                                            int quantityProductInStock = Integer.parseInt(documentSnapshotPro.get("quantity").toString());
+                                            if(quantity>quantityProductInStock)
+                                            {
+                                                AlertDialog.Builder Message = new AlertDialog.Builder(DeliveryActivity.this);
+                                                Message.setTitle("Thông báo");
+                                                Message.setIcon(R.drawable.cancel);
+                                                Message.setMessage("Sản phẩm " + documentSnapshotPro.get("name").toString()+ " đã hết hàng "
+                                                        +"\nQuý khách vui lòng xóa sản phẩm này hoặc đợi 2 ngày để tiếp tục thanh toán");
+                                                Message.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                    }
+                                                });
+                                                Message.show();
+                                            }
+                                            else{
+                                                StartPayment();
+                                            }
+
+                                        } else {
+                                            String error = taskPro.getException().getMessage();
+                                            Toast.makeText(DeliveryActivity.this, error, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                        else{
+                            Toast.makeText(DeliveryActivity.this, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        String error = task.getException().getMessage();
+                        Toast.makeText(DeliveryActivity.this, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(DeliveryActivity.this, "Chưa có giỏ hàng", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void GetDefaultAddress() {
         fStore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
