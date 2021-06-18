@@ -11,19 +11,17 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.giftsapp.Model.Address;
-import com.example.giftsapp.Model.RandomId;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,7 +45,7 @@ public class EditLocation extends AppCompatActivity {
     FirebaseUser user;
     String       userID, name = "", phone = "", province = "", district = "", village = "", detailAddress = "", addressID = "";
     Integer      provinceID, districtID;
-    Boolean      isDefault = true, onlyOneAddress;
+    Boolean      isDefault = true, isDelete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +99,12 @@ public class EditLocation extends AppCompatActivity {
             public void onClick(View v) {
                 GetDataFromUI();
                 if (CheckRequired()) {
+                    isDelete = false;
                     if (!address.isDefault() && isDefault) {
                         FindDefaultAddress();
+                    } else {
+                        DeleteAddress();
                     }
-                    DeleteAddress();
-                    UpdateAddress();
-                    finish();
                 }
             }
         });
@@ -118,8 +116,8 @@ public class EditLocation extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Không thể xóa địa chỉ mặc định", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                isDelete = true;
                 DeleteAddress();
-                finish();
             }
         });
     }
@@ -171,7 +169,6 @@ public class EditLocation extends AppCompatActivity {
 
     private void Init() {
         address = getIntent().getParcelableExtra("PARCEL_ADDRESS");
-        onlyOneAddress          = getIntent().getBooleanExtra("ONLY_ONE_ADDRESS", false);
         edtName                 = findViewById(R.id.edtName);
         edtPhone                = findViewById(R.id.edtPhone);
         txtProvince             = findViewById(R.id.txtProvince);
@@ -218,7 +215,12 @@ public class EditLocation extends AppCompatActivity {
                     addressUpdated.put("village", village);
                     addressUpdated.put("detailAddress", detailAddress);
 
-                    fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(addressUpdated));
+                    fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(addressUpdated)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            finish();
+                        }
+                    });
                 } else {
                     Log.d("TAG", "DocumentSnapshot Fail" + task.getException());
                 }
@@ -257,7 +259,16 @@ public class EditLocation extends AppCompatActivity {
                                 addressDeleted.put("village", address.getVillage());
                                 addressDeleted.put("detailAddress", address.getDetailAddress());
 
-                                fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(addressDeleted));
+                                fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(addressDeleted)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        if (!isDelete) {
+                                            UpdateAddress();
+                                        } else {
+                                            finish();
+                                        }
+                                    }
+                                });
                                 break;
                             }
                         }
@@ -320,7 +331,12 @@ public class EditLocation extends AppCompatActivity {
         disableDefault.put("village", village);
         disableDefault.put("detailAddress", detailAddress);
 
-        fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(disableDefault));
+        fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(disableDefault)).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                DeleteAddress();
+            }
+        });
     }
 
     private void FindDefaultAddress() {
@@ -350,8 +366,12 @@ public class EditLocation extends AppCompatActivity {
                                 defaultAddress.put("village", village);
                                 defaultAddress.put("detailAddress", detailAddress);
 
-                                fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress));
-                                SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
+                                fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
+                                    }
+                                });
                             }
                         }
                     }

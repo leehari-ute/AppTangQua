@@ -33,11 +33,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SignUpForm extends AppCompatActivity {
 
@@ -119,51 +122,8 @@ public class SignUpForm extends AppCompatActivity {
         }
 
         if (Validate()) {
-            fAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                userID = fAuth.getCurrentUser().getUid();
-                                DocumentReference documentReference = fStore.collection("Users").document(userID);
-                                Map<String, Object> User = new HashMap<>();
-                                User.put("fullName", fullName);
-                                User.put("email", email);
-                                User.put("phone", phone);
-                                User.put("gender", gender);
-                                User.put("role", "Customer");
-                                User.put("bio", "");
-                                User.put("birthday", "28/02/2000");
-                                ArrayList<String> address = new ArrayList<>();
-                                User.put("address", address);
-                                if (gender.equals("Nam")) {
-                                    User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtMale.jpg?alt=media&token=868c8c7b-21af-4f78-bfa2-41b9d154c0e6");
-                                } else {
-                                    User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtFemale.jpg?alt=media&token=757d5538-61f2-4096-a74b-e2fc0e667012");
-                                }
-                                documentReference.set(User).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("TAG", "onSuccess: user profile is create for "+ userID);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("TAG", "onFailure: "+ e.toString());
-                                    }
-                                });
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-
-                                Toast.makeText(SignUpForm.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            Toast.makeText(SignUpForm.this, "Lỗi: " + task.getException(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        };
+            CheckExistUser();
+        }
     }
 
     private boolean Validate() {
@@ -248,5 +208,79 @@ public class SignUpForm extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void CheckExistUser() {
+        edtEmail.setError(null);
+        fStore.collection("Users").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (!Objects.requireNonNull(task.getResult()).isEmpty()) {
+                        Toast.makeText(SignUpForm.this, "Email đã tồn tại", Toast.LENGTH_SHORT).show();
+                        edtEmail.setError("Email đã tồn tại");
+                    } else {
+                        fStore.collection("Users").whereEqualTo("phone", phone).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (!Objects.requireNonNull(task.getResult()).isEmpty()) {
+                                    Toast.makeText(SignUpForm.this, "Số điện thoại đã tồn tại", Toast.LENGTH_SHORT).show();
+                                    edtPhone.setError("Số điện thoại đã tồn tại");
+                                } else {
+                                    AddUser();
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void AddUser() {
+        fAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            userID = fAuth.getCurrentUser().getUid();
+                            DocumentReference documentReference = fStore.collection("Users").document(userID);
+                            Map<String, Object> User = new HashMap<>();
+                            User.put("fullName", fullName);
+                            User.put("email", email);
+                            User.put("phone", phone);
+                            User.put("gender", gender);
+                            User.put("role", "Customer");
+                            User.put("bio", "");
+                            User.put("birthday", "28/02/2000");
+                            ArrayList<String> address = new ArrayList<>();
+                            User.put("address", address);
+                            if (gender.equals("Nam")) {
+                                User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtMale.jpg?alt=media&token=868c8c7b-21af-4f78-bfa2-41b9d154c0e6");
+                            } else {
+                                User.put("avtUrl", "https://firebasestorage.googleapis.com/v0/b/android-project-se.appspot.com/o/default%2FavtFemale.jpg?alt=media&token=757d5538-61f2-4096-a74b-e2fc0e667012");
+                            }
+                            documentReference.set(User).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("TAG", "onSuccess: user profile is create for "+ userID);
+                                    Toast.makeText(SignUpForm.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(SignUpForm.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("TAG", "onFailure: "+ e.toString());
+                                }
+                            });
+                            return;
+                        }
+                        Toast.makeText(SignUpForm.this, "Lỗi: " + task.getException(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

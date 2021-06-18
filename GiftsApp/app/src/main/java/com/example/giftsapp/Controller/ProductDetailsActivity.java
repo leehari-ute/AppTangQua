@@ -125,7 +125,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
         Id_product2 = getIntent().getStringExtra("IdProduct2");
         Id_product3 = getIntent().getStringExtra("IdProductSearch");
 
-
         ProductDetailDescription = getIntent().getStringExtra("productDescription");
         ProductDetailDescription1 = getIntent().getStringExtra("productDescription1");
         ProductDetailDescription2 = getIntent().getStringExtra("productDescription2");
@@ -404,10 +403,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
         else if(id == R.id.main_cart_icon)
         {
-            Intent cartIntent = new Intent(ProductDetailsActivity.this,MainActivity.class);
+            Intent cartIntent = new Intent(ProductDetailsActivity.this, MainActivity.class);
             com.example.giftsapp.Controller.MainActivity.showCart =true;
             startActivity(cartIntent);
-            finish();
             // xem giỏ hàng chỗ này
             return true;
         }

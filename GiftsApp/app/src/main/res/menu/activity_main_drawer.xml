@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic__homec"
-            android:title="Home" />
+            android:title="Trang chủ" />
         <item
             android:id="@+id/nav_order"
             android:icon="@drawable/ic_wallet"
@@ -23,10 +23,10 @@
         <item
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_account_circle"
-            android:title="Thông tin cá nhân" />
+            android:title="Cài đặt tài khoản" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
-            android:title="Thoát" />
+            android:title="Đăng xuất" />
     </group>
 </menu>

@@ -1,5 +1,6 @@
 package com.example.giftsapp.Controller.Fragment_Accounts;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -7,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -30,8 +32,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.giftsapp.Controller.LoginForm;
+import com.example.giftsapp.Controller.SettingAccountAdmin;
 import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.R;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,13 +45,19 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.type.DateTime;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Year;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -56,7 +66,10 @@ public class Information extends Fragment {
     TextView            txtName, txtGender, txtBirthday, txtBio, txtPhone, txtEmail, txtChangePass, txtChangeAvt;
     ImageView           imgAvt;
     Calendar            calendar = Calendar.getInstance();
+    @SuppressLint("SimpleDateFormat")
     SimpleDateFormat    simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    Uri                 filePath;
+    final int           PICK_IMAGE_REQUEST = 71;
     FirebaseAuth        fAuth;
     FirebaseFirestore   fStore;
     StorageReference    storageRef;
@@ -122,8 +135,7 @@ public class Information extends Fragment {
         txtChangeAvt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent, 1000);
+                ChooseImage();
             }
         });
 
@@ -131,13 +143,12 @@ public class Information extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         if (context instanceof SettingAccountForm) {
             this.settingAccountForm = (SettingAccountForm) context;
         }
     }
-
 
     private void Init(View view) {
         txtChangePass   = view.findViewById(R.id.txtChangePass);
@@ -167,7 +178,6 @@ public class Information extends Fragment {
             @Override
             public void onClick(View v) {
                 ChangeGender("Nam");
-                LoadUserInformation();
                 dialog.dismiss();
             }
         });
@@ -176,7 +186,6 @@ public class Information extends Fragment {
             @Override
             public void onClick(View v) {
                 ChangeGender("Nữ");
-                LoadUserInformation();
                 dialog.dismiss();
             }
         });
@@ -191,10 +200,7 @@ public class Information extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 calendar.set(year, month, dayOfMonth);
-                if (calendar.before(new Date())) {
-                    ChangeBirthday(simpleDateFormat.format(calendar.getTime()));
-                    LoadUserInformation();
-                }
+                ChangeBirthday(simpleDateFormat.format(calendar.getTime()));
             }
         }, year, month, date);
         datePickerDialog.show();
@@ -212,19 +218,19 @@ public class Information extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 String newPassword = resetPass.getText().toString();
                 if (newPassword.length() < 6) {
-                    resetPass.setError("Password must be more than 5 characters");
+                    resetPass.setError("Mật khẩu phải có hơn 5 ký tự");
                     return;
                 }
                 resetPass.setError(null);
                 user.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(settingAccountForm, "Reset Password Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(settingAccountForm, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(settingAccountForm, "Reset Password Unsuccessfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(settingAccountForm, "Lỗi vui lòng thử lại", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -269,60 +275,94 @@ public class Information extends Fragment {
         });
     }
 
-    private void UploadAvtToStorage(Uri imgUri) {
-        final ProgressDialog progressDialog = new ProgressDialog(settingAccountForm);
-        progressDialog.setTitle("Uploading...");
-        progressDialog.show();
-
-        StorageReference fileRef = storageRef.child("users/" + userID + "/profile.png");
-        fileRef.putFile(imgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressDialog.dismiss();
-//                String urlDownload = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                UploadAvtToFireStore(imgUri);
-                Toast.makeText(settingAccountForm, "Image Uploaded", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-                Toast.makeText(settingAccountForm, "Failed", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                double progress = (100.0*snapshot.getBytesTransferred()/snapshot
-                        .getTotalByteCount());
-                progressDialog.setMessage("Uploaded "+(int)progress+"%");
-            }
-        });
+    private void ChooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000) {
-            if (resultCode == Activity.RESULT_OK) {
-                Uri imgUri = data.getData();
-                UploadAvtToStorage(imgUri);
-                Glide.with(settingAccountForm)
-                        .load(imgUri)
-                        .into(imgAvt);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+                && data != null && data.getData() != null ) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                imgAvt.setImageBitmap(bitmap);
+                UploadImage();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    private void UploadAvtToFireStore(Uri imgUri) {
-        fStore.collection("Users").document(userID).update("avtUrl", imgUri.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+    private void UploadImage() {
+        if(filePath != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(settingAccountForm);
+            progressDialog.setTitle("Đang tải lên...");
+            progressDialog.show();
+
+            StorageReference ref = storageRef.child("users/" + userID + "/profile.png");
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(settingAccountForm, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(settingAccountForm, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+            GetImageUrl(ref);
+        }
+    }
+
+    private void GetImageUrl(StorageReference ref) {
+        UploadTask uploadTask = ref.putFile(filePath);
+        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("TAG", "DocumentSnapshot successfully updated!");
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                return ref.getDownloadUrl();
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("TAG", "Error updating document", e);
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    String imgUrl = downloadUri.toString();
+                    fStore.collection("Users").document(userID).update("avtUrl", imgUrl)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("TAG", "DocumentSnapshot successfully updated!");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("TAG", "Error updating document", e);
+                        }
+                    });
+                } else {
+                    Toast.makeText(settingAccountForm, "Failed "+task.getException(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -333,6 +373,7 @@ public class Information extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("TAG", "DocumentSnapshot successfully updated!");
+                        LoadUserInformation();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -348,6 +389,7 @@ public class Information extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("TAG", "DocumentSnapshot successfully updated!");
+                        LoadUserInformation();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override

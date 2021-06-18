@@ -8,6 +8,9 @@ import android.widget.ListView;
 import com.example.giftsapp.Adapter.ProductAdapter;
 import com.example.giftsapp.Adapter.StatusAdapter;
 
+import java.security.SecureRandom;
+import java.util.Calendar;
+
 public class Helper {
     public static void getListViewProductSize(ListView myListView) {
         ProductAdapter myListAdapter = (ProductAdapter) myListView.getAdapter();
@@ -50,5 +53,60 @@ public class Helper {
         myListView.setLayoutParams(params);
         // print height of adapter on log
         Log.i("height of listItem:", String.valueOf(totalHeight));
+    }
+
+    public static String getMonth() {
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        String monthEnglish = "January";
+        switch (month) {
+            case 1:
+                monthEnglish = "February";
+                break;
+            case 2:
+                monthEnglish = "March";
+                break;
+            case 3:
+                monthEnglish = "April";
+                break;
+            case 4:
+                monthEnglish = "May";
+                break;
+            case 5:
+                monthEnglish = "June";
+                break;
+            case 6:
+                monthEnglish = "July";
+                break;
+            case 7:
+                monthEnglish = "August";
+                break;
+            case 8:
+                monthEnglish = "September";
+                break;
+            case 9:
+                monthEnglish = "October";
+                break;
+            case 10:
+                monthEnglish = "November";
+                break;
+            case 11:
+                monthEnglish = "December";
+                break;
+            default:
+                break;
+        }
+        return monthEnglish;
+    }
+
+    private static volatile SecureRandom numberGenerator = null;
+    private static final long MSB = 0x8000000000000000L;
+
+    public static String RandomID() {
+        SecureRandom ng = numberGenerator;
+        if (ng == null) {
+            numberGenerator = ng = new SecureRandom();
+        }
+
+        return Long.toHexString(MSB | ng.nextLong()) + Long.toHexString(MSB | ng.nextLong());
     }
 }

@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         break;
                     case R.id.nav_cart:
                         showCart = false;
-                        GotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
+                        GotoFragment("Giỏ hàng",new MyCartFragment(),CART_FRAGMENT);
                         break;
                     case R.id.nav_logout:
                         LogOut();
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(showCart)
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            GotoFragment("My Cart",new MyCartFragment(),-2);
+            GotoFragment("Giỏ hàng", new MyCartFragment(),-2);
         } else {
             drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.addDrawerListener(drawerToggle);
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(currentFragment==HOME_FRAGMENT) {
+        if(currentFragment == HOME_FRAGMENT) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getMenuInflater().inflate(R.menu.main, menu);
         }
@@ -210,30 +210,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-           if(id== R.id.main_search_icon)
-           {
-               // seach ở đây
-               Intent intent = new Intent(getApplicationContext(),SearchProductActivity.class);
-               startActivity(intent);
-               return true;
-           }else if(id == R.id.main_notification_icon)
-           {
-               // Thông báo chỗ này
+       if(id== R.id.main_search_icon) {
+           // seach ở đây
+           Intent intent = new Intent(getApplicationContext(),SearchProductActivity.class);
+           startActivity(intent);
+           return true;
+       } else if(id == R.id.main_notification_icon) {
+           // Thông báo chỗ này
+           return true;
+       } else if(id==R.id.main_cart_icon) {
+           // xem giỏ hàng chỗ này
+           GotoFragment("Giỏ hàng",new MyCartFragment(),CART_FRAGMENT);
+           return true;
+       } else if(id == android.R.id.home) {
+           if(showCart){
+               showCart = false;
+               finish();
                return true;
            }
-           else if(id==R.id.main_cart_icon)
-           {
-               // xem giỏ hàng chỗ này
-               GotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
-               return true;
-           }
-           else if(id == android.R.id.home){
-               if(showCart){
-                   showCart = false;
-                   finish();
-                   return true;
-               }
-           }
+       }
         return super.onOptionsItemSelected(item);
     }
 

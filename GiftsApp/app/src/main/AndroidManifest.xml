@@ -14,8 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GiftsApp">
-        <activity android:name=".Controller.SearchProductActivity"/>
-        <activity android:name=".Controller.BillAdmin"/>
+        <activity android:name=".Controller.LoginForm"/>
+        <activity android:name=".Controller.RevenueAdmin" />
+        <activity android:name=".Controller.ManageUser" />
+        <activity android:name=".Controller.SettingAccountAdmin" />
+        <activity android:name=".Controller.SearchProductActivity" />
+        <activity android:name=".Controller.BillAdmin" />
         <activity android:name=".Controller.EditLocation" />
         <activity android:name=".Controller.SelectLocationForm" />
         <activity
@@ -45,7 +49,6 @@
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.GiftsApp.NoActionBar" />
-        <activity android:name=".Controller.CustomerHome" />
         <activity android:name=".Controller.ProductsForm" />
         <activity android:name=".Controller.AddProductsForm" />
         <activity android:name=".Controller.AdminHome" />
@@ -53,8 +56,7 @@
         <activity
             android:name=".Controller.SettingAccountForm"
             android:theme="@style/Theme.GiftsApp.NoActionBar" />
-
-        <activity android:name=".Controller.LoginForm">
+        <activity android:name=".Controller.Logo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragInformation"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -30,7 +31,7 @@
                 android:id="@+id/txtChangeAvt"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:textSize="10dp"
+                android:textSize="12sp"
                 android:textAlignment="center"
                 android:layout_gravity="center"
                 android:text="Đổi ảnh đại diện"/>
@@ -61,8 +62,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableEnd="@drawable/right"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"
+                        app:drawableEndCompat="@drawable/right" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -84,8 +85,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/right"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"
+                        app:drawableEndCompat="@drawable/right" />
                 </LinearLayout>
 
 
@@ -107,9 +108,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableEnd="@drawable/right"
                         android:layout_marginTop="10dp"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"
+                        app:drawableEndCompat="@drawable/right" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -138,8 +139,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableEnd="@drawable/right"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"
+                        app:drawableEndCompat="@drawable/right" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -193,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_infor"
                 android:text="Thay đổi mật khẩu"
-                android:drawableEnd="@drawable/right"/>
+                app:drawableEndCompat="@drawable/right" />
         </LinearLayout>
     </ScrollView>
 

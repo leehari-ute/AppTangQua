@@ -1,5 +1,6 @@
 package com.example.giftsapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -65,7 +66,7 @@ public class AddressAdapter extends BaseAdapter {
 
         if (!address.isDefault()) {
             txtDefault.setVisibility(View.INVISIBLE);
-            Drawable iconLocation = context.getResources().getDrawable(R.drawable.location_gray);
+            @SuppressLint("UseCompatLoadingForDrawables") Drawable iconLocation = context.getResources().getDrawable(R.drawable.location_gray);
             txtIconLocation.setCompoundDrawables(null, null, iconLocation, null);
         }
         return convertView;

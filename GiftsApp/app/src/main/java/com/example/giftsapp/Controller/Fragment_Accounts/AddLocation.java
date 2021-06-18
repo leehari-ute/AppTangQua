@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -21,9 +20,10 @@ import com.example.giftsapp.Controller.DistrictForm;
 import com.example.giftsapp.Controller.LoginForm;
 import com.example.giftsapp.Controller.ProvinceForm;
 import com.example.giftsapp.Controller.VillageForm;
-import com.example.giftsapp.Model.RandomId;
+import com.example.giftsapp.Model.Helper;
 import com.example.giftsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -102,9 +102,9 @@ public class AddLocation extends AppCompatActivity {
                 if (CheckRequired()) {
                     if (isDefault) {
                         FindDefaultAddress();
+                    } else {
+                        AddNewAddress();
                     }
-                    AddNewAddress();
-                    finish();
                 }
             }
         });
@@ -172,7 +172,7 @@ public class AddLocation extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    addressID = RandomId.unique();
+                    addressID = Helper.RandomID();
                     HashMap<String, Object> newAddress = new HashMap<String, Object>();
                     newAddress.put("ID", addressID);
                     newAddress.put("isDefault", isDefault);
@@ -183,7 +183,12 @@ public class AddLocation extends AppCompatActivity {
                     newAddress.put("village", village);
                     newAddress.put("detailAddress", detailAddress);
 
-                    fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(newAddress));
+                    fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(newAddress)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            finish();
+                        }
+                    });
                 } else {
                     Log.d("TAG", "DocumentSnapshot Fail" + task.getException());
                 }
@@ -212,7 +217,12 @@ public class AddLocation extends AppCompatActivity {
         disableDefault.put("village", village);
         disableDefault.put("detailAddress", detailAddress);
 
-        fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(disableDefault));
+        fStore.collection("Users").document(userID).update("address", FieldValue.arrayUnion(disableDefault)).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                AddNewAddress();
+            }
+        });
     }
 
     private void FindDefaultAddress() {
@@ -242,8 +252,12 @@ public class AddLocation extends AppCompatActivity {
                                 defaultAddress.put("village", village);
                                 defaultAddress.put("detailAddress", detailAddress);
 
-                                fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress));
-                                SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
+                                fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
+                                    }
+                                });
                             }
                         }
                     }

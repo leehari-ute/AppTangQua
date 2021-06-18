@@ -17,9 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftsapp.Controller.BillAdmin;
+import com.example.giftsapp.Controller.ManageUser;
 import com.example.giftsapp.Controller.ProductsForm;
+import com.example.giftsapp.Controller.RevenueAdmin;
+import com.example.giftsapp.Controller.SettingAccountAdmin;
 import com.example.giftsapp.Controller.SettingAccountForm;
 import com.example.giftsapp.Model.MainModel;
+import com.example.giftsapp.Model.Revenue;
 import com.example.giftsapp.R;
 
 import java.util.ArrayList;
@@ -93,7 +97,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ProductsForm.class);
+                    Intent intent = new Intent(v.getContext(), ManageUser.class);
                     switch (position) {
                         case 1:
                             intent = new Intent(v.getContext(), BillAdmin.class);
@@ -102,6 +106,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
                             intent = new Intent(v.getContext(), ProductsForm.class);
                             break;
                         case 3:
+                            intent = new Intent(v.getContext(), SettingAccountAdmin.class);
+                            break;
+                        case 4:
+                            intent=new Intent(v.getContext(), RevenueAdmin.class);
                         default:
                             break;
                     }
