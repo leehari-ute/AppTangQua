@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.example.giftsapp.Controller.BillAdmin;
@@ -23,6 +26,7 @@ import com.example.giftsapp.Controller.Fragment_Accounts.BillStatusAdmin;
 import com.example.giftsapp.Controller.OrderDetailsActivity;
 import com.example.giftsapp.Model.Bill;
 import com.example.giftsapp.Model.BillModel;
+import com.example.giftsapp.Model.Helper;
 import com.example.giftsapp.Model.Revenue;
 import com.example.giftsapp.Model.StatusBill;
 import com.example.giftsapp.R;
@@ -49,26 +53,41 @@ import java.util.Map;
 public class BillAdapter extends BaseAdapter {
     private final Context context;
     private final int layout;
-    private List<Bill> billList;
+    private ArrayList<Bill> billList;
     private final boolean isAdmin;
     FirebaseFirestore fStore;
+    private String status;
+    private ArrayList<Bill> billByStatus;
 
-    public BillAdapter(Context context, int layout, List<Bill> billList, boolean isAdmin) {
+    public BillAdapter(Context context, int layout, ArrayList<Bill> billList, boolean isAdmin, String status) {
         this.context = context;
         this.layout = layout;
         this.billList = billList;
         this.fStore = FirebaseFirestore.getInstance();
         this.isAdmin = isAdmin;
+        this.status = status;
+        billByStatus = new ArrayList<>();
+        for (int i = 0; i < billList.size(); i++) {
+            ArrayList<StatusBill> statusBill = billList.get(i).getStatus();
+            for (int j = 0; j < statusBill.size(); j ++) {
+                if (statusBill.get(j).getDone()) {
+                    if (statusBill.get(j).getName().equals(status)) {
+                        Bill bill = billList.get(i);
+                        billByStatus.add(bill);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public int getCount() {
-        return billList.size();
+        return billByStatus.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return billList.get(position);
+        return billByStatus.get(position);
     }
 
     @Override
@@ -91,7 +110,7 @@ public class BillAdapter extends BaseAdapter {
         ImageView imgSp = convertView.findViewById(R.id.imgSp);
 
 
-        Bill bill = billList.get(position);
+        Bill bill = billByStatus.get(position);
         String statusPresent = "";
         Integer positionPresent = null;
         txtFirstPro.setText(bill.getProductsArrayList().get(0).getName());
@@ -185,9 +204,19 @@ public class BillAdapter extends BaseAdapter {
                                     String finalNextStatus = nextStatus;
                                     fStore.collection("Bill").document(bill.getId()).update("status", FieldValue.arrayUnion(newStatus))
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @RequiresApi(api = Build.VERSION_CODES.N)
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             Toast.makeText(context, "Đã chuyển trạng thái", Toast.LENGTH_SHORT).show();
+                                            billList.removeIf(x -> x.getId().equals(bill.getId()));
+                                            bill.getStatus().add(new StatusBill(false, finalStatusPresent, bill.getStatus().get(finalPositionPresent).getDate()));
+                                            bill.getStatus().removeIf(StatusBill::getDone);
+                                            bill.getStatus().add(new StatusBill(true, finalNextStatus, date));
+                                            billList.add(bill);
+                                            billByStatus.remove(position);
+                                            BillAdmin.viewPagerAdapter.setBillArrayList(billList);
+                                            BillAdmin.viewPagerAdapter.notifyDataSetChanged();
+                                            notifyDataSetChanged();
                                             if (finalNextStatus.equals("Đã giao hàng")) {
                                                 int year = Calendar.getInstance().get(Calendar.YEAR);
                                                 fStore.collection("Revenue").whereEqualTo("year", year).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -214,8 +243,6 @@ public class BillAdapter extends BaseAdapter {
                                                                         @Override
                                                                         public void onSuccess(DocumentReference documentReference) {
                                                                             Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-
-
                                                                         }}).addOnFailureListener(new OnFailureListener() {
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
@@ -226,8 +253,8 @@ public class BillAdapter extends BaseAdapter {
                                                             String idRevenue = "";
                                                             long recentRevenue = 0;
                                                             int recentTotalBill = 0;
-                                                            Map<String, Object> revenue = new HashMap<>();
-                                                            String month = Revenue.getMonth();
+                                                            Map<String, Object> revenue;
+                                                            String month = Helper.getMonth();
                                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                                 Log.d("TAG", document.getId() + " => " + document.getData());
                                                                 revenue = (Map<String, Object>) document.get(month);

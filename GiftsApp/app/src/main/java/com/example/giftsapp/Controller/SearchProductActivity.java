@@ -3,13 +3,18 @@ package com.example.giftsapp.Controller;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.giftsapp.Adapter.SearchProductAdapter;
@@ -38,6 +43,10 @@ public class SearchProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_product);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("Tìm kiếm sản phẩm");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F15220")));
         SearchPro_recyclerView = findViewById(R.id.Search_product_recyclerView);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -66,8 +75,6 @@ public class SearchProductActivity extends AppCompatActivity {
                         searchProductAdapter.notifyDataSetChanged();
 
                     }
-
-
                 }else{
                     String error = task.getException().getMessage();
                     Toast.makeText(SearchProductActivity.this, error, Toast.LENGTH_SHORT).show();
@@ -99,5 +106,19 @@ public class SearchProductActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

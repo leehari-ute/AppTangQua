@@ -1,5 +1,10 @@
 package com.example.giftsapp.Model;
 
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class CartItemModel {
     public static final int CART_ITEM = 0;
     public static final int TOTAL_AMOUNT = 1; // số lượng
@@ -23,9 +28,10 @@ public class CartItemModel {
     private int productQuantity;
     private int codeSale;
     private String proID;
+    private String proStatus; // check còn hàng hay hết hàng
 
     public CartItemModel(int type, String productImage, String productTitle, int freeVAT, String productPrice, String cuttedPrice
-            , int productQuantity, int codeSale, String proID) {
+            , int productQuantity, int codeSale, String proID, String proStatus) {
         this.type = type;
         this.productImage = productImage;
         this.productTitle = productTitle;
@@ -35,7 +41,9 @@ public class CartItemModel {
         this.productQuantity = productQuantity;
         this.codeSale = codeSale;
         this.proID = proID;
+        this.proStatus = proStatus;
     }
+
 
     public String getProductImage() {
         return productImage;
@@ -100,7 +108,25 @@ public class CartItemModel {
     public void setProID(String proID) {
         this.proID = proID;
     }
-//// Cart item
+
+    public String getProStatus() {
+        return proStatus;
+    }
+
+    public void setProStatus(String proStatus) {
+        this.proStatus = proStatus;
+    }
+
+    public static double calculateTotalPrice (List<CartItemModel> cartItemModels) {
+        final double[] totalPrice = {0};
+        for (int i = 0; i < cartItemModels.size(); i++) {
+            CartItemModel cartItemModel = cartItemModels.get(i);
+            totalPrice[0] += cartItemModel.getProductQuantity() * Double.parseDouble(cartItemModel.getProductPrice());
+        }
+        return totalPrice[0];
+    }
+
+    //// Cart item
 
     ///////// Cart Total Amount
     private int totalItem; // số lượng sản phẩm

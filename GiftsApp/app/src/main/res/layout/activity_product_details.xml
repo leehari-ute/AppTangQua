@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -65,31 +66,31 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_weight="1">
+
             <TextView
                 android:id="@+id/tv_AddToCart"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="ADD TO CART"
-                android:drawableEnd="@drawable/ic_cart"
+                android:text="Thêm vào giỏ hàng"
                 android:drawablePadding="8dp"
                 android:gravity="center"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:drawableTint="#485F70"
                 android:textColor="#485F70"
-                />
+                app:drawableEndCompat="@drawable/ic_cart" />
 
         </LinearLayout>
         <Button
             android:id="@+id/buy_now_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Buy Now"
+            android:text="Mua ngay"
+            android:textAllCaps="false"
             android:stateListAnimator="@null"
             android:background="@color/colorOranges"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

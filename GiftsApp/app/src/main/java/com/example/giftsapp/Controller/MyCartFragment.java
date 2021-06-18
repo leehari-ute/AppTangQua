@@ -1,5 +1,6 @@
 package com.example.giftsapp.Controller;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -68,7 +69,7 @@ public class MyCartFragment extends Fragment {
 
     private RecyclerView cartItemRecyclerView;
     private Button continueBtn;
-    private TextView TotalPrice_tv;
+    public static TextView TotalPrice_tv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,7 +102,6 @@ public class MyCartFragment extends Fragment {
         // lấy thông tin các sản phẩm trong cart của USer
         Log.i("User",currentUser);
         try {
-
                 firebaseFirestore.collection("Carts").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -121,19 +121,35 @@ public class MyCartFragment extends Fragment {
                                     String ProID = productArray.get(i).get("ProductID").toString();
                                     int quantity = Integer.parseInt(productArray.get(i).get("Quantity").toString());
                                     firebaseFirestore.collection("Products").document(ProID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @SuppressLint("SetTextI18n")
                                         @Override
                                         public void onComplete(@NonNull Task<DocumentSnapshot> taskPro) {
                                             if (taskPro.isSuccessful()) {
                                                 DocumentSnapshot documentSnapshotPro = taskPro.getResult();
-                                                Long price = Long.parseLong(documentSnapshotPro.get("price").toString());
-                                                Long Cuttedprice = price + 20000;
-                                                cartItemModelList.add(new CartItemModel(0
-                                                        ,documentSnapshotPro.get("imageUrl").toString()
-                                                        , documentSnapshotPro.get("name").toString(), 1
-                                                        , documentSnapshotPro.get("price").toString(), Cuttedprice.toString(), quantity, 111,ProID));
-                                                totalPrice[0] = totalPrice[0] + price*quantity*1.0;
-                                                cartAdapter.notifyDataSetChanged();
-                                                TotalPrice_tv.setText(totalPrice[0]+""+".VND");
+                                                if(documentSnapshotPro!=null) {
+                                                    long prices = Long.parseLong(documentSnapshotPro.get("price").toString());
+                                                    long Cuttedprice = prices + 20000;
+                                                    int QuantityInStock = Integer.parseInt(documentSnapshotPro.get("quantity").toString());
+                                                    String status="";
+                                                    if(QuantityInStock >= quantity)
+                                                    {
+                                                        status = "Còn hàng";
+                                                    }
+                                                    else if(QuantityInStock < quantity)
+                                                    {
+                                                        status = "Hết hàng";
+                                                    }
+                                                    cartItemModelList.add(new CartItemModel(0
+                                                            , documentSnapshotPro.get("imageUrl").toString()
+                                                            , documentSnapshotPro.get("name").toString(), 1
+                                                            , documentSnapshotPro.get("price").toString(), Cuttedprice + "", quantity, 111, ProID
+                                                            ,status));
+                                                    totalPrice[0] = totalPrice[0] + prices * quantity * 1.0;
+                                                    cartAdapter.notifyDataSetChanged();
+                                                    TotalPrice_tv.setText(totalPrice[0] + "" + ".VND");
+                                                }else{
+                                                    Toast.makeText(mainActivity, "Không có giỏ hàng", Toast.LENGTH_SHORT).show();
+                                                }
 
                                             } else {
                                                 String error = taskPro.getException().getMessage();

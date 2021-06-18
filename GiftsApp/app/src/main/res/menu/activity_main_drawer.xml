@@ -7,26 +7,26 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic__homec"
-            android:title="Home" />
+            android:title="Trang chủ" />
         <item
             android:id="@+id/nav_order"
             android:icon="@drawable/ic_wallet"
-            android:title="My Orders" />
+            android:title="Đơn mua" />
         <item
             android:id="@+id/nav_discount"
             android:icon="@drawable/sale"
-            android:title="My Discount" />
+            android:title="Khuyến mãi" />
         <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/ic_cart"
-            android:title="My Cart" />
+            android:title="Giỏ hàng" />
         <item
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_account_circle"
-            android:title="My Account" />
+            android:title="Cài đặt tài khoản" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
-            android:title="Log Out" />
+            android:title="Đăng xuất" />
     </group>
 </menu>

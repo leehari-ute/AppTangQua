@@ -104,12 +104,11 @@
         android:textColor="#000000"
         android:background="@drawable/border_background"
         android:backgroundTint="#000000"
-        android:drawableEnd="@drawable/ic_drop_down"
         android:drawablePadding="8dp"
         android:padding="3dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView15"
         app:layout_constraintStart_toEndOf="@+id/product_image"
-        app:layout_constraintTop_toBottomOf="@+id/tv_cut_price" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_cut_price"
+        app:drawableEndCompat="@drawable/ic_drop_down" />
 
     <LinearLayout
         android:id="@+id/linearLayout6"
@@ -117,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@color/colorOranges"
-        android:gravity="right"
+        android:gravity="end"
         android:orientation="horizontal"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -126,7 +125,7 @@
 
         <TextView
             android:id="@+id/tv_Evaluate"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Giao hàng tận nơi an tâm về giá"
@@ -138,7 +137,8 @@
             android:layout_width="100dp"
             android:layout_height="35dp"
             android:background="@drawable/border_background"
-            android:text="Evaluate"
+            android:text="Đánh giá"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="12sp" />
 
@@ -159,10 +159,24 @@
             android:id="@+id/tv_remove_item"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Remove item"
+            android:text="Xóa khỏi giỏ hàng"
             android:gravity="center"
             android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_delete"
-            />
+            app:drawableStartCompat="@drawable/ic_delete" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:text="Còn hàng"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/product_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/product_title"
+        app:layout_constraintTop_toTopOf="@+id/product_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>
