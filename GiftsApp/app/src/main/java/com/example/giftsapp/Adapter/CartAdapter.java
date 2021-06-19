@@ -147,6 +147,7 @@ public class CartAdapter extends RecyclerView.Adapter {
             removeItemCart = itemView.findViewById(R.id.tv_remove_item);
             ProductStatus = itemView.findViewById(R.id.tv_status);
             if (!isCart) {
+                productQuantity.setEnabled(false);
                 removeItemCart.setEnabled(false);
                 removeItemCart.setVisibility(View.INVISIBLE);
             }

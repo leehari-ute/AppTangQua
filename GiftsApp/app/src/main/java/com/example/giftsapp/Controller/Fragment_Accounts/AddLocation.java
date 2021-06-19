@@ -232,9 +232,7 @@ public class AddLocation extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.getData().get("address") != null) {
-                        Log.d("CUCCUNG", "add:" + document.getData().get("address"));
                         ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
-                        Log.d("CUCCUNG", "size:" + addressArray.size());
                         if (addressArray.size() > 0) {
                             for (int i = 0; i < addressArray.size(); i++) {
                                 if (addressArray.get(i).get("isDefault").toString().equals("true")) {
