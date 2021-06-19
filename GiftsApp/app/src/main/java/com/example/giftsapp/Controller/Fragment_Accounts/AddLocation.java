@@ -232,34 +232,42 @@ public class AddLocation extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.getData().get("address") != null) {
+                        Log.d("CUCCUNG", "add:" + document.getData().get("address"));
                         ArrayList<Map<String, Object>> addressArray = (ArrayList<Map<String, Object>>) document.getData().get("address");
-                        for (int i = 0; i < addressArray.size(); i++) {
-                            if (addressArray.get(i).get("isDefault").toString().equals("true")) {
-                                HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
-                                String addressID = addressArray.get(i).get("ID").toString();
-                                String name = addressArray.get(i).get("name").toString().trim();
-                                String phone = addressArray.get(i).get("phone").toString().trim();
-                                String province = addressArray.get(i).get("province").toString().trim();
-                                String district = addressArray.get(i).get("district").toString().trim();
-                                String village = addressArray.get(i).get("village").toString().trim();
-                                String detailAddress = addressArray.get(i).get("detailAddress").toString().trim();
-                                defaultAddress.put("ID", addressID);
-                                defaultAddress.put("isDefault", true);
-                                defaultAddress.put("name", name);
-                                defaultAddress.put("phone", phone);
-                                defaultAddress.put("province", province);
-                                defaultAddress.put("district", district);
-                                defaultAddress.put("village", village);
-                                defaultAddress.put("detailAddress", detailAddress);
+                        Log.d("CUCCUNG", "size:" + addressArray.size());
+                        if (addressArray.size() > 0) {
+                            for (int i = 0; i < addressArray.size(); i++) {
+                                if (addressArray.get(i).get("isDefault").toString().equals("true")) {
+                                    HashMap<String, Object> defaultAddress = new HashMap<String, Object>();
+                                    String addressID = addressArray.get(i).get("ID").toString();
+                                    String name = addressArray.get(i).get("name").toString().trim();
+                                    String phone = addressArray.get(i).get("phone").toString().trim();
+                                    String province = addressArray.get(i).get("province").toString().trim();
+                                    String district = addressArray.get(i).get("district").toString().trim();
+                                    String village = addressArray.get(i).get("village").toString().trim();
+                                    String detailAddress = addressArray.get(i).get("detailAddress").toString().trim();
+                                    defaultAddress.put("ID", addressID);
+                                    defaultAddress.put("isDefault", true);
+                                    defaultAddress.put("name", name);
+                                    defaultAddress.put("phone", phone);
+                                    defaultAddress.put("province", province);
+                                    defaultAddress.put("district", district);
+                                    defaultAddress.put("village", village);
+                                    defaultAddress.put("detailAddress", detailAddress);
 
-                                fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
-                                    }
-                                });
+                                    fStore.collection("Users").document(userID).update("address", FieldValue.arrayRemove(defaultAddress)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            SetNotDefault(addressID, name, phone, province, district, village, detailAddress);
+                                        }
+                                    });
+                                    break;
+                                }
                             }
+                        } else {
+                            AddNewAddress();
                         }
+
                     }
                 }else {
                     Log.d("TAG", "DocumentSnapshot Fail" + task.getException());
